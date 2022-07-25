@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  name: "SettingForm",
+  name: "Setting",
 };
 </script>

@@ -25,8 +25,8 @@ const routes = [
   },
   {
     path: '/users/:id/edit',
-    name: 'setting-form',
-    component: () => import('../views/SettingForm.vue')
+    name: 'setting',
+    component: () => import('../views/Setting.vue')
   },
   {
     path: '/main/',
