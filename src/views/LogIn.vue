@@ -65,14 +65,7 @@ export default {
 // TODO: input disabled => form-field也要加class = "disabled"
 
 <style lang="scss" scoped>
-$light-blue1:#50B5FF;
-$Error:#FC5A5A;
-$gray-white1: #D5D5DC;
-$gray1:#696974;
-$gray3:#B5B5BE;
-$brand-color:#FF6600;
-$white:#FFFFFF;
-$Primary:#0062FF;
+@import "./../assets/application.scss";
 
 .container {
   form {
