@@ -8,7 +8,7 @@
         <h3>登入 Alphitter</h3>
       </div>
 
-      <div class="form-row account-field">
+      <div class="form-field account-field">
         <label for="account">帳號</label>
         <input
           id="account"
@@ -17,13 +17,13 @@
           placeholder="請輸入帳號"
           required
         />
-        <div class="alert" >
+        <div class="alert-msg" >
           <span class="msg">message</span>
           <span class="letter-count">0/50</span>
         </div>
       </div>
 
-      <div class="form-row password-field">
+      <div class="form-field password-field">
         <label for="password">密碼</label>
         <input
           id="password"
@@ -32,7 +32,7 @@
           placeholder="請輸入密碼"
           required
         />
-        <div class="alert">
+        <div class="alert-msg">
           <span class="msg">message</span>
           <span class="letter-count">0/50</span>
         </div>
@@ -62,9 +62,18 @@ export default {
 };
 </script>
 
-// TODO: input disabled => form-row也要加class = "disabled"
+// TODO: input disabled => form-field也要加class = "disabled"
 
 <style lang="scss" scoped>
+$light-blue1:#50B5FF;
+$Error:#FC5A5A;
+$gray-white1: #D5D5DC;
+$gray1:#696974;
+$gray3:#B5B5BE;
+$brand-color:#FF6600;
+$white:#FFFFFF;
+$Primary:#0062FF;
+
 .container {
   form {
     display: flex;
@@ -83,10 +92,10 @@ export default {
         font-weight: 700;
       }
     }
-    .form-row.account-field {
+    .form-field.account-field {
       margin-bottom: 32px;
     }
-    .form-row {
+    .form-field {
       position: relative;
       width: 100%;
       height: 54px;
@@ -95,15 +104,15 @@ export default {
       border-radius: 2px;
       border-bottom: 2px solid #657786 ;
       &:hover,&focus {
-        border-bottom: 2px solid var(--light-blue) ;
+        border-bottom: 2px solid $light-blue1 ;
       }
       &.error {
-        border-bottom: 2px solid var(--Error) ;
+        border-bottom: 2px solid $Error ;
       }
       &.disabled {
-        border-bottom: 2px solid var(--gray-white1) ;
+        border-bottom: 2px solid $gray-white1 ;
       }
-      .alert {
+      .alert-msg {
         position: absolute;
         top: 54px;
         left: 0;
@@ -120,7 +129,8 @@ export default {
         width: 100%;
         height: 22px;
         font-size: 14px;
-        color: var(--gray1);
+        color: $gray1;
+        margin-bottom: 0;
       }
       input {
         width: 100%;
@@ -134,7 +144,7 @@ export default {
       }
       /* 更改placeholder的字體顏色及大小  */
       input::-webkit-input-placeholder {
-        color: var(--gray3);    
+        color: $gray3;    
         font-size: 16px;    
       }
     }
@@ -145,9 +155,9 @@ export default {
       .login-btn {
         width: 100%;
         height: 100%;
-        background-color: var(--brand-color);
+        background-color: $brand-color;
         border-radius: 50px;
-        color: var(--white);
+        color: $white;
         font-size: 20px;
       }
     }
@@ -165,7 +175,7 @@ export default {
         a {
           text-decoration-line: underline;
           font-size: 16px;
-          color: var(--Primary);
+          color: $Primary;
         }
       }
     }
