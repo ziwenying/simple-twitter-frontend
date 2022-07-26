@@ -25,11 +25,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$brand-color: #ff6600;
-$light-blue2: #e6ecf0;
-$white: #ffffff;
-$gray2: #92929d;
-$near-white: #fafafb;
+@import "./../assets/application.scss";
 
 %btn-style {
   height: 40px;
