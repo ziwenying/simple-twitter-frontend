@@ -19,7 +19,6 @@
         />
         <div class="alert-msg" >
           <span class="msg">message</span>
-          <span class="letter-count">0/50</span>
         </div>
       </div>
 
@@ -34,7 +33,6 @@
         />
         <div class="alert-msg">
           <span class="msg">message</span>
-          <span class="letter-count">0/50</span>
         </div>
       </div>
 
@@ -110,8 +108,6 @@ export default {
         top: 54px;
         left: 0;
         width: 100%;
-        display: flex;
-        justify-content: space-between;
         margin: 4px 0 0 0;
         span {
           font-size: 12px;

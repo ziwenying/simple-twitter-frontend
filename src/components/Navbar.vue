@@ -70,8 +70,8 @@ export default {
 .side-navbar {
   max-width: 332px;
   height: 100vh;
-  position: absolute;
-  left: 0;
+  // position: absolute;
+  // left: 0;
   .nav-container {
     width: 178px;
     height: 100%;

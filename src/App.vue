@@ -18,7 +18,7 @@ export default {
 
 <style lang="scss">
 .main-container {
-  max-width: 1140px;
+  max-width: 1500px;
   margin: 0 auto;
   position:relative;
 }
