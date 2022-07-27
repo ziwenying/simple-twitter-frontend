@@ -3,7 +3,7 @@
     <h4 class="popular-title">推薦跟隨</h4>
     <div class="popular-lists">
       <div class="popular-list">
-        <a href="">
+        <a href="#">
           <img
             class="user-avatar"
             src="./../assets/image/user-image.png"
@@ -17,7 +17,7 @@
         <button class="btn-setting">正在跟隨</button>
       </div>
       <div class="popular-list">
-        <a href="">
+        <a href="#">
           <img
             class="user-avatar"
             src="./../assets/image/user-image.png"
@@ -31,7 +31,7 @@
         <button class="btn-setting">正在跟隨</button>
       </div>
       <div class="popular-list">
-        <a href="">
+        <a href="#">
           <img
             class="user-avatar"
             src="./../assets/image/user-image.png"

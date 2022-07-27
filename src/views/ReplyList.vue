@@ -4,7 +4,6 @@
       <h4>←</h4>
       <h4 class="pb-4">推文</h4>
     </div>
-
     <div class="main-wrapper">
       <!-- component TweetDetail -->
       <TweetDetail />

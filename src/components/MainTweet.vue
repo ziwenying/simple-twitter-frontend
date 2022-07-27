@@ -1,7 +1,7 @@
 <template>
   <div class="tweet-lists">
     <div class="tweet-list">
-      <a href="">
+      <a href="#">
         <img
           class="user-avatar"
           src="./../assets/image/user-image.png"
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="tweet-list">
-      <a href="">
+      <a href="#">
         <img
           class="user-avatar"
           src="./../assets/image/user-image.png"
@@ -65,7 +65,7 @@
       </div>
     </div>
     <div class="tweet-list">
-      <a href="">
+      <a href="#">
         <img
           class="user-avatar"
           src="./../assets/image/user-image.png"
@@ -97,7 +97,7 @@
       </div>
     </div>
     <div class="tweet-list">
-      <a href="">
+      <a href="#">
         <img
           class="user-avatar"
           src="./../assets/image/user-image.png"
@@ -129,7 +129,7 @@
       </div>
     </div>
     <div class="tweet-list">
-      <a href="">
+      <a href="#">
         <img
           class="user-avatar"
           src="./../assets/image/user-image.png"
@@ -161,7 +161,7 @@
       </div>
     </div>
     <div class="tweet-list">
-      <a href="">
+      <a href="#">
         <img
           class="user-avatar"
           src="./../assets/image/user-image.png"
@@ -206,14 +206,12 @@ export default {
 @import "./../assets/application.scss";
 
 .tweet-lists {
-  // 單一推文
   .tweet-list {
     height: 168px;
     width: 100%;
     display: flex;
     padding: 0 0 0 23px;
     border: $light-blue2 1px solid;
-
     .user-avatar {
       margin: 16px 8px 0 0;
       width: 50px;
@@ -223,11 +221,9 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
-
       .tweet-title {
         display: flex;
         align-items: center;
-
         .name {
           margin: 0 8px 0 0;
           color: $black;
@@ -245,12 +241,10 @@ export default {
       }
       .tweet-reply-heart {
         display: flex;
-
         .tweet-reply,
         .tweet-heart {
           display: flex;
           align-items: center;
-
           margin: 0 41px 0 0;
           font-size: 14px;
           .icon {

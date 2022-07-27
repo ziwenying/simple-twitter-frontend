@@ -47,7 +47,6 @@ export default {
   color: $white;
   border-radius: 50px;
 }
-
 .main-outer {
   position: relative;
   .main-page-title {

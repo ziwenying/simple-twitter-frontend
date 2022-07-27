@@ -84,15 +84,11 @@ export default {
 <style lang="scss" scoped>
 @import "./../assets/application.scss";
 .side-navbar {
-  // max-width: 332px; //註解掉 設這邊的話 pupular 會被擠到下面
-  height: 100vh;
-  // position: absolute; //註解掉
-  // left: 0; //註解掉
+  max-height: 914px;
   .nav-container {
     width: 178px;
     height: 100%;
-    //這邊 margin: 0 24px 0 130px ->> margin: 0 24px 0 0;
-    margin: 0 24px 0 0; //修改
+    margin: 0 24px 0 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

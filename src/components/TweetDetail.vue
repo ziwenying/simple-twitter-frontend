@@ -51,11 +51,9 @@ $light-blue2: #e6ecf0;
   display: flex;
   flex-direction: column;
   margin: 0 16px 16px 16px;
-
   .tweet-title {
     display: flex;
     margin: 16px 0 10px 0;
-
     .user-avatar {
       width: 50px;
       height: 50px;
@@ -92,7 +90,6 @@ $light-blue2: #e6ecf0;
         color: $Secondary;
       }
     }
-
     .count-like {
       margin: 0 0 0 24px;
     }
@@ -105,7 +102,6 @@ $light-blue2: #e6ecf0;
       height: 25px;
       cursor: pointer;
     }
-
     img:nth-child(1) {
       margin: 0 133px 0 0;
     }

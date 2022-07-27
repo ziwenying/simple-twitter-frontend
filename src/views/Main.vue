@@ -4,7 +4,6 @@
     <Navbar class="col-2 main-nav" />
     <!-- MainPage.vue -->
     <router-view class="col-7 main-page scrollbar" />
-
     <!--component Populars -->
     <Populars class="col-3 popular" />
   </div>

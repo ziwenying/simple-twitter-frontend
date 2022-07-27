@@ -20,6 +20,5 @@ export default {
 .main-container {
   max-width: 1140px;
   margin: 0 auto;
-  position: relative;
 }
 </style>
