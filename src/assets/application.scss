@@ -10,8 +10,8 @@ $Success: #3DD598;
 $Warning: #FFC542;
 $Error: #FC5A5A;
 $orange: #FF974A;
-$light-blue1: #50B5FF; 
-$light-blue2: #E6ECF0; 
+$light-blue1: #50B5FF;
+$light-blue2: #E6ECF0;
 $green: #82C43C;
 $purple: #A461D8;
 $pink: #FF9AD5;
@@ -114,4 +114,19 @@ input:required {
 }
 input:invalid {
   box-shadow: none;
+}
+
+%btn-style {
+  height: 40px;
+  background: $brand-color;
+  color: $white;
+  border-radius: 50px;
+}
+
+%btn-unfollowed-style {
+  height: 40px;
+  background: $white;
+  color: $brand-color;
+  border-radius: 50px;
+  border: 1px $brand-color solid;
 }

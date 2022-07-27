@@ -1,11 +1,13 @@
 <template>
   <div class="tweet-lists">
     <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">Apple</p>
@@ -31,11 +33,13 @@
       </div>
     </div>
     <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">Apple</p>
@@ -61,11 +65,13 @@
       </div>
     </div>
     <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">Apple</p>
@@ -91,11 +97,13 @@
       </div>
     </div>
     <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">Apple</p>
@@ -121,11 +129,13 @@
       </div>
     </div>
     <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">Apple</p>
@@ -151,71 +161,13 @@
       </div>
     </div>
     <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">Apple</p>
@@ -304,6 +256,7 @@ export default {
           .icon {
             width: 14px;
             height: 14px;
+            cursor: pointer;
           }
         }
       }

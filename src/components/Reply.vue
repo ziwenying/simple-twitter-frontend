@@ -1,11 +1,13 @@
 <template>
   <div class="reply-lists">
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="#">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Devon Lane</p>
@@ -22,11 +24,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Marvin McKinney</p>
@@ -43,11 +47,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="#">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Devon Lane</p>
@@ -64,11 +70,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Marvin McKinney</p>
@@ -85,11 +93,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="#">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Devon Lane</p>
@@ -106,11 +116,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Marvin McKinney</p>
@@ -127,11 +139,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="#">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Devon Lane</p>
@@ -148,11 +162,13 @@
       </div>
     </div>
     <div class="reply-list">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+        />
+      </a>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">Marvin McKinney</p>
@@ -211,6 +227,7 @@ export default {
           color: $Secondary;
         }
         .account {
+          margin: 0 0 0 8px;
           color: $brand-color;
         }
       }

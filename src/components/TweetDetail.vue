@@ -1,11 +1,12 @@
 <template>
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
-      <img
-        class="user-avatar"
-        src="./../assets/image/user-image.png"
-        alt="user-avatar"
-      />
+      <a href="#">
+        <img
+          class="user-avatar"
+          src="./../assets/image/user-image.png"
+          alt="user-avatar"
+      /></a>
       <div class="tweet-title-name-account">
         <p class="name">Apple</p>
         <p class="account">@apple</p>
@@ -102,6 +103,7 @@ $light-blue2: #e6ecf0;
     .icon {
       width: 25px;
       height: 25px;
+      cursor: pointer;
     }
 
     img:nth-child(1) {
