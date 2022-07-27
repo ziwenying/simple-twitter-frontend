@@ -1,8 +1,8 @@
 <template>
-  <div class="col-10 tweets-list scrollbar">
-      <h3 class="title">
+  <div class="tweets-list">
+      <h4 class="title">
         推文清單
-      </h3>
+      </h4>
       <div class="tweets">
         <div class="tweet">
           <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">

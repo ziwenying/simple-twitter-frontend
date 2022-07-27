@@ -5,7 +5,6 @@
     <AdminTweetsList class="col-10"/>
   </div>  
 </template>
-
 <script>
 import Navbar from './../components/Navbar.vue'
 import AdminTweetsList from './../components/AdminTweetsList.vue'
