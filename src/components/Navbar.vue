@@ -2,10 +2,14 @@
   <div class="side-navbar">
     <div class="nav-container">
       <div class="nav-top">
-        <img class="logo-img" src="~@/assets/image/logo.png" alt="logo-img">
+        <img class="logo-img" src="~@/assets/image/logo.png" alt="logo-img" />
         <!-- 黑色 -->
         <div class="home-btn nav-item">
-          <img class="home-icon" src="~@/assets/image/home.png" alt="home-icon">
+          <img
+            class="home-icon"
+            src="~@/assets/image/home.png"
+            alt="home-icon"
+          />
           <p class="nav-text">首頁</p>
         </div>
         <!-- 在該頁面時, 變成橘色 -->
@@ -14,7 +18,11 @@
           <p class="nav-text">首頁</p>
         </div> -->
         <div class="user-profile-btn nav-item">
-          <img class="user-icon" src="~@/assets/image/user.png" alt="user-icon">
+          <img
+            class="user-icon"
+            src="~@/assets/image/user.png"
+            alt="user-icon"
+          />
           <p class="nav-text">個人資料</p>
         </div>
         <!-- <div class="user-profile-btn nav-item btn-clicked">
@@ -22,7 +30,11 @@
           <p class="nav-text">個人資料</p>
         </div> -->
         <div class="setting-btn nav-item">
-          <img  class="setting-icon" src="~@/assets/image/setting.png" alt="setting-icon">
+          <img
+            class="setting-icon"
+            src="~@/assets/image/setting.png"
+            alt="setting-icon"
+          />
           <p class="nav-text">設定</p>
         </div>
         <!-- <div class="setting-btn nav-item btn-clicked">
@@ -52,7 +64,11 @@
         </div>
       </div> -->
       <div class="nav-bottom">
-        <img class="logout-icon" src="~@/assets/image/logout-icon.png" alt="logout-icon">
+        <img
+          class="logout-icon"
+          src="~@/assets/image/logout-icon.png"
+          alt="logout-icon"
+        />
         <p class="nav-text">登出</p>
       </div>
     </div>
@@ -61,21 +77,18 @@
 
 <script>
 export default {
-  name: 'Navbar'
-}
+  name: "Navbar",
+};
 </script>
 
 <style lang="scss" scoped>
 @import "./../assets/application.scss";
 .side-navbar {
-  max-width: 332px;
-  height: 100vh;
-  position: absolute;
-  left: 0;
+  max-height: 914px;
   .nav-container {
     width: 178px;
     height: 100%;
-    margin: 0 24px 0 130px;
+    margin: 0 24px 0 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -86,7 +99,7 @@ export default {
       display: flex;
       flex-direction: column;
       .tweet-btn {
-        width:178px;
+        width: 178px;
         height: 46px;
         color: $white;
         font-size: 20px;
@@ -114,14 +127,16 @@ export default {
             color: $brand-color;
           }
         }
-        >img {
+        > img {
           margin-right: 20px;
         }
-        .home-icon, .user-icon, .setting-icon {
+        .home-icon,
+        .user-icon,
+        .setting-icon {
           width: 24px;
           height: 24px;
           &:hover {
-          color: $brand-color;
+            color: $brand-color;
           }
         }
       }
