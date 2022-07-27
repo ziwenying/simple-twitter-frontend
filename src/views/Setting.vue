@@ -1,15 +1,17 @@
 <template>
-  <div class="setting-container">
-    <Navbar /> 
-    <div class="setting-form-area">
+  <div class="row setting-wrapper">
+    <Navbar class="col-2 pl-0"/> 
+    <div class="col-7 setting-form-area">
       <h4>帳戶設定</h4>
       <hr>
-      <SettingForm />
+      <div class="setting-form-container">
+        <SettingForm />
+      </div>      
       <div class="btn-container">
         <button class="save-btn">儲存</button>
       </div>
     </div>
-    <div class="right"></div>
+    <div class="col-3 right"></div>
   </div>
 </template>
 
@@ -28,14 +30,10 @@ export default {
 <style lang="scss" scoped>
 @import "./../assets/application.scss";
 
-.setting-container {
+.setting-wrapper {
   width: 100%;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 332px 1fr 427px;
-  .side-navbar {
-    grid-column: 1/2;
-  }
+  height: 914px;
   .setting-form-area {
     position: relative;
     padding-right: 24px;
@@ -55,8 +53,11 @@ export default {
      top: 62px;
      left: 0;
     }
-    grid-column: 2/3;
-    margin: 0 auto;
+    .setting-form-container {
+      // 表格置中
+      display: flex;
+      justify-content: center;
+    }
     .form-container {
       padding-top: 24px;      
       width: 593px;
@@ -76,9 +77,6 @@ export default {
       }
     }
     
-  }
-  .right {
-    grid-column: 3/4;
   }
 }
 </style>

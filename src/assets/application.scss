@@ -115,3 +115,18 @@ input:required {
 input:invalid {
   box-shadow: none;
 }
+
+%btn-style {
+  height: 40px;
+  background: $brand-color;
+  color: $white;
+  border-radius: 50px;
+}
+
+%btn-unfollowed-style {
+  height: 40px;
+  background: $white;
+  color: $brand-color;
+  border-radius: 50px;
+  border: 1px $brand-color solid;
+}

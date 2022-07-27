@@ -68,14 +68,11 @@ export default {
 <style lang="scss" scoped>
 @import "./../assets/application.scss";
 .side-navbar {
-  max-width: 332px;
-  height: 100vh;
-  // position: absolute;
-  // left: 0;
+  max-height: 914px;
   .nav-container {
     width: 178px;
     height: 100%;
-    margin: 0 24px 0 130px;
+    margin: 0 24px 0 0px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
