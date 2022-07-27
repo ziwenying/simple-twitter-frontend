@@ -50,7 +50,7 @@ $light-blue2: #e6ecf0;
 .main-tweet-wrapper {
   display: flex;
   flex-direction: column;
-  margin: 16px;
+  margin: 0 16px 16px 16px;
 
   .tweet-title {
     display: flex;

@@ -3,9 +3,7 @@
     <div class="main-page-title">
       <h4 class="pb-4">首頁</h4>
     </div>
-
     <div class="main-wrapper">
-      <div class="block"></div>
       <div class="main-tweet-wrapper">
         <div class="avatar-input">
           <a href="">
@@ -52,33 +50,28 @@ export default {
 
 .main-outer {
   position: relative;
-
   .main-page-title {
-    position: fixed;
-    width: 45%; //這邊有問題
+    position: sticky;
+    top: 0;
     background: $white;
     height: 74px;
     border-bottom: $light-blue2 1px solid;
     z-index: 1;
-
     h4 {
       height: 74px;
       padding: 24px 0 0 23px;
       font-size: 24px;
       font-weight: 700;
       border-left: $light-blue2 1px solid;
+      border-right: $light-blue2 1px solid;
       z-index: 1;
     }
   }
-
   .main-wrapper {
     position: relative;
     border-top: $light-blue2 1px solid;
     border-left: $light-blue2 1px solid;
     border-right: $light-blue2 1px solid;
-    .block {
-      height: 74px;
-    }
     .main-tweet-wrapper {
       position: relative;
       .avatar-input {

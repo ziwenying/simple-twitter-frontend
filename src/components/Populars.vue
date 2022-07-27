@@ -164,7 +164,7 @@ export default {
 @import "./../assets/application.scss";
 
 .popular-wrapper {
-  margin: 16px 0 0 0;
+  margin: 16px 0 20px 0;
   background: $near-white;
   border-radius: 16px;
   .popular-title {
@@ -175,7 +175,7 @@ export default {
     .popular-list {
       display: flex;
       justify-content: space-between;
-      margin: 16px 0 32px 0;
+      padding: 16px 0 16px 0;
       .user-avatar {
         width: 50px;
         height: 50px;

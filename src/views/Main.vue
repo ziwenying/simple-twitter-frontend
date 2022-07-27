@@ -25,17 +25,20 @@ export default {
 
 <style scoped lang="scss">
 @import "./../assets/application.scss";
-.main-page {
-  overflow-y: scroll;
-  max-height: 914px;
-}
-.scrollbar {
-  &::-webkit-scrollbar {
-    width: 8px;
+
+.outer-main-wrapper {
+  .main-page {
+    overflow-y: scroll;
+    max-height: 914px;
   }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: rgba(0, 0, 0, 0.1);
+  .scrollbar {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
   }
 }
 </style>

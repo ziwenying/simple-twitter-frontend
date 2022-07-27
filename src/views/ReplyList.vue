@@ -6,7 +6,6 @@
     </div>
 
     <div class="main-wrapper">
-      <div class="block"></div>
       <!-- component TweetDetail -->
       <TweetDetail />
       <!-- component Reply -->
@@ -33,14 +32,14 @@ export default {
 
 .reply-outer {
   position: relative;
-
   .reply-lists-title {
     display: flex;
-    position: fixed;
-    width: 45%; //這邊有問題
+    position: sticky;
+    top: 0;
     background: $white;
-    border-left: $light-blue2 1px solid;
+    border-right: $light-blue2 1px solid;
     border-bottom: $light-blue2 1px solid;
+    border-left: $light-blue2 1px solid;
     z-index: 1;
     h4:nth-child(1) {
       cursor: pointer;
@@ -53,15 +52,11 @@ export default {
       z-index: 1;
     }
   }
-
   .main-wrapper {
     position: relative;
-    border-left: $light-blue2 1px solid;
     border-right: $light-blue2 1px solid;
+    border-left: $light-blue2 1px solid;
     border-bottom: $light-blue2 1px solid;
-    .block {
-      height: 74px;
-    }
   }
 }
 </style>
