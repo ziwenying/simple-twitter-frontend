@@ -1,9 +1,15 @@
 <template>
-  <div>我正在追蹤</div>
+  <!-- component Followers -->
+  <Followers />
 </template>
 
 <script>
+import Followers from "../components/Followers.vue";
+
 export default {
   name: "UserFollowings",
+  components: {
+    Followers,
+  },
 };
 </script>
