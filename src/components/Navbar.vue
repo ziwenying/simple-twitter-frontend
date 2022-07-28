@@ -150,6 +150,8 @@ export default {
       }
     }
     .nav-bottom {
+      position: fixed;
+      bottom: 16px;
       display: flex;
       align-items: center;
       &:hover {
