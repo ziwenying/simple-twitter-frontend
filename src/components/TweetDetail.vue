@@ -30,7 +30,8 @@
       </div>
     </div>
     <div class="tweet-reply-heart">
-      <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+      <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
       <img class="icon" src="./../assets/image/heart.png" alt="heart" />
     </div>
   </div>

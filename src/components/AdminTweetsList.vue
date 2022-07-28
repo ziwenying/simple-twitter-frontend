@@ -9,7 +9,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -20,7 +20,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -31,7 +31,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -42,7 +42,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -53,7 +53,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -64,7 +64,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -75,7 +75,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -86,7 +86,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>
@@ -97,7 +97,7 @@
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3小時</span>
+              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
             </div>
              <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
           </div>

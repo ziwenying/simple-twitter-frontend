@@ -26,6 +26,8 @@
     <Populars class="col-3 popular" />
     <!-- component UserEditModal -->
     <UserEditModal />
+    <CreateTweetModal/>
+    <ReplyModal/>
   </div>
 </template>
 
@@ -35,6 +37,8 @@ import UserProfileCard from "../components/UserProfileCard.vue";
 import UserNavPills from "../components/UserNavPills.vue";
 import Populars from "../components/Populars.vue";
 import UserEditModal from "../components/UserEditModal.vue";
+import CreateTweetModal from "../components/CreateTweetModal.vue";
+import ReplyModal from "../components/ReplyModal.vue";
 
 export default {
   name: "User",
@@ -44,6 +48,8 @@ export default {
     UserNavPills,
     Populars,
     UserEditModal,
+    ReplyModal,
+    CreateTweetModal
   },
 };
 </script>
