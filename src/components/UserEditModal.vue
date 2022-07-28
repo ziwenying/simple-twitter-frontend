@@ -26,7 +26,7 @@
             <div class="black">
               <img
                 class="background-img"
-                src="./../assets/image/user-background.png"
+                src="./../assets/image/profile-background.png"
                 alt="user-background"
               />
             </div>

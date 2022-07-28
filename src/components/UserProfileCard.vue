@@ -2,7 +2,7 @@
   <div class="user-profile-outer">
     <img
       class="background-img"
-      src="./../assets/image/user-background.png"
+      src="./../assets/image/profile-background.png"
       alt="user-background"
     />
     <img
