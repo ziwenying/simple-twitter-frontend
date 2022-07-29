@@ -94,7 +94,7 @@ export default {
           id: uuidv4(),
           tweetText: this.text,
         };
-        // 新的推文資料(newTweet) -> 傳置父層 Main.vue
+        // 新的推文資料(newTweet) -> 傳至父層 Main.vue
         this.$emit("after-submit-tweet", this.newTweet);
         // 將發推區內的文字清空
         this.text = "";

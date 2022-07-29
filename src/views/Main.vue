@@ -13,7 +13,7 @@
     <!--component Populars -->
     <Populars class="col-3 popular" />
     <!-- Modal -->
-    <CreateTweetModal />
+    <CreateTweetModal @after-create-tweet="afterCreateTweet"/>
     <ReplyModal :replyModalData="replyModalData" />
   </div>
 </template>
@@ -191,6 +191,23 @@ export default {
   methods: {
     fetchTweets() {
       this.tweets = DummyData.tweets;
+    },
+    afterCreateTweet(payload) {
+      const { UserId, description } = payload
+      this.tweets.push({
+        UserId,
+        text: description,
+        user: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          avatar: this.currentUser.avatar,
+          account: this.currentUser.account,
+        },
+        createdAt: new Date(),
+        isLiked: false,
+        likeCount: 0,
+        commentCount: 0,
+      })
     },
     afterSubmitTweet(payload) {
       const { id, tweetText } = payload;
