@@ -1,199 +1,52 @@
 <template>
   <div class="tweet-lists">
-    <div class="tweet-list">
+    <div v-for="tweet in tweets" :key="tweet.id" class="tweet-list">
       <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
+        <img class="user-avatar" :src="tweet.user.avatar" alt="user-avatar" />
       </a>
       <div class="tweet-content">
         <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
+          <p class="name">{{ tweet.user.name }}</p>
+          <p class="account">
+            @{{ tweet.user.account }}&nbsp;‧&nbsp;{{
+              tweet.createdAt | fromNow
+            }}
+          </p>
         </div>
         <div class="tweet-text">
           <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
+            {{ tweet.text }}
           </p>
         </div>
         <div class="tweet-reply-heart">
+          <!-- 要跳出 modal -->
           <div class="tweet-reply">
-            <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
+            <img
+              @click="isClickedTweet(tweet.id)"
+              data-toggle="modal"
+              data-target="#replyTweetModal"
+              class="icon"
+              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/reply.png?raw=true"
+              alt="reply"
+            />
+            <p>{{ tweet.commentCount }}</p>
           </div>
           <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tweet-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="tweet-content">
-        <div class="tweet-title">
-          <p class="name">Apple</p>
-          <p class="account">@apple ‧ 3 小時</p>
-        </div>
-        <div class="tweet-text">
-          <p>
-            Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-            cillum dolor. Voluptate exercitation incididunt aliquip deserunt
-            reprehenderit elit laborum.
-          </p>
-        </div>
-        <div class="tweet-reply-heart">
-          <div class="tweet-reply">
-            <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-            <p>13</p>
-          </div>
-          <div class="tweet-heart">
-            <img class="icon" src="./../assets/image/heart.png" alt="heart" />
-            <p>76</p>
+            <img
+              v-if="tweet.isLiked"
+              @click.stop.prevent="deleteLiked(tweet.id)"
+              class="icon"
+              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/red-heart.png?raw=true"
+              alt="heart"
+            />
+            <img
+              v-if="!tweet.isLiked"
+              @click.stop.prevent="addLiked(tweet.id)"
+              class="icon"
+              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/heart.png?raw=true"
+              alt="heart"
+            />
+            <p>{{ tweet.likeCount }}</p>
           </div>
         </div>
       </div>
@@ -202,8 +55,61 @@
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
   name: "MainTweets",
+  mixins: [fromNowFilter],
+  props: {
+    initialTweets: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      tweets: [],
+      oneTweet: {},
+    };
+  },
+  created() {
+    this.fetchTweets();
+  },
+  methods: {
+    fetchTweets() {
+      this.tweets = this.initialTweets;
+    },
+    isClickedTweet(tweetId) {
+      // 回覆推
+      this.oneTweet = this.tweets.find((tweet) => {
+        return tweet.id === tweetId;
+      });
+      // 得到，被點擊那則推文的資料 -> 傳到父曾 MainPage.vue
+      this.$emit("after-click-reply", this.oneTweet);
+    },
+    addLiked(tweetId) {
+      this.tweets = this.tweets.map((tweet) => {
+        return tweetId === tweet.id
+          ? {
+              ...tweet,
+              isLiked: !tweet.isLiked,
+              likeCount: tweet.likeCount + 1,
+            }
+          : tweet;
+      });
+    },
+    deleteLiked(tweetId) {
+      this.tweets = this.tweets.map((tweet) => {
+        return tweetId === tweet.id
+          ? {
+              ...tweet,
+              isLiked: !tweet.isLiked,
+              likeCount: tweet.likeCount - 1,
+            }
+          : tweet;
+      });
+    },
+  },
 };
 </script>
 
@@ -243,7 +149,7 @@ export default {
       }
       .tweet-text {
         font-size: 16px;
-        // flex-wrap: wrap;
+        line-height: 26px;
       }
       .tweet-reply-heart {
         display: flex;
@@ -256,6 +162,7 @@ export default {
           .icon {
             width: 14px;
             height: 14px;
+            margin: 0 8px 0 0;
             cursor: pointer;
           }
         }
