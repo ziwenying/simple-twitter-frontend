@@ -28,24 +28,24 @@
             <div class="tweet">
               <img
                 class="avatar"
-                src="~@/assets/image/user-image.png"
+                :src="replyModalData.userAvatar"
                 alt="avatar"
               />
               <div class="tweet-info">
                 <div class="tweet-detail">
-                  <span class="user-name">Apple</span>
+                  <span class="user-name">{{ replyModalData.userName }}</span>
                   <span class="account-created-time"
-                    >@apple&#xb7;3&nbsp;小時</span
+                    >@{{ replyModalData.userAccount }}&#xb7;{{
+                      replyModalData.createdAt | fromNow
+                    }}</span
                   >
                 </div>
                 <p class="tweet-text">
-                  Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                  ullamco cillum dolor. Voluptate exercitation incididunt
-                  aliquip deserunt reprehenderit elit laborum.
+                  {{ replyModalData.text }}
                 </p>
                 <div class="reply-to">
                   <span>回覆給</span>&nbsp;<span class="reply-to-account"
-                    >@Mitsubishi</span
+                    >@{{ replyModalData.userAccount }}</span
                   >
                 </div>
               </div>
@@ -53,7 +53,8 @@
           </div>
           <div class="reply-area">
             <div class="modal-user-avatar">
-              <img src="~@/assets/image/avatar.png" alt="avatar" />
+              <!-- 這邊圖片之後記得改 currentUser 的大頭貼 -->
+              <img src="./../assets/image/avatar.png" alt="avatar" />
             </div>
             <div class="modal-tweet-text">
               <textarea
@@ -75,11 +76,20 @@
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
   name: "ReplyModal",
+  mixins: [fromNowFilter],
+  props: {
+    replyModalData: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
- 
+
 <style lang="scss" scoped>
 @import "./../assets/application.scss";
 
@@ -120,11 +130,11 @@ export default {
         position: relative;
         // 連結線
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           left: 25px;
           top: 60px;
-          height:85px;
+          height: 85px;
           background-color: $gray3;
           border-right: 1px solid $gray3;
           border-left: 1px solid $gray3;
@@ -184,7 +194,7 @@ export default {
         margin-right: 8px;
       }
       .modal-tweet-text {
-        flex:1; 
+        flex: 1;
         textarea {
           width: 90%;
           height: 75%;
