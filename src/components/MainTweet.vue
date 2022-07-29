@@ -22,7 +22,8 @@
         </div>
         <div class="tweet-reply-heart">
           <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+            <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
             <p>13</p>
           </div>
           <div class="tweet-heart">
@@ -54,7 +55,8 @@
         </div>
         <div class="tweet-reply-heart">
           <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+            <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
             <p>13</p>
           </div>
           <div class="tweet-heart">
@@ -86,7 +88,8 @@
         </div>
         <div class="tweet-reply-heart">
           <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+            <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
             <p>13</p>
           </div>
           <div class="tweet-heart">
@@ -118,7 +121,8 @@
         </div>
         <div class="tweet-reply-heart">
           <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+            <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
             <p>13</p>
           </div>
           <div class="tweet-heart">
@@ -150,7 +154,8 @@
         </div>
         <div class="tweet-reply-heart">
           <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+            <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
             <p>13</p>
           </div>
           <div class="tweet-heart">
@@ -182,7 +187,8 @@
         </div>
         <div class="tweet-reply-heart">
           <div class="tweet-reply">
-            <img class="icon" src="./../assets/image/reply.png" alt="reply" />
+            <img class="icon" data-toggle="modal"
+      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
             <p>13</p>
           </div>
           <div class="tweet-heart">

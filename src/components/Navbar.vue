@@ -41,7 +41,8 @@
           <img  class="setting-icon" src="~@/assets/image/setting-orange.png" alt="setting-icon">
           <p class="nav-text">設定</p>
         </div> -->
-        <button class="tweet-btn">推文</button>
+        <button class="tweet-btn" data-toggle="modal"
+      data-target="#createTweetModal">推文</button>
       </div>
       <!-- 後台Navbar  -->
       <!-- <div class="nav-top">
