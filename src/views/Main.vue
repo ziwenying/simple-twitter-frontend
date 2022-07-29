@@ -10,12 +10,17 @@
     />
     <!--component Populars -->
     <Populars class="col-3 popular" />
+    <!-- Modal -->
+    <CreateTweetModal/>
+    <ReplyModal/>
   </div>
 </template>
 
 <script>
 import Populars from "../components/Populars.vue";
 import Navbar from "../components/Navbar.vue";
+import CreateTweetModal from "../components/CreateTweetModal.vue";
+import ReplyModal from "../components/ReplyModal.vue";
 
 // const userDummyData = {
 //   currentUser: {},
@@ -136,6 +141,8 @@ export default {
   components: {
     Populars,
     Navbar,
+    ReplyModal,
+    CreateTweetModal
   },
   data() {
     return {

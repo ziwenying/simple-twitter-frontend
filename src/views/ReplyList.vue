@@ -21,7 +21,7 @@ export default {
   name: "ReplyList",
   components: {
     TweetDetail,
-    Reply,
+    Reply
   },
 };
 </script>
