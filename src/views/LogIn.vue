@@ -11,6 +11,7 @@
       <div class="form-field account-field">
         <label for="account">帳號</label>
         <input
+          v-modal="account"
           id="account"
           name="account"
           type="text"
@@ -25,6 +26,7 @@
       <div class="form-field password-field">
         <label for="password">密碼</label>
         <input
+          v-modal="password"
           id="password"
           name="password"
           type="password"
@@ -57,10 +59,17 @@
 <script>
 export default {
   name: "LogIn",
+  data () {
+    return {
+      account: '',
+      email: ''
+    }
+  },
+  methods: {
+
+  }
 };
 </script>
-
-// TODO: input disabled => form-field也要加class = "disabled"
 
 <style lang="scss" scoped>
 @import "./../assets/application.scss";
@@ -90,19 +99,9 @@ export default {
       position: relative;
       width: 100%;
       height: 54px;
-      padding: 2px 10px 4px 10px;
+      padding: 2px 0px 4px 0px;
       background-color: #F5F8FA;
       border-radius: 2px;
-      border-bottom: 2px solid #657786 ;
-      &:hover,&focus {
-        border-bottom: 2px solid $light-blue1 ;
-      }
-      &.error {
-        border-bottom: 2px solid $Error ;
-      }
-      &.disabled {
-        border-bottom: 2px solid $gray-white1 ;
-      }
       .alert-msg {
         position: absolute;
         top: 54px;
@@ -120,21 +119,32 @@ export default {
         font-size: 14px;
         color: $gray1;
         margin-bottom: 0;
+        margin-left: 10px;
       }
       input {
         width: 100%;
         height: 26px;
         border-color: transparent;
         background-color: transparent;
+        border-bottom: 2px solid #657786 ;
+        padding-bottom: 10px;
+        padding-left: 9px;
         &:disabled {
           border-color: transparent;
           background-color: transparent;
+          border-bottom: 2px solid $gray-white1 ;
         } 
-      }
-      /* 更改placeholder的字體顏色及大小  */
-      input::-webkit-input-placeholder {
-        color: $gray3;    
-        font-size: 16px;    
+        &:hover, &:focus {
+        border-bottom: 2px solid $light-blue1 ;
+        }
+        &.error {
+          border-bottom: 2px solid $Error ;
+        }
+        /* 更改placeholder的字體顏色及大小  */
+        &::-webkit-input-placeholder {
+          color: $gray3;    
+          font-size: 16px;    
+        }
       }
     }
     .btn-container {
