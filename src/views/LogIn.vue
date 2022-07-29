@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="login-form">
+    <form class="login-form" @submit.prevent.stop="handleSubmit">
       <div class="logo">
         <img src="./../assets/image/logo.png" alt="logo" />
       </div>
@@ -11,7 +11,7 @@
       <div class="form-field account-field">
         <label for="account">帳號</label>
         <input
-          v-modal="account"
+          v-model="account"
           id="account"
           name="account"
           type="text"
@@ -26,7 +26,7 @@
       <div class="form-field password-field">
         <label for="password">密碼</label>
         <input
-          v-modal="password"
+          v-model="password"
           id="password"
           name="password"
           type="password"
@@ -57,16 +57,36 @@
 </template>
 
 <script>
+import { Toast } from './../utils/helpers'
 export default {
   name: "LogIn",
   data () {
     return {
       account: '',
-      email: ''
+      password: ''
     }
   },
   methods: {
+    handleSubmit() {
+      // 表單驗證
+      if (!this.account || !this.password) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填入帳號和密碼'
+        })
+        return 
+      }
+      const data = JSON.stringify({
+        account: this.account,
+        password: this.password
+      })
+      // TODO: 向後端驗證使用者登入資訊是否合法
 
+      console.log(data)
+      
+      // 如果登入成功, 直接轉址首頁
+      this.$router.push('/main')
+    }
   }
 };
 </script>

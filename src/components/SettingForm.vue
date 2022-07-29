@@ -3,6 +3,7 @@
     <div class="form-field account-field">
       <label for="account">帳號</label>
       <input
+        v-model="account"
         id="account"
         name="account"
         type="text"
@@ -17,6 +18,7 @@
     <div class="form-field name-field">
       <label for="name">名稱</label>
       <input
+        v-model="name"
         id="name"
         name="name"
         type="text"
@@ -32,6 +34,7 @@
     <div class="form-field email-field">
       <label for="email">Email</label>
       <input
+        v-model="email"
         id="email"
         name="email"
         type="email"
@@ -46,6 +49,7 @@
     <div class="form-field password-field">
       <label for="password">密碼</label>
       <input
+        v-model="password"
         id="password"
         name="password"
         type="password"
@@ -60,6 +64,7 @@
     <div class="form-field password-check-field">
       <label for="password-check">密碼確認</label>
       <input
+        v-model="passwordCheck"
         id="password-check"
         name="password-check"
         type="password"
@@ -75,7 +80,18 @@
 
 <script>
 export default {
-  name: 'SettingForm'
+  name: 'SettingForm',
+  data () {
+    return {
+      account: '',
+      name: '',
+      email: '',
+      password: '',
+      passwordCheck: ''
+    }
+  },
+  methods: {
+  }
 }
 </script>
 
