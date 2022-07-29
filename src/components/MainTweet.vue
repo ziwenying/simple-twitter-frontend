@@ -7,7 +7,11 @@
       <div class="tweet-content">
         <div class="tweet-title">
           <p class="name">{{ tweet.user.name }}</p>
-          <p class="account">@{{ tweet.user.account }}&nbsp;‧&nbsp;3 小時</p>
+          <p class="account">
+            @{{ tweet.user.account }}&nbsp;‧&nbsp;{{
+              tweet.createdAt | fromNow
+            }}
+          </p>
         </div>
         <div class="tweet-text">
           <p>
@@ -18,6 +22,7 @@
           <!-- 要跳出 modal -->
           <div class="tweet-reply">
             <img
+              @click="isClickedTweet(tweet.id)"
               data-toggle="modal"
               data-target="#replyTweetModal"
               class="icon"
@@ -29,14 +34,14 @@
           <div class="tweet-heart">
             <img
               v-if="tweet.isLiked"
-              @click.stop.prevent="addLiked(tweet.id)"
+              @click.stop.prevent="deleteLiked(tweet.id)"
               class="icon"
               src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/red-heart.png?raw=true"
               alt="heart"
             />
             <img
               v-if="!tweet.isLiked"
-              @click.stop.prevent="deleteLiked(tweet.id)"
+              @click.stop.prevent="addLiked(tweet.id)"
               class="icon"
               src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/heart.png?raw=true"
               alt="heart"
@@ -50,8 +55,11 @@
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
   name: "MainTweets",
+  mixins: [fromNowFilter],
   props: {
     initialTweets: {
       type: Array,
@@ -61,6 +69,7 @@ export default {
   data() {
     return {
       tweets: [],
+      oneTweet: {},
     };
   },
   created() {
@@ -69,6 +78,14 @@ export default {
   methods: {
     fetchTweets() {
       this.tweets = this.initialTweets;
+    },
+    isClickedTweet(tweetId) {
+      // 回覆推
+      this.oneTweet = this.tweets.find((tweet) => {
+        return tweet.id === tweetId;
+      });
+      // 得到，被點擊那則推文的資料 -> 傳到父曾 MainPage.vue
+      this.$emit("after-click-reply", this.oneTweet);
     },
     addLiked(tweetId) {
       this.tweets = this.tweets.map((tweet) => {

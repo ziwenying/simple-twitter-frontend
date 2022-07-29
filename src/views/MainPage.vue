@@ -21,15 +21,18 @@
               placeholder="有什麼新鮮事？"
             />
           </div>
-          <!-- 下午從改這邊布局開始 -->
-          <p class="waring-msg">字數不可超過 140 字</p>
-          <button type="submit" class="btn-setting btn-position">推文</button>
+          <!-- if more 140 show waring-msg-->
+          <div class="input-footer">
+            <p v-if="exceedText" class="waring-msg">字數不可超過 140 字</p>
+            <button type="submit" class="btn-setting" :disabled="exceedText">
+              推文
+            </button>
+          </div>
         </div>
         <!-- component MainTweet -->
       </div>
     </form>
-
-    <MainTweet :initialTweets="initialTweets" />
+    <MainTweet @after-click-reply="afterClickReply" :initialTweets="tweets" />
   </div>
 </template>
 
@@ -51,21 +54,75 @@ export default {
   },
   data() {
     return {
+      tweets: [],
       text: "",
+      exceedText: false,
+      newTweet: {},
     };
+  },
+  watch: {
+    text() {
+      this.calWords();
+    },
+  },
+  created() {
+    this.tweets = this.initialTweets;
   },
   methods: {
     handleSubmit() {
-      console.log(uuidv4(), "currentUserId", this.text);
-      // tweetId: tweetId,
-      // userId: currentUserId,
-      // text: this.text,
+      if (this.exceedText === true) {
+        return Toast.fire({
+          icon: "warning",
+          title: "內容超過字數上限 140 字",
+        });
+      }
+      // 刪掉半形和全形空白
+      this.text = this.text.trim(" ", "");
+      if (!this.text) {
+        Toast.fire({
+          icon: "warning",
+          title: "內容不可空白",
+        });
+        return;
+      } else {
+        Toast.fire({
+          icon: "success",
+          title: "推文發送成功",
+        });
+        //把使用者寫的推文內容存入 newTweet
+        this.newTweet = {
+          id: uuidv4(),
+          tweetText: this.text,
+        };
+        // 新的推文資料(newTweet) -> 傳置父層 Main.vue
+        this.$emit("after-submit-tweet", this.newTweet);
+        // 將發推區內的文字清空
+        this.text = "";
+      }
+    },
+    calWords() {
+      return this.text.length > 140
+        ? (this.exceedText = true)
+        : (this.exceedText = false);
+    },
+    afterClickReply(payload) {
+      // 被點擊的那則留言的資料，繼續傳到父層 Main.vue
+      this.$emit("after-click-reply", payload);
 
-      this.text = ""; // 將表單內的資料清空
-      Toast.fire({
-        icon: "warning",
-        title: "內容不可空白",
-      });
+      // {
+      //           id: id,
+      //           text: tweetText,
+      //           likeCount: 0,
+      //           commentCount: 0,
+      //           createdAt: "2022-07-29T08:41:42.564Z",
+      //           // 留言的那個人 (currentUser)
+      //           user: {
+      //             id: this.currentUser.id,
+      //             name: this.currentUser.name,
+      //             avatar: this.currentUser.avatar,
+      //             account: this.currentUser.account,
+      //           },
+      //         }
     },
   },
 };
@@ -110,7 +167,6 @@ export default {
         display: flex;
         position: relative;
         padding: 16px 0 0 23px;
-        border-bottom: $light-blue2 10px solid;
 
         .user-avatar {
           width: 50px;
@@ -120,7 +176,7 @@ export default {
         .textarea-tweet {
           padding: 12px;
           width: 100%;
-          height: 137px;
+          height: 150px;
           border: none;
           resize: none;
         }
@@ -130,14 +186,21 @@ export default {
           font-weight: 700;
         }
       }
-      .btn-setting {
-        width: 64px;
-        @extend %btn-style;
-      }
-      .btn-position {
-        position: absolute;
-        right: 23px;
-        bottom: 26px;
+      .input-footer {
+        display: flex;
+        justify-content: end;
+        padding: 0 15px 15px 20px;
+        border-bottom: $light-blue2 10px solid;
+        .waring-msg {
+          padding: 10px;
+          color: $brand-color;
+          font-size: 15px;
+        }
+        .btn-setting {
+          width: 64px;
+          font-size: 18px;
+          @extend %btn-style;
+        }
       }
     }
   }
