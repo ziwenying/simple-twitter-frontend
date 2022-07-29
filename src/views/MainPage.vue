@@ -3,37 +3,70 @@
     <div class="main-page-title">
       <h4 class="pb-4">首頁</h4>
     </div>
-    <div class="main-wrapper">
-      <div class="main-tweet-wrapper">
-        <div class="avatar-input">
-          <a href="">
-            <img
-              class="user-avatar"
-              src="./../assets/image/avatar.png"
-              alt="user-avatar"
+    <form @submit.stop.prevent="handleSubmit">
+      <div class="main-wrapper">
+        <div class="main-tweet-wrapper">
+          <div class="avatar-input">
+            <a href="">
+              <img
+                class="user-avatar"
+                src="./../assets/image/avatar.png"
+                alt="user-avatar"
+              />
+            </a>
+            <textarea
+              v-model="text"
+              class="textarea-tweet"
+              type="text"
+              placeholder="有什麼新鮮事？"
             />
-          </a>
-          <textarea
-            class="textarea-tweet"
-            type="text"
-            placeholder="有什麼新鮮事？"
-          />
+          </div>
+          <!-- 下午從改這邊布局開始 -->
+          <p class="waring-msg">字數不可超過 140 字</p>
+          <button type="submit" class="btn-setting btn-position">推文</button>
         </div>
-        <button class="btn-setting btn-position">推文</button>
+        <!-- component MainTweet -->
       </div>
-      <!-- component MainTweet -->
-    </div>
-    <MainTweet />
+    </form>
+
+    <MainTweet :initialTweets="initialTweets" />
   </div>
 </template>
 
 <script>
 import MainTweet from "../components/MainTweet.vue";
+import { v4 as uuidv4 } from "uuid";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "MainPage",
   components: {
     MainTweet,
+  },
+  props: {
+    initialTweets: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      text: "",
+    };
+  },
+  methods: {
+    handleSubmit() {
+      console.log(uuidv4(), "currentUserId", this.text);
+      // tweetId: tweetId,
+      // userId: currentUserId,
+      // text: this.text,
+
+      this.text = ""; // 將表單內的資料清空
+      Toast.fire({
+        icon: "warning",
+        title: "內容不可空白",
+      });
+    },
   },
 };
 </script>
