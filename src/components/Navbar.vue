@@ -82,43 +82,12 @@
 </template>
 
 <script>
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: 'root',
-    account: 'root',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    role: 'user'
-  },
-  isAuthenticated: true
-}
+import { mapState } from 'vuex'
 export default {
   name: "Navbar",
-  data () {
-    return {
-      currentUser: {
-      id: - 1,
-      name: '',
-      account: '',
-      email: '',
-      image: '',
-      role: ''
-    },
-    isAuthenticated: false
-    }
-  },
-  created () {
-    this.fetchUser()
-  },
-  methods: {
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...dummyUser.currentUser
-      }
-      this.isAuthenticated = dummyUser.isAuthenticated
-    }
+  // 取得Vuex中的currentUser資料
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   }
 };
 </script>

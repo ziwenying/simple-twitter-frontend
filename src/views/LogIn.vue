@@ -89,6 +89,8 @@ export default {
         }
         // 把token存在localStorage裡
         localStorage.setItem("token", data.token);
+        // 把API回傳的登入使用者資料存到Vuex
+        this.$store.commit('setCurrentUser', data.user)
         // 登入成功, 直接轉址首頁
         this.$router.push("/main/mainpage");
       } catch (error) {

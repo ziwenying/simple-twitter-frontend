@@ -87,6 +87,8 @@ export default {
         }
         // 如果登入成功, 存下token, 並直接轉址首頁
         localStorage.setItem("adminToken", data.token)
+        // 把API回傳的登入使用者資料存到Vuex
+        this.$store.commit('setCurrentUser', data.user)
         this.$router.push("/admin/tweets");
       } catch (error) {
         this.password = ""
