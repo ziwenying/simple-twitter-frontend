@@ -58,6 +58,8 @@
 
 <script>
 import { Toast } from './../utils/helpers'
+import authorizationAPI from './../apis/authorization'
+
 export default {
   name: "LogIn",
   data () {
@@ -76,13 +78,10 @@ export default {
         })
         return 
       }
-      const data = JSON.stringify({
+      authorizationAPI.signIn({
         account: this.account,
         password: this.password
-      })
-      // TODO: 向後端驗證使用者登入資訊是否合法
-
-      console.log(data)
+      }).then(response=> {console.log(response)})
       
       // 如果登入成功, 直接轉址首頁
       this.$router.push('/main')
