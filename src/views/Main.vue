@@ -13,7 +13,7 @@
     <!--component Populars -->
     <Populars class="col-3 popular" />
     <!-- Modal -->
-    <CreateTweetModal />
+    <CreateTweetModal @after-submit-tweet="afterSubmitTweet"/>
     <ReplyModal :replyModalData="replyModalData" />
   </div>
 </template>
@@ -30,7 +30,7 @@ const DummyData = {
     name: "",
     email: "",
     avatar: "",
-    role: "false",
+    role: "user",
   },
   tweets: [
     {
@@ -194,24 +194,21 @@ export default {
     },
     afterSubmitTweet(payload) {
       const { id, tweetText } = payload;
-      const getNewTweet = () => {
-        // 新增的推文加入下面的推文清單中
-        this.tweets.push({
-          id: id,
-          text: tweetText,
-          likeCount: 0,
-          commentCount: 0,
-          createdAt: "2022-07-29T08:41:42.564Z",
-          // 留言的那個人 (currentUser)
-          user: {
-            id: this.currentUser.id,
-            name: this.currentUser.name,
-            avatar: this.currentUser.avatar,
-            account: this.currentUser.account,
-          },
-        });
-      };
-      getNewTweet();
+      // 新增的推文加入下面的推文清單中
+      this.tweets.push({
+        id: id,
+        text: tweetText,
+        likeCount: 0,
+        commentCount: 0,
+        createdAt: "2022-07-29T08:41:42.564Z",
+        // 留言的那個人 (currentUser)
+        user: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          avatar: this.currentUser.avatar,
+          account: this.currentUser.account,
+        },
+      });
     },
     afterClickReply(payload) {
       const { id, text, createdAt, user } = payload;

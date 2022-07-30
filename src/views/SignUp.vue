@@ -36,6 +36,7 @@ export default {
 @import "./../assets/application.scss";
 
 .container {
+  margin-bottom: 30px;
   form {
     display: flex;
     flex-direction: column;

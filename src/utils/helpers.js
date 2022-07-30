@@ -1,4 +1,11 @@
+import axios from 'axios'
 
+// TODO: 更改Api baseURL
+const baseURL = ''
+
+export const apiHelper = axios.create({
+  baseURL,
+})
 import Swal from 'sweetalert2'
 
 //提示通知

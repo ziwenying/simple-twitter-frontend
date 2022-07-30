@@ -12,17 +12,20 @@
       </div>
     </div>
     <div class="col-3 right"></div>
+    <CreateTweetModal/>
   </div>
 </template>
 
 <script>
 import Navbar from './../components/Navbar.vue'
 import SettingForm from './../components/SettingForm.vue'
+import CreateTweetModal from "../components/CreateTweetModal.vue";
 export default {
   name: "Setting",
   components: {
     Navbar,
-    SettingForm
+    SettingForm,
+    CreateTweetModal,
   }
 };
 </script>
