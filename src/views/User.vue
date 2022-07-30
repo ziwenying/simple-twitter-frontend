@@ -6,16 +6,16 @@
     <div class="col-7 user-page">
       <div class="user-outer">
         <div class="reply-lists-title">
-          <a href="#">
+          <router-link :to="{ name: 'main-page' }">
             <img class="arrow" src="./../assets/image/arrow.png" alt="arrow" />
-          </a>
+          </router-link>
           <div class="name-tweet">
-            <p class="name">John Doe</p>
-            <p class="tweet-count">25 推文</p>
+            <p class="name">{{ targetProfile.name }}</p>
+            <p class="tweet-count">{{ targetProfile.tweetsCount }} 推文</p>
           </div>
         </div>
         <!-- component UserProfileCard.vue -->
-        <UserProfileCard />
+        <UserProfileCard :targetProfile="targetProfile" />
         <!-- component UserNavPills.vue -->
         <UserNavPills />
         <!-- view MainTweets.vue -->
@@ -26,8 +26,8 @@
     <Populars class="col-3 popular" />
     <!-- component UserEditModal -->
     <UserEditModal />
-    <CreateTweetModal/>
-    <ReplyModal/>
+    <CreateTweetModal />
+    <ReplyModal />
   </div>
 </template>
 
@@ -40,6 +40,25 @@ import UserEditModal from "../components/UserEditModal.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
 
+const dummyDataProfile = {
+  id: 2,
+  account: "user1",
+  email: "user1@example.com",
+  name: "user1",
+  avatar:
+    "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+  cover:
+    "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/profile-background.png?raw=true",
+  introduction:
+    "balabababa, Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+  role: "user",
+  createdAt: "2022-07-29T14:25:42.000Z",
+  updatedAt: "2022-07-29T14:25:42.000Z",
+  followerCount: 59, //新增
+  followingCount: 34, //新增
+  tweetsCount: 25, //新增
+};
+
 export default {
   name: "User",
   components: {
@@ -49,7 +68,31 @@ export default {
     Populars,
     UserEditModal,
     ReplyModal,
-    CreateTweetModal
+    CreateTweetModal,
+  },
+  data() {
+    return {
+      targetProfile: {
+        id: 2,
+        account: "user1",
+        email: "user1@example.com",
+        name: "user1",
+        avatar: "https://avatar-url",
+        cover: "https://cover-url",
+        introduction: "balabababa",
+        role: "user",
+        createdAt: "2022-07-29T14:25:42.000Z",
+        updatedAt: "2022-07-29T14:25:42.000Z",
+      },
+    };
+  },
+  created() {
+    this.fetchProfile();
+  },
+  methods: {
+    fetchProfile() {
+      this.targetProfile = dummyDataProfile;
+    },
   },
 };
 </script>

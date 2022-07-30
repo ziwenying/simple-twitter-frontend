@@ -14,21 +14,21 @@
       編輯個人資料
     </button>
     <div class="user-title">
-      <div class="name">John Doe</div>
-      <div class="account">@heyjohn</div>
+      <div class="name">{{ targetProfile.name }}</div>
+      <div class="account">@{{ targetProfile.account }}</div>
     </div>
     <p class="user-text">
-      Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.
+      {{ targetProfile.introduction }}
     </p>
     <div class="follow">
-      <a class="following">
-        <div class="following-count">34 個</div>
-        <div class="following-text">跟隨中</div>
-      </a>
-      <a class="follower">
-        <div class="follower-count">59 位</div>
-        <div class="follower-text">跟隨者</div>
-      </a>
+      <router-link :to="{ name: 'user-followings' }" class="following">
+        <div class="follow-count">{{ targetProfile.followingCount }} 個</div>
+        <div class="follow-text">跟隨中</div>
+      </router-link>
+      <router-link :to="{ name: 'user-followers' }" class="follower">
+        <div class="follow-count">{{ targetProfile.followerCount }} 位</div>
+        <div class="follow-text">跟隨者</div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -36,6 +36,12 @@
 <script>
 export default {
   name: "UserProfileCard",
+  props: {
+    targetProfile: {
+      type: Object,
+      require: true,
+    },
+  },
 };
 </script>
 
@@ -85,18 +91,23 @@ export default {
     display: flex;
     margin: 8px 0 0 16px;
     font-size: 14px;
-    .following {
-      display: flex;
-      .following-text {
-        color: $Secondary;
-      }
-    }
+
+    .following,
     .follower {
       display: flex;
-      margin: 0 0 0 20px;
-      .follower-text {
+      .follow-text {
         color: $Secondary;
       }
+      .follow-count {
+        color: $black;
+      }
+    }
+    .following:hover,
+    .follower:hover {
+      text-decoration: underline;
+    }
+    .follower {
+      margin: 0 0 0 20px;
     }
   }
 }
