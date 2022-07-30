@@ -94,7 +94,6 @@ export default {
       } catch (error) {
         this.password = "";
         this.isProcessing = false;
-        console.log(error.message);
         Toast.fire({
           icon: "error",
           title: "帳號不存在",
