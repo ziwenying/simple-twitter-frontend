@@ -18,7 +18,7 @@
           placeholder="請輸入帳號"
           required
         />
-        <div class="alert-msg" >
+        <div class="alert-msg">
           <span class="msg">message</span>
         </div>
       </div>
@@ -39,54 +39,69 @@
       </div>
 
       <div class="btn-container">
-        <button class="login-btn" type="submit" >
-          登入
+        <button class="login-btn" type="submit" :disabled="isProcessing">
+          {{ isProcessing? '驗證中' : '登入'}}
         </button>
       </div>
       <div class="router-link-container">
         <div class="router-link-group">
-          <router-link  to="/signup"
-            >註冊</router-link
-          >
+          <router-link to="/signup">註冊</router-link>
           <span> &#xb7; </span>
-          <router-link  to="/admin/login">後台登入</router-link>
+          <router-link to="/admin/login">後台登入</router-link>
         </div>
       </div>
     </form>
-   </div> 
+  </div>
 </template>
 
 <script>
-import { Toast } from './../utils/helpers'
-import authorizationAPI from './../apis/authorization'
+import { Toast } from "./../utils/helpers";
+import authorizationAPI from "./../apis/authorization";
 
 export default {
   name: "LogIn",
-  data () {
+  data() {
     return {
-      account: '',
-      password: ''
-    }
+      account: "",
+      password: "",
+      isProcessing: false,
+    };
   },
   methods: {
-    handleSubmit() {
-      // 表單驗證
-      if (!this.account || !this.password) {
+    async handleSubmit() {
+      try {
+        //表單驗證
+        if (!this.account || !this.password) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填入帳號和密碼",
+          });
+          return;
+        }
+        this.isProcessing = true;
+        const response = await authorizationAPI.signIn({
+          account: this.account,
+          password: this.password,
+        });
+        const { data } = response;
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
+        }
+        // 把token存在localStorage裡
+        localStorage.setItem("token", data.token);
+        // 登入成功, 直接轉址首頁
+        this.$router.push("/main/mainpage");
+      } catch (error) {
+        this.password = "";
+        this.isProcessing = false;
+        console.log(error.message);
         Toast.fire({
-          icon: 'warning',
-          title: '請填入帳號和密碼'
-        })
-        return 
+          icon: "error",
+          title: "帳號不存在",
+        });
       }
-      authorizationAPI.signIn({
-        account: this.account,
-        password: this.password
-      }).then(response=> {console.log(response)})
-      
-      // 如果登入成功, 直接轉址首頁
-      this.$router.push('/main')
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -119,7 +134,7 @@ export default {
       width: 100%;
       height: 54px;
       padding: 2px 0px 4px 0px;
-      background-color: #F5F8FA;
+      background-color: #f5f8fa;
       border-radius: 2px;
       .alert-msg {
         position: absolute;
@@ -131,7 +146,7 @@ export default {
           font-size: 12px;
         }
       }
-      >label {
+      > label {
         display: block;
         width: 100%;
         height: 22px;
@@ -145,31 +160,32 @@ export default {
         height: 26px;
         border-color: transparent;
         background-color: transparent;
-        border-bottom: 2px solid #657786 ;
+        border-bottom: 2px solid #657786;
         padding-bottom: 10px;
         padding-left: 9px;
         &:disabled {
           border-color: transparent;
           background-color: transparent;
-          border-bottom: 2px solid $gray-white1 ;
-        } 
-        &:hover, &:focus {
-        border-bottom: 2px solid $light-blue1 ;
+          border-bottom: 2px solid $gray-white1;
+        }
+        &:hover,
+        &:focus {
+          border-bottom: 2px solid $light-blue1;
         }
         &.error {
-          border-bottom: 2px solid $Error ;
+          border-bottom: 2px solid $Error;
         }
         /* 更改placeholder的字體顏色及大小  */
         &::-webkit-input-placeholder {
-          color: $gray3;    
-          font-size: 16px;    
+          color: $gray3;
+          font-size: 16px;
         }
       }
     }
     .btn-container {
-      width:100%;
+      width: 100%;
       height: 46px;
-      margin-top:40px;
+      margin-top: 40px;
       .login-btn {
         width: 100%;
         height: 100%;
@@ -177,6 +193,9 @@ export default {
         border-radius: 50px;
         color: $white;
         font-size: 20px;
+        &:disabled {
+          background-color: $gray3;
+        }
       }
     }
     .router-link-container {
@@ -197,6 +216,6 @@ export default {
         }
       }
     }
- }
+  }
 }
 </style>
