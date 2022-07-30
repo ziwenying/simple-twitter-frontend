@@ -4,14 +4,14 @@
         推文清單
       </h4>
       <div class="tweets">
-        <div class="tweet" v-for="tweet in tweets" :key="tweet.id">
+        <div class="tweet" v-for="tweet in initialTweets" :key="tweet.id">
           <img class="avatar" :src=" tweet.User.avatar | emptyImage " alt="avatar">
           <div class="tweet-info">
             <div class="tweet-detail">
               <span class="user-name">{{tweet.User.name}}</span>
               <span class="account-created-time">@{{tweet.User.account}}&#xb7;{{tweet.createdAt | fromNow }}</span>
             </div>
-             <p class="tweet-text">{{tweet.description}}</p>
+             <p class="tweet-text">{{tweet.description | onlyDisplay50Letters}}</p>
           </div>
           <button class="delete-btn" @click.prevent.stop="handleDeleteBtnClick(tweet.id)">✕</button>
         </div>
@@ -31,17 +31,21 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      tweets : this.initialTweets,
-    }
-  },
   methods: {
     handleDeleteBtnClick(tweetId) {
       //TODO:發送API請伺服器刪掉這則tweet
       // 告訴父元件哪一條tweet被刪掉
       console.log('delete', tweetId)
       this.$emit('after-delete-tweet', tweetId)
+    }
+  },
+  filters: {
+    onlyDisplay50Letters(string) {
+      if (string.length > 50) {
+        return string.slice(0, 50) + "..."
+      } else { 
+        return string 
+      }
     }
   }
 }
