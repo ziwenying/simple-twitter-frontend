@@ -23,8 +23,8 @@
           </div>
           <!-- if more 140 show waring-msg-->
           <div class="input-footer">
-            <p v-if="exceedText" class="waring-msg">字數不可超過 140 字</p>
-            <button type="submit" class="btn-setting" :disabled="exceedText">
+            <p v-if="text.trim().length> 140" class="waring-msg">字數不可超過 140 字</p>
+            <button type="submit" class="btn-setting" :disabled="text.trim().length> 140">
               推文
             </button>
           </div>
@@ -60,11 +60,6 @@ export default {
       newTweet: {},
     };
   },
-  watch: {
-    text() {
-      this.calWords();
-    },
-  },
   created() {
     this.tweets = this.initialTweets;
   },
@@ -73,11 +68,11 @@ export default {
       if (this.exceedText === true) {
         return Toast.fire({
           icon: "warning",
-          title: "內容超過字數上限 140 字",
+          title: "字數不可超過 140 字",
         });
       }
-      // 刪掉半形和全形空白
-      this.text = this.text.trim(" ", "");
+      // 刪掉空白
+      this.text = this.text.trim();
       if (!this.text) {
         Toast.fire({
           icon: "warning",
@@ -99,11 +94,6 @@ export default {
         // 將發推區內的文字清空
         this.text = "";
       }
-    },
-    calWords() {
-      return this.text.length > 140
-        ? (this.exceedText = true)
-        : (this.exceedText = false);
     },
     afterClickReply(payload) {
       // 被點擊的那則留言的資料，繼續傳到父層 Main.vue

@@ -35,7 +35,7 @@
               />
            </div>
            <span class="alert-msg" v-if="text.trim().length> 140">字數不可超過 140 字</span>
-           <button class="modal-tweet-btn" type="submit">推文</button>
+           <button class="modal-tweet-btn" type="submit" :disabled="text.trim().length> 140">推文</button>
         </div>
       </div>
     </div>
@@ -90,19 +90,14 @@ export default {
       } 
 
       // 伺服器新增 Comment 成功後...
-      this.$emit("after-create-tweet", {
+      this.$emit("after-submit-tweet", {
         id: uuidv4(),  // 尚未串接 API 暫時使用隨機的 id, POST後伺服器會回傳id
-        UserId: this.currentUser.id,
-        description: this.text,
+        tweetText: this.text,
       })
       // 送出後清空新增推文區塊的文字
       this.text = '' 
       //關掉Modal
       $('#createTweetModal').modal('hide') 
-      // 如果在其他頁面點擊導覽列推文按鈕, 推文成功導向主頁(可查看最新推文)
-      if (this.$route.name !== 'main-page') {
-        this.$router.push('/main')
-      }
     }
   }
 };
