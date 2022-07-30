@@ -2,7 +2,6 @@
   <div class="row outer-user-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 user-nav" />
-    <!-- MainTweets.vue -->
     <div class="col-7 user-page">
       <div class="user-outer">
         <div class="reply-lists-title">
@@ -18,16 +17,22 @@
         <UserProfileCard :targetProfile="targetProfile" />
         <!-- component UserNavPills.vue -->
         <UserNavPills />
-        <!-- view MainTweets.vue -->
-        <router-view class="scrollbar bottom-lists" />
+        <!-- view MainTweets.vue or Replies.vue -->
+        <router-view
+          :initialTweets="tweets"
+          :initialLikeTweets="likeTweets"
+          :replies="replies"
+          @after-click-reply="afterClickReply"
+          class="scrollbar bottom-lists"
+        />
       </div>
     </div>
     <!--component Populars -->
     <Populars class="col-3 popular" />
     <!-- component UserEditModal -->
-    <UserEditModal />
+    <UserEditModal :initialTargetProfile="targetProfile" />
     <CreateTweetModal />
-    <ReplyModal />
+    <ReplyModal :replyModalData="replyModalData" />
   </div>
 </template>
 
@@ -58,6 +63,275 @@ const dummyDataProfile = {
   followingCount: 34, //新增
   tweetsCount: 25, //新增
 };
+const DummyData = {
+  currentUser: {
+    id: -1,
+    name: "",
+    email: "",
+    avatar: "",
+    role: "false",
+  },
+  tweets: [
+    {
+      id: 7,
+      text: "這個時間11Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      createdAt: "2022-07-29T08:41:42.564Z",
+      isLiked: true,
+      likeCount: 5,
+      commentCount: 3,
+      user: {
+        id: 1,
+        name: "Orange",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "orange",
+      },
+    },
+    {
+      id: 1,
+      text: "213Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      user: {
+        id: 1,
+        name: "Apple",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple",
+      },
+      createdAt: "2022-07-04T00:55:09.000Z",
+      isLiked: true,
+      likeCount: 9,
+      commentCount: 3,
+    },
+    {
+      id: 2,
+      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      user: {
+        id: 1,
+        name: "Apple",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple",
+      },
+      createdAt: "2022-07-04T00:55:09.000Z",
+      isLiked: true,
+      likeCount: 2,
+      commentCount: 3,
+    },
+    {
+      id: 3,
+      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      user: {
+        id: 1,
+        name: "Apple",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple",
+      },
+      createdAt: "2022-07-04T00:55:09.000Z",
+      isLiked: false,
+      likeCount: 1,
+      commentCount: 3,
+    },
+    {
+      id: 4,
+      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      user: {
+        id: 1,
+        name: "Apple",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple",
+      },
+      createdAt: "2022-07-04T00:55:09.000Z",
+      isLiked: true,
+      likeCount: 4,
+      commentCount: 3,
+    },
+    {
+      id: 5,
+      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      user: {
+        id: 1,
+        name: "Apple",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple",
+      },
+      createdAt: "2022-07-04T00:55:09.000Z",
+      isLiked: false,
+      likeCount: 5,
+      commentCount: 3,
+    },
+    {
+      id: 6,
+      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
+      user: {
+        id: 1,
+        name: "Apple",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple",
+      },
+      createdAt: "2022-07-04T00:55:09.000Z",
+      isLiked: false,
+      likeCount: 5,
+      commentCount: 3,
+    },
+  ],
+  // 活躍使用者
+  users: [
+    {
+      id: -1,
+      name: "",
+      avatar: "",
+      isFollowed: false,
+    },
+  ],
+  // 使用者回覆過的留言
+  replies: [
+    {
+      id: 1,
+      text: "早安午安晚安Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "nononono!!", //推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 2,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "apple", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 2,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "apple", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 3,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "apple1", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 4,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 5,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "apple", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 6,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "sleeping", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 7,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "you", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 8,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "haha", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 9,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "apple", //新增推文的主人
+
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+    {
+      id: 10,
+      text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+      tweetMaster: "banana", //新增推文的主人
+      // 留言者的資料
+      user: {
+        id: 1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "user1",
+      },
+      createdAt: "2022-07-29T08:41:42.564Z",
+    },
+  ],
+};
 
 export default {
   name: "User",
@@ -84,14 +358,47 @@ export default {
         createdAt: "2022-07-29T14:25:42.000Z",
         updatedAt: "2022-07-29T14:25:42.000Z",
       },
+      tweets: [],
+      likeTweets: [],
+      replies: [],
+      popular: [],
+      currentUser: {
+        id: -1,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        account: "apple01",
+        email: "user1@example.com",
+        role: "user",
+      },
+      replyModalData: {},
     };
   },
   created() {
-    this.fetchProfile();
+    this.fetchData();
   },
   methods: {
-    fetchProfile() {
+    fetchData() {
+      // /api/users/:id 取得指定使用者的資料
       this.targetProfile = dummyDataProfile;
+      // /api/tweets 取得所有推文
+      this.tweets = DummyData.tweets;
+      this.likeTweets = this.tweets.filter((tweet) => {
+        return tweet.isLiked === true;
+      });
+      //GET  /api/tweets/:tweet_id/replies 取得
+      this.replies = DummyData.replies;
+    },
+    afterClickReply(payload) {
+      const { id, text, createdAt, user } = payload;
+      this.replyModalData = {
+        id,
+        text,
+        createdAt,
+        userName: user.name,
+        userAccount: user.account,
+        userAvatar: user.avatar,
+      };
     },
   },
 };

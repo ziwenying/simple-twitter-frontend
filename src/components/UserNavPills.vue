@@ -2,22 +2,37 @@
   <ul class="nav-pills">
     <router-link
       :to="{ name: 'main-tweets' }"
-      class="pills-link pills-link-active"
-      ><li class="nav-item nav-item-selected">推文</li>
-    </router-link>
-
-    <!-- <li class="nav-item nav-item-selected">
-      <router-link
-        :to="{ name: 'main-tweets' }"
-        class="pills-link pills-link-active"
-        >推文</router-link
+      class="pills-link"
+      :class="{ 'pills-link-active': $route.name === 'main-tweets' }"
+      ><li
+        class="nav-item"
+        :class="{ 'nav-item-selected': $route.name === 'main-tweets' }"
       >
-    </li> -->
-    <router-link :to="{ name: 'replies' }" class="pills-link"
-      ><li class="nav-item">回覆</li></router-link
+        推文
+      </li>
+    </router-link>
+    <router-link
+      :to="{ name: 'replies' }"
+      class="pills-link"
+      :class="{ 'pills-link-active': $route.name === 'replies' }"
+      ><li
+        class="nav-item"
+        :class="{ 'nav-item-selected': $route.name === 'replies' }"
+      >
+        回覆
+      </li></router-link
     >
-    <router-link :to="{ name: 'liked-tweets' }" class="pills-link">
-      <li class="nav-item">喜歡的內容</li></router-link
+    <router-link
+      :to="{ name: 'liked-tweets' }"
+      class="pills-link"
+      :class="{ 'pills-link-active': $route.name === 'liked-tweets' }"
+    >
+      <li
+        class="nav-item"
+        :class="{ 'nav-item-selected': $route.name === 'liked-tweets' }"
+      >
+        喜歡的內容
+      </li></router-link
     >
   </ul>
 </template>
@@ -45,7 +60,6 @@ export default {
       font-size: 15px;
       width: 130px;
     }
-    // 點擊後亮
     .nav-item-selected {
       height: 100%;
       border-bottom: 2px $brand-color solid;
@@ -58,7 +72,6 @@ export default {
   .pills-link:hover {
     color: $brand-color;
   }
-  // 點擊後亮
   .pills-link-active {
     color: $brand-color;
   }

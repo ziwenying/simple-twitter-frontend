@@ -7,7 +7,11 @@
     aria-labelledby="user-edit-label"
     aria-hidden="true"
   >
-    <div class="modal-dialog">
+    <form
+      action="submit"
+      @submit.stop.prevent="handleSubmit"
+      class="modal-dialog"
+    >
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="user-edit-label">編輯個人資料</h5>
@@ -19,14 +23,14 @@
           >
             <span aria-hidden="true">&times;</span>
           </button>
-          <button type="button" class="modal-close">儲存</button>
+          <button type="submit" class="modal-save">儲存</button>
         </div>
         <div class="modal-body">
           <div class="modal-img">
             <div class="black">
               <img
                 class="background-img"
-                src="./../assets/image/profile-background.png"
+                :src="profile.cover"
                 alt="user-background"
               />
             </div>
@@ -47,7 +51,7 @@
               <div class="black">
                 <img
                   class="user-avatar"
-                  src="./../assets/image/avatar.png"
+                  :src="profile.avatar"
                   alt="user-avatar"
                 />
               </div>
@@ -63,6 +67,8 @@
             <div class="form-field name-field">
               <label for="name">名稱</label>
               <input
+                :class="{ error: profile.name.trim().length > 50 }"
+                v-model="profile.name"
                 id="name"
                 name="name"
                 type="text"
@@ -70,32 +76,78 @@
                 required
               />
               <div class="alert-msg">
-                <span class="msg">8/50</span>
+                <span class="msg" v-if="profile.name.trim().length > 50"
+                  >字數超出上限！</span
+                >
+                <span class="number">{{ profile.name.trim().length }}/50</span>
               </div>
             </div>
             <div class="form-field introduction-field">
               <label for="introduction">自我介紹</label>
               <textarea
+                :class="{ error: profile.introduction.trim().length > 160 }"
+                v-model="profile.introduction"
                 id="introduction"
                 name="introduction"
                 type="text"
                 placeholder="請輸入自我介紹"
                 required
               />
-            </div>
-            <div class="alert-msg-intro">
-              <span class="msg">0/160</span>
+              <div class="alert-msg-intro">
+                <span
+                  class="msg"
+                  v-if="profile.introduction.trim().length > 160"
+                  >字數超出上限！</span
+                >
+                <span class="number"
+                  >{{ profile.introduction.trim().length }}/160</span
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
   name: "UserEditModal",
+  props: {
+    initialTargetProfile: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      profile: {},
+    };
+  },
+  created() {
+    // const { id: UserId } = this.$route.params;
+    console.log("profile", this.initialTargetProfile);
+    this.getProfile();
+  },
+  methods: {
+    getProfile() {
+      const { avatar, cover, name, introduction } = {
+        avatar: this.initialTargetProfile.avatar,
+        cover: this.initialTargetProfile.cover,
+        name: this.initialTargetProfile.name,
+        introduction: this.initialTargetProfile.introduction,
+      };
+      this.profile = { avatar, cover, name, introduction };
+      console.log(this.profile.introduction.trim().length);
+    },
+    handleSubmit() {
+      //關掉Modal
+      $("#user-edit").modal("hide");
+    },
+  },
 };
 </script>
 
@@ -126,8 +178,9 @@ export default {
           height: 15px;
           padding: 15px 0 0 0;
           color: $brand-color;
+          z-index: 2;
         }
-        .modal-close {
+        .modal-save {
           @extend %btn-style;
           position: absolute;
           top: 8px;
@@ -226,9 +279,17 @@ export default {
             .alert-msg {
               position: absolute;
               top: 54px;
-              right: 0;
+              width: 100%;
               margin: 4px 0 0 0;
-              span {
+              .msg {
+                position: absolute;
+                left: 0;
+                color: $brand-color;
+                font-size: 12px;
+              }
+              .number {
+                position: absolute;
+                right: 0;
                 color: $gray1;
                 font-size: 12px;
               }
@@ -263,8 +324,8 @@ export default {
                 border-bottom: 2px solid $Error;
               }
               &::-webkit-input-placeholder {
-              color: $gray3;
-              font-size: 16px;
+                color: $gray3;
+                font-size: 16px;
               }
             }
             input {
@@ -273,6 +334,7 @@ export default {
           }
 
           .introduction-field {
+            position: relative;
             background-color: #f5f8fa;
             height: 145px;
             textarea {
@@ -280,15 +342,23 @@ export default {
               overflow: hidden;
               resize: none;
             }
-          }
-          .alert-msg-intro {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            margin: 4px 0 0 0;
-            span {
-              color: $gray1;
-              font-size: 12px;
+            .alert-msg-intro {
+              position: absolute;
+              bottom: -8px;
+              right: 0;
+              width: 100%;
+              .msg {
+                position: absolute;
+                left: 0;
+                color: $brand-color;
+                font-size: 12px;
+              }
+              .number {
+                position: absolute;
+                right: 0;
+                color: $gray1;
+                font-size: 12px;
+              }
             }
           }
         }

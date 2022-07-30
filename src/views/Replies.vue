@@ -1,163 +1,24 @@
 <template>
   <div class="reply-lists">
-    <div class="reply-list">
+    <div class="reply-list" v-for="reply in replies" :key="reply.id">
       <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
+        <img class="user-avatar" :src="reply.user.avatar" alt="user-avatar" />
       </a>
       <div class="reply-content">
         <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
+          <p class="name">{{ reply.user.name }}</p>
+          <p class="account-time">
+            @{{ reply.user.account }}&nbsp;‧&nbsp;{{
+              reply.createdAt | fromNow
+            }}
+          </p>
         </div>
         <div class="reply-who">
           <p class="reply">回覆</p>
-          <p class="account">@apple</p>
+          <p class="account">@{{ reply.tweetMaster }}</p>
         </div>
         <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">John Doe</p>
-          <p class="account-time">@heyjohn・3 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
+          {{ reply.text }}
         </p>
       </div>
     </div>
@@ -165,8 +26,17 @@
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
   name: "Replies",
+  mixins: [fromNowFilter],
+  props: {
+    replies: {
+      type: Array,
+      required: true,
+    },
+  },
 };
 </script>
 

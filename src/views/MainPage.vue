@@ -23,8 +23,14 @@
           </div>
           <!-- if more 140 show waring-msg-->
           <div class="input-footer">
-            <p v-if="text.trim().length> 140" class="waring-msg">字數不可超過 140 字</p>
-            <button type="submit" class="btn-setting" :disabled="text.trim().length> 140">
+            <p v-if="text.trim().length > 140" class="waring-msg">
+              字數不可超過 140 字
+            </p>
+            <button
+              type="submit"
+              class="btn-setting"
+              :disabled="text.trim().length > 140"
+            >
               推文
             </button>
           </div>
@@ -98,21 +104,6 @@ export default {
     afterClickReply(payload) {
       // 被點擊的那則留言的資料，繼續傳到父層 Main.vue
       this.$emit("after-click-reply", payload);
-
-      // {
-      //           id: id,
-      //           text: tweetText,
-      //           likeCount: 0,
-      //           commentCount: 0,
-      //           createdAt: "2022-07-29T08:41:42.564Z",
-      //           // 留言的那個人 (currentUser)
-      //           user: {
-      //             id: this.currentUser.id,
-      //             name: this.currentUser.name,
-      //             avatar: this.currentUser.avatar,
-      //             account: this.currentUser.account,
-      //           },
-      //         }
     },
   },
 };
