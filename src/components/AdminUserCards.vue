@@ -2,13 +2,15 @@
   <div class="users-list">
     <h4 class="title">使用者列表</h4>
     <div class="cards-panel row">
-      <div class="col-3 p-0">
+      <div class="col-3 p-0" v-for="user in initialUsers" :key="user.id">
         <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
+          <div class="background-img">
+            <img :src="user.cover" alt="background-image">
+          </div>
+          <img class="avatar" :src="user.avatar" alt="avatar" />
           <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
+            <div class="name">{{user.name}}</div>
+            <div class="account">@{{user.account}}</div>
             <div class="tweets-likes">
               <div class="tweets-count">
                 <img
@@ -16,7 +18,7 @@
                   src="~@/assets/image/pen.png"
                   alt="pen-icon"
                 />
-                <span class="tweets-total">1.5k</span>
+                <span class="tweets-total">{{user.tweetCount | displayCount}}</span>
               </div>
               <div class="likes-count">
                 <img
@@ -24,479 +26,22 @@
                   src="~@/assets/image/heart.png"
                   alt="like-icon"
                 />
-                <span class="likes-total">20k</span>
+                <span class="likes-total">{{user.likeCount | displayCount }}</span>
               </div>
             </div>
             <div class="followings-followers">
               <div class="followings">
-                <span class="followings-quantity">34個</span
+                <span class="followings-quantity">{{user.followingCount | displayCount}}&nbsp;個</span
                 ><span>跟隨中</span>
               </div>
               <div class="followers">
-                <span class="followers-quantity">59位</span
+                <span class="followers-quantity">{{user.followerCount | displayCount}}&nbsp;位</span
                 ><span>跟隨者</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-3 p-0">
-        <div class="user-card">
-          <div class="background-img"></div>
-          <img class="avatar" src="~@/assets/image/avatar.png" alt="avatar" />
-          <div class="card-content">
-            <div class="name">John Doe</div>
-            <div class="account">@heyjohn</div>
-            <div class="tweets-likes">
-              <div class="tweets-count">
-                <img
-                  class="pen-icon icon"
-                  src="~@/assets/image/pen.png"
-                  alt="pen-icon"
-                />
-                <span class="tweets-total">1.5k</span>
-              </div>
-              <div class="likes-count">
-                <img
-                  class="like-icon icon"
-                  src="~@/assets/image/heart.png"
-                  alt="like-icon"
-                />
-                <span class="likes-total">20k</span>
-              </div>
-            </div>
-            <div class="followings-followers">
-              <div class="followings">
-                <span class="followings-quantity">34個</span
-                ><span>跟隨中</span>
-              </div>
-              <div class="followers">
-                <span class="followers-quantity">59位</span
-                ><span>跟隨者</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </template>
@@ -505,6 +50,31 @@
 <script>
 export default {
   name: "AdminUserCards",
+  props: {
+    initialUsers : {
+      type: Array,
+      required: true
+    }
+  },
+  filters: {
+    // 更改數字顯示
+    displayCount(num) {
+      // 數字大於100萬, 顯示M
+      if (num >= 1000000 && num % 1000000 === 0) {
+        return `${num * 0.000001}M`
+      } else if ( num > 1000000 ) {
+        return `${(num * 0.000001).toFixed(1)}M`
+      // 數字大於1000, 顯示k
+      } else if (num % 1000 === 0 && num !== 0) {
+        return `${num * 0.001}k` 
+      } else if (num > 1000) {
+        return `${(num * 0.001).toFixed(1)}k`
+      // 數字小於1000, 直接顯示
+      } else {
+        return num
+      }
+    }
+  }
 };
 </script>
 
@@ -530,13 +100,14 @@ export default {
       background-color: $card-background-color;
       border-radius: 10px;
       .background-img {
+        img {
         position: absolute;
         top: 0;
         right: 0;
         width: 100%;
         height: 140px;
-        background-image: url(~@/assets/image/user-background.png);
         border-radius: 10px 10px 0 0;
+        }
       }
       .avatar {
         position: absolute;
@@ -557,7 +128,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 18px;
         .name {
           font-size: 16px;
           font-weight: 700;

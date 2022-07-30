@@ -89,7 +89,7 @@ const dummyUser = {
     account: 'root',
     email: 'root@example.com',
     image: 'https://i.pravatar.cc/300',
-    role: 'user'
+    role: 'admin'
   },
   isAuthenticated: true
 }
