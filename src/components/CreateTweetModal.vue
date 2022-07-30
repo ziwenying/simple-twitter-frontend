@@ -1,5 +1,6 @@
 <template>
-  <div
+  <form action="submit" @submit.prevent.stop="handleSubmit">
+    <div
     class="modal fade create-tweet-modal-container"
     id="createTweetModal"
     tabindex="-1"
@@ -25,25 +26,80 @@
           </div>
            <div class="modal-tweet-text">
              <textarea
+                v-model="text"
                 class="form-control"
                 id="tweet-text"
                 name="tweet-text"
                 type="text"
                 placeholder="有什麼新鮮事？"
-                required
               />
            </div>
-           <span class="alert-msg">字數不可超過 140 字</span>
-           <button class="modal-tweet-btn" type="submit">推文</button>
+           <span class="alert-msg" v-if="text.trim().length> 140">字數不可超過 140 字</span>
+           <button class="modal-tweet-btn" type="submit" :disabled="text.trim().length> 140">推文</button>
         </div>
       </div>
     </div>
   </div>
+  </form>
 </template>
 
 <script>
+import { v4 as uuidv4 } from "uuid"
+import { Toast } from "./../utils/helpers"
+import $ from 'jquery'   
+const dummyUser = {
+  currentUser: {
+    id: - 1,
+    name: 'root',
+    account: 'root',
+    email: 'root@example.com',
+    image: 'https://i.pravatar.cc/300',
+    role: 'user'
+  },
+  isAuthenticated: true
+}
 export default {
   name: "CreateTweetModal",
+  data() {
+    return {
+      currentUser: dummyUser.currentUser,
+      text:'',
+    }
+  },
+  methods: {
+    handleSubmit() {
+      // TODO: 向 API 發送 POST 請求
+      // 表單驗證
+      if (!this.text.trim()) {
+        Toast.fire({
+          icon: 'warning',
+          title: '內容不可空白'
+        })
+        return
+      } else if (this.text.length > 140) {
+        Toast.fire({
+          icon: 'warning',
+          title: '字數不可超過 140 字'
+        })
+        return 
+      } else {
+      Toast.fire({
+          icon: 'success',
+          title: '推文發送成功'
+        })
+      } 
+
+      // 伺服器新增 Comment 成功後...
+      this.$emit("after-submit-tweet", {
+        id: uuidv4(),  // 尚未串接 API 暫時使用隨機的 id, POST後伺服器會回傳id
+        tweetText: this.text,
+      })
+      // 送出後清空新增推文區塊的文字
+      this.text = '' 
+      //關掉Modal
+      $('#createTweetModal').modal('hide') 
+    }
+  }
 };
 </script>
 

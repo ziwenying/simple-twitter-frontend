@@ -219,20 +219,10 @@ export default {
             position: relative;
             width: 100%;
             height: 54px;
-            padding: 2px 10px 4px 10px;
+            padding: 2px 0px 4px 0px;
             background-color: #f5f8fa;
             border-radius: 2px;
-            border-bottom: 2px solid #657786;
-            &:hover,
-            &focus {
-              border-bottom: 2px solid $light-blue1;
-            }
-            &.error {
-              border-bottom: 2px solid $Error;
-            }
-            &.disabled {
-              border-bottom: 2px solid $gray-white1;
-            }
+
             .alert-msg {
               position: absolute;
               top: 54px;
@@ -250,23 +240,35 @@ export default {
               font-size: 14px;
               color: $gray1;
               margin-bottom: 0;
+              margin-left: 10px;
             }
             input,
             textarea {
               width: 100%;
               border-color: transparent;
               background-color: transparent;
+              border-bottom: 2px solid #657786;
+              padding-bottom: 10px;
+              padding-left: 9px;
               &:disabled {
                 border-color: transparent;
                 background-color: transparent;
+                border-bottom: 2px solid $gray-white1;
+              }
+              &:hover,
+              &:focus {
+                border-bottom: 2px solid $light-blue1;
+              }
+              &.error {
+                border-bottom: 2px solid $Error;
+              }
+              &::-webkit-input-placeholder {
+              color: $gray3;
+              font-size: 16px;
               }
             }
             input {
               height: 26px;
-            }
-            input::-webkit-input-placeholder {
-              color: $gray3;
-              font-size: 16px;
             }
           }
 
@@ -274,7 +276,7 @@ export default {
             background-color: #f5f8fa;
             height: 145px;
             textarea {
-              height: 127px;
+              height: 122px;
               overflow: hidden;
               resize: none;
             }
