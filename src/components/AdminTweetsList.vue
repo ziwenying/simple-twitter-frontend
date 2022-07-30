@@ -4,119 +4,47 @@
         推文清單
       </h4>
       <div class="tweets">
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
+        <div class="tweet" v-for="tweet in tweets" :key="tweet.id">
+          <img class="avatar" :src=" tweet.User.avatar | emptyImage " alt="avatar">
           <div class="tweet-info">
             <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
+              <span class="user-name">{{tweet.User.name}}</span>
+              <span class="account-created-time">@{{tweet.User.account}}&#xb7;{{tweet.createdAt | fromNow }}</span>
             </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
+             <p class="tweet-text">{{tweet.description}}</p>
           </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
-        </div>
-        <div class="tweet">
-          <img class="avatar" src="~@/assets/image/user-image.png" alt="avatar">
-          <div class="tweet-info">
-            <div class="tweet-detail">
-              <span class="user-name">Apple</span>
-              <span class="account-created-time">@apple&#xb7;3&nbsp;小時</span>
-            </div>
-             <p class="tweet-text">Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.</p>
-          </div>
-          <button class="delete-btn">✕</button>
+          <button class="delete-btn" @click.prevent.stop="handleDeleteBtnClick(tweet.id)">✕</button>
         </div>
       </div>
     </div>
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+import { emptyImageFilter } from "./../utils/mixins";
 export default {
-  name: 'AdminTweetsList'
+  name: 'AdminTweetsList',
+  mixins: [fromNowFilter, emptyImageFilter],
+  props: {
+    initialTweets: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      tweets : this.initialTweets,
+    }
+  },
+  methods: {
+    handleDeleteBtnClick(tweetId) {
+      //TODO:發送API請伺服器刪掉這則tweet
+      // 告訴父元件哪一條tweet被刪掉
+      console.log('delete', tweetId)
+      this.$emit('after-delete-tweet', tweetId)
+    }
+  }
 }
-</script>
-
-<script>
-export default {
-  name: "AdminTweetsList",
-};
 </script>
 
 <style lang="scss" scoped>
@@ -146,6 +74,7 @@ export default {
       .avatar {
         height: 50px;
         width: 50px;
+        border-radius: 50%;
         margin-right: 8px;
       }
       .tweet-info {
