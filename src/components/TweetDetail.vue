@@ -2,44 +2,105 @@
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
       <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
+        <img class="user-avatar" :src="oneTweet.user.avatar" alt="user-avatar"
       /></a>
       <div class="tweet-title-name-account">
-        <p class="name">Apple</p>
-        <p class="account">@apple</p>
+        <p class="name">{{ oneTweet.user.name }}</p>
+        <p class="account">@{{ oneTweet.user.account }}</p>
       </div>
     </div>
     <div class="tweet-text">
       <p class="text">
-        Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-        cillum dolor. Voluptate exercitation incididunt aliquip deserunt.
+        {{ oneTweet.text }}
       </p>
-      <p class="time">上午 10:05・2021年11月10日</p>
+      <!-- 這邊要重寫時間 -->
+      <p class="time">{{ oneTweet.createdAt | fromNow }}</p>
     </div>
     <div class="count">
       <div class="count-reply">
-        <p>34</p>
+        <p>{{ oneTweet.replyCount }}</p>
         <p>回覆</p>
       </div>
       <div class="count-like">
-        <p>808</p>
+        <p>{{ oneTweet.likeCount }}</p>
         <p>喜歡次數</p>
       </div>
     </div>
     <div class="tweet-reply-heart">
-      <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-      <img class="icon" src="./../assets/image/heart.png" alt="heart" />
+      <img
+        @click="isClickedTweet(oneTweet.id)"
+        class="icon"
+        data-toggle="modal"
+        data-target="#replyTweetModal"
+        src="./../assets/image/reply.png"
+        alt="reply"
+      />
+      <img
+        v-if="oneTweet.isLiked"
+        @click.stop.prevent="deleteLiked(oneTweet.id)"
+        class="icon"
+        src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/red-heart.png?raw=true"
+        alt="heart"
+      />
+      <img
+        v-if="!oneTweet.isLiked"
+        @click.stop.prevent="addLiked(initialTweet.id)"
+        class="icon"
+        src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/heart.png?raw=true"
+        alt="heart"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
   name: "Reply",
+  mixins: [fromNowFilter],
+  props: {
+    initialTweet: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      oneTweet: {},
+    };
+  },
+  created() {
+    this.fetchTweet();
+  },
+  methods: {
+    fetchTweet() {
+      this.oneTweet = this.initialTweet;
+    },
+    isClickedTweet() {
+      // 被點擊的那則留言的資料，傳到父層 User.vue
+      this.oneTweet = this.initialTweet;
+      this.$emit("after-click-reply", this.oneTweet);
+    },
+    addLiked() {
+      console.log("like");
+      console.log(this.oneTweet);
+      // /api/tweets/:id/like
+      this.oneTweet = {
+        ...this.oneTweet,
+        isLiked: !this.oneTweet.isLiked,
+        likeCount: this.oneTweet.likeCount + 1,
+      };
+    },
+    deleteLiked() {
+      // /api/tweets/:id/unlike
+      this.oneTweet = {
+        ...this.oneTweet,
+        isLiked: !this.oneTweet.isLiked,
+        likeCount: this.oneTweet.likeCount - 1,
+      };
+    },
+  },
 };
 </script>
 

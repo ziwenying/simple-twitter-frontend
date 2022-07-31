@@ -84,7 +84,7 @@ export default {
       this.oneTweet = this.tweets.find((tweet) => {
         return tweet.id === tweetId;
       });
-      // 得到，被點擊那則推文的資料 -> 傳到父曾 MainPage.vue
+      // 得到，被點擊那則推文的資料 -> 傳到父層MainPage.vue
       this.$emit("after-click-reply", this.oneTweet);
     },
     addLiked(tweetId) {

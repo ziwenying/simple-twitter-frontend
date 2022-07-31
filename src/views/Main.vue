@@ -13,7 +13,7 @@
     <!--component Populars -->
     <Populars class="col-3 popular" />
     <!-- Modal -->
-    <CreateTweetModal @after-submit-tweet="afterSubmitTweet"/>
+    <CreateTweetModal @after-submit-tweet="afterSubmitTweet" />
     <ReplyModal :replyModalData="replyModalData" />
   </div>
 </template>
@@ -211,6 +211,7 @@ export default {
       });
     },
     afterClickReply(payload) {
+      console.log("payloadmain", payload);
       const { id, text, createdAt, user } = payload;
       this.replyModalData = {
         id,

@@ -6,7 +6,11 @@
       <div class="user-outer">
         <div class="reply-lists-title">
           <router-link :to="{ name: 'main-page' }">
-            <img class="arrow" src="./../assets/image/arrow.png" alt="arrow" />
+            <img
+              class="arrow"
+              src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/arrow.png?raw=true"
+              alt="arrow"
+            />
           </router-link>
           <div class="name-tweet">
             <p class="name">{{ targetProfile.name }}</p>
