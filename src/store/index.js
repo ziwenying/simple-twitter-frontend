@@ -45,8 +45,10 @@ export default new Vuex.Store({
         commit('setCurrentUser', {
           id, name, account, email, avatar, role
         })
+        return true //登入有效
       } catch (error) {
         console.error(error.message)
+        return false  //登入無效
       }
     }
   },
