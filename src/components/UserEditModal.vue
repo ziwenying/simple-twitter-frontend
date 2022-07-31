@@ -48,7 +48,7 @@
                 src="./../assets/image/add-avatar.png"
                 alt="add-avatar"
               />
-              <!-- 刪除預設圖片 -->
+              <!-- 刪除前一次上傳的圖片 -->
               <img
                 @click="restoreDefaultCover"
                 class="delete-img"
@@ -88,7 +88,11 @@
             <div class="form-field name-field">
               <label for="name">名稱</label>
               <input
-                :class="{ error: profile.name.trim().length > 50 }"
+                :class="{
+                  error:
+                    profile.name.trim().length > 50 ||
+                    profile.name.trim().length === 0,
+                }"
                 v-model="profile.name"
                 id="name"
                 name="name"
@@ -97,8 +101,18 @@
                 required
               />
               <div class="alert-msg">
-                <span class="msg" v-if="profile.name.trim().length > 50"
-                  >字數超出上限！</span
+                <span
+                  class="msg"
+                  v-if="
+                    profile.name.trim().length > 50 ||
+                    profile.name.trim().length === 0
+                  "
+                >
+                  {{
+                    profile.name.trim().length === 0
+                      ? "名稱不可空白！"
+                      : "字數超出上限！"
+                  }}</span
                 >
                 <span class="number">{{ profile.name.trim().length }}/50</span>
               </div>
@@ -106,22 +120,19 @@
             <div class="form-field introduction-field">
               <label for="introduction">自我介紹</label>
               <textarea
-                :class="{ error: profile.introduction.trim().length > 160 }"
+                :class="{ error: profile.introduction.length > 160 }"
                 v-model="profile.introduction"
                 id="introduction"
                 name="introduction"
                 type="text"
                 placeholder="請輸入自我介紹"
-                required
               />
               <div class="alert-msg-intro">
-                <span
-                  class="msg"
-                  v-if="profile.introduction.trim().length > 160"
+                <span class="msg" v-if="profile.introduction.length > 160"
                   >字數超出上限！</span
                 >
                 <span class="number"
-                  >{{ profile.introduction.trim().length }}/160</span
+                  >{{ profile.introduction.length }}/160</span
                 >
               </div>
             </div>
@@ -134,6 +145,7 @@
 
 <script>
 import $ from "jquery";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "UserEditModal",
@@ -209,9 +221,30 @@ export default {
       this.profile.cover = this.initialTargetProfile.cover;
     },
     handleSubmit(e) {
+      if (!this.profile.name.trim()) {
+        Toast.fire({
+          icon: "warning",
+          title: "名稱不可空白！",
+        });
+        return;
+      } else if (
+        this.profile.name.trim().length > 50 ||
+        this.profile.introduction.length > 160
+      ) {
+        Toast.fire({
+          icon: "warning",
+          title: "字數超出上限！",
+        });
+        return;
+      } else {
+        Toast.fire({
+          icon: "success",
+          title: "推文發送成功",
+        });
+      }
       //關掉Modal
       $("#user-edit").modal("hide");
-      // 表單資料轉為物件傳回父層
+      // 表單資料轉為物件傳回父層 User.vue
       const form = e.target; // <form></form>
       const formData = new FormData(form);
       this.$emit("after-submit", formData);

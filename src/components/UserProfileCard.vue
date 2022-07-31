@@ -2,15 +2,11 @@
   <div class="user-profile-outer">
     <img
       class="background-img"
-      src="./../assets/image/profile-background.png"
+      :src="targetProfile.cover"
       alt="user-background"
     />
     <div class="avatar">
-      <img
-        class="user-avatar"
-        src="./../assets/image/avatar.png"
-        alt="user-avatar"
-      />
+      <img class="user-avatar" :src="targetProfile.avatar" alt="user-avatar" />
     </div>
 
     <button class="user-edit" data-toggle="modal" data-target="#user-edit">
