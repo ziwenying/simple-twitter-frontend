@@ -83,8 +83,9 @@ export default {
           account: this.account,
           password: this.password,
         });
+        console.log(response)
         const { data } = response;
-        if (response.statusText !== "OK") {
+        if (data.status === "error") {
           throw new Error(data.message);
         }
         // 把token存在localStorage裡
@@ -96,6 +97,7 @@ export default {
       } catch (error) {
         this.password = "";
         this.isProcessing = false;
+        console.error(error)
         Toast.fire({
           icon: "error",
           title: "帳號不存在",

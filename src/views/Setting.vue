@@ -77,7 +77,8 @@
           
         </div>
         <div class="btn-container">
-          <button class="save-btn" type="submit">儲存</button>
+          <button class="processing-btn" disabled v-if="isProcessing">處理中</button>
+          <button class="save-btn" type="submit" v-else>儲存</button>
         </div>
       </form>
     </div>
@@ -90,6 +91,7 @@
 import Navbar from "./../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 const dummyUser = {
   currentUser: {
     id: 1,
@@ -114,11 +116,15 @@ export default {
       email: "",
       password: "",
       checkPassword: "",
+      isProcessing: false
     }
   },
   created() {
     const { id } = this.$route.params 
     this.fetchUserProfile(id)
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
     fetchUserProfile(userId) {
@@ -135,7 +141,7 @@ export default {
     }, 
     handleSubmit(e) {
       
-      if (!this.account || !this.email || !this.name || !this.password || !this.checkPassword) {
+      if (!this.account.trim() || !this.email.trim() || !this.name.trim() || !this.password.trim() || !this.checkPassword.trim()) {
         Toast.fire({
           icon: 'warning',
           title: '請輸入所有欄位'
@@ -149,7 +155,14 @@ export default {
           title: '兩次密碼輸入不同'
         })
         return 
+      } else if (this.name.length > 50) {
+        Toast.fire({
+          icon: 'warning',
+          title: '暱稱不可超過50字'
+        })
+        return
       }
+      this.isProcessing = true
       console.log('submit')
       const form = e.target
       const formData = new FormData(form)
@@ -266,6 +279,15 @@ export default {
       display: flex;
       justify-content: flex-end;
       margin-top: 40px;
+      .processing-btn {
+        background-color: $gray3;
+        width: 120px;
+        height: 46px;
+        border-radius: 50px;
+        padding: 8px 24px;
+        font-size: 20px;
+        color: $white;
+      }
       .save-btn {
         width: 88px;
         height: 46px;

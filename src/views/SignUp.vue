@@ -19,14 +19,14 @@
             required
           />
           <div class="alert-msg">
-            <span class="msg">message</span>
+            <span class="msg">account已重複註冊！</span>
           </div>
         </div>
 
         <div class="form-field name-field">
           <label for="name">名稱</label>
           <input
-           :class="{ error: name.length > 50 }"
+            :class="{ error: name.length > 50 }"
             v-model="name"
             id="name"
             name="name"
@@ -35,8 +35,8 @@
             required
           />
           <div class="alert-msg">
-            <span class="msg" v-if="name.length>50">字數超過上限！</span>
-            <span class="letter-count" >{{name.length}}/50</span>
+            <span class="msg" v-if="name.length > 50">字數超過上限！</span>
+            <span class="letter-count">{{ name.length }}/50</span>
           </div>
         </div>
 
@@ -51,7 +51,7 @@
             required
           />
           <div class="alert-msg">
-            <span class="msg">message</span>
+            <span class="msg">Email已重複註冊！</span>
           </div>
         </div>
 
@@ -65,9 +65,6 @@
             placeholder="請設定密碼"
             required
           />
-          <div class="alert-msg">
-            <span class="msg">message</span>
-          </div>
         </div>
 
         <div class="form-field password-check-field">
@@ -80,13 +77,10 @@
             placeholder="請再次輸入密碼"
             required
           />
-          <div class="alert-msg">
-            <span class="msg">message</span>
-          </div>
         </div>
       </div>
       <div class="btn-container">
-        <button class="signup-btn" type="submit">註冊</button>
+        <button class="signup-btn" type="submit" :disabled="isProcessing">{{isProcessing ? '註冊中' : '註冊'}}</button>
       </div>
       <div class="router-link-container">
         <router-link to="/login">取消</router-link>
@@ -96,48 +90,76 @@
 </template>
 
 <script>
-import { Toast } from './../utils/helpers'
+import { Toast } from "./../utils/helpers";
+import authorizationAPI from './../apis/authorization'
 export default {
   name: "SignUp",
-  data () {
-    return {     
+  data() {
+    return {
       account: "",
       name: "",
       email: "",
       password: "",
       checkPassword: "",
-    }
+      isProcessing: false
+    };
   },
-  methods : {
-    handleSubmit() {
-      if (!this.account || !this.email || !this.name || !this.password || !this.checkPassword) {
-        Toast.fire({
-          icon: 'warning',
-          title: '請輸入所有欄位'
+  methods: {
+    async handleSubmit() {
+      try {
+        if (
+          !this.account.trim() ||
+          !this.email.trim() ||
+          !this.name.trim() ||
+          !this.password.trim() ||
+          !this.checkPassword.trim()
+        ) {
+          Toast.fire({
+            icon: "warning",
+            title: "請輸入所有欄位",
+          });
+          return
+        } else if (this.password !== this.checkPassword) {
+          this.password = "";
+          this.checkPassword = "";
+          Toast.fire({
+            icon: "warning",
+            title: "兩次密碼輸入不同",
+          });
+          return
+        } else if (this.name.length > 50) {
+          Toast.fire({
+            icon: "warning",
+            title: "暱稱不可超過50字",
+          });
+          return;
+        }
+        this.isProcessing = true
+        const { data } = await authorizationAPI.signUp({
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword,
         })
-        return
-      } else if ( this.password !== this.checkPassword) {
-        this.password = ''
-        this.checkPassword = ''
+        if (data.status !== 'success') {
+          throw new Error (data.message)
+        }
+        // 如果註冊成功, 轉址登入頁
         Toast.fire({
-          icon: 'warning',
-          title: '兩次密碼輸入不同'
+          icon: 'success',
+          title: '註冊成功！'
         })
-        return 
+        this.$router.push("/login");
+      } catch (error) {
+        this.isProcessing = false
+        Toast.fire({
+          icon: 'error',
+          title: '註冊失敗，請重新嘗試'
+        })
       }
-      // TODO: API
-      const data = JSON.stringify({
-        account: this.account,
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        checkPassword: this.checkPassword
-      })
-       console.log(data)
-       // 如果註冊成功, 轉址登入頁
-       this.$router.push('/login')
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -164,74 +186,74 @@ export default {
       }
     }
     .form-container {
-        padding-top: 24px;
-        width: 356px;
-        .form-field {
-          position: relative;
+      padding-top: 24px;
+      width: 356px;
+      .form-field {
+        position: relative;
+        width: 100%;
+        height: 54px;
+        padding: 2px 0px 4px 0px;
+        margin-bottom: 32px;
+        background-color: #f5f8fa;
+        border-radius: 2px;
+        &.password-check-field {
+          margin-bottom: 0;
+        }
+        .alert-msg {
+          position: absolute;
+          top: 54px;
+          left: 0;
           width: 100%;
-          height: 54px;
-          padding: 2px 0px 4px 0px;
-          margin-bottom: 32px;
-          background-color: #f5f8fa;
-          border-radius: 2px;
-          &.password-check-field {
-            margin-bottom: 0;
-          }
-          .alert-msg {
-            position: absolute;
-            top: 54px;
-            left: 0;
-            width: 100%;
-            margin: 4px 0 0 0;
-            span {
-              font-size: 12px;
-              &.msg {
-                position: absolute;
-                left: 0;
-                color: $Error;
-              }
-              &.letter-count {
-                position: absolute;
-                right: 0;
-                color: $gray1;
-              }
+          margin: 4px 0 0 0;
+          span {
+            font-size: 12px;
+            &.msg {
+              position: absolute;
+              left: 0;
+              color: $Error;
             }
-          }
-          > label {
-            display: block;
-            width: 100%;
-            height: 22px;
-            font-size: 14px;
-            color: $gray1;
-            margin-bottom: 0;
-            margin-left: 10px;
-          }
-          input {
-            width: 100%;
-            height: 26px;
-            border-color: transparent;
-            background-color: transparent;
-            border-bottom: 2px solid #657786;
-            padding-bottom: 10px;
-            padding-left: 9px;
-            &:disabled {
-              border-color: transparent;
-              background-color: transparent;
-            }
-            &:hover,
-            &:focus {
-              border-bottom: 2px solid $light-blue1;
-            }
-            &.error {
-              border-bottom: 2px solid $Error;
-            }
-            &::-webkit-input-placeholder {
-              color: $gray3;
-              font-size: 16px;
+            &.letter-count {
+              position: absolute;
+              right: 0;
+              color: $gray1;
             }
           }
         }
+        > label {
+          display: block;
+          width: 100%;
+          height: 22px;
+          font-size: 14px;
+          color: $gray1;
+          margin-bottom: 0;
+          margin-left: 10px;
+        }
+        input {
+          width: 100%;
+          height: 26px;
+          border-color: transparent;
+          background-color: transparent;
+          border-bottom: 2px solid #657786;
+          padding-bottom: 10px;
+          padding-left: 9px;
+          &:disabled {
+            border-color: transparent;
+            background-color: transparent;
+          }
+          &:hover,
+          &:focus {
+            border-bottom: 2px solid $light-blue1;
+          }
+          &.error {
+            border-bottom: 2px solid $Error;
+          }
+          &::-webkit-input-placeholder {
+            color: $gray3;
+            font-size: 16px;
+          }
+        }
       }
+    }
     .btn-container {
       width: 100%;
       height: 46px;
@@ -243,6 +265,9 @@ export default {
         border-radius: 50px;
         color: $white;
         font-size: 20px;
+        &:disabled {
+          background-color: $gray3;
+        }
       }
     }
     .router-link-container {
