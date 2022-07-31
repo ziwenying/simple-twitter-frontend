@@ -408,17 +408,21 @@ export default {
     },
     afterSubmit(formData) {
       //Put /api/users/:id 編輯自己的資料
+      let arrayFormData = [];
       for (let [name, value] of formData.entries()) {
-        console.log([name, value]);
+        // 撈出更新的資料
+        arrayFormData.push(value);
+        console.log([name]);
       }
+      console.log(1, arrayFormData);
       // 下面更新使用者的資料使用
-      // this.targetProfile = {
-      //   ...this.targetProfile,
-      //   name: "user1",
-      //   avatar: "https://avatar-url",
-      //   cover: "https://cover-url",
-      //   introduction: "balabababa",
-      // };
+      this.targetProfile = {
+        ...this.targetProfile,
+        avatar: "https://avatar-url",
+        cover: "https://cover-url",
+        name: arrayFormData[2],
+        introduction: arrayFormData[3],
+      };
     },
   },
 };
