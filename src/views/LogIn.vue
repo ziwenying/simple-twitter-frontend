@@ -19,7 +19,7 @@
           required
         />
         <div class="alert-msg">
-          <span class="msg">message</span>
+          <span class="msg" v-if="errorMsg === 'Account not exists for user'">帳號不存在</span>
         </div>
       </div>
 
@@ -34,7 +34,7 @@
           required
         />
         <div class="alert-msg">
-          <span class="msg">message</span>
+          <span class="msg" v-if="errorMsg === 'Password incorrect.'">密碼錯誤</span>
         </div>
       </div>
 
@@ -65,11 +65,14 @@ export default {
       account: "",
       password: "",
       isProcessing: false,
+      errorMsg: ''
     };
   },
   methods: {
     async handleSubmit() {
       try {
+        // 先把錯誤訊息清空
+        this.errorMsg = ''
         //表單驗證
         if (!this.account || !this.password) {
           Toast.fire({
@@ -83,7 +86,6 @@ export default {
           account: this.account,
           password: this.password,
         });
-        console.log(response)
         const { data } = response;
         if (data.status === "error") {
           throw new Error(data.message);
@@ -97,11 +99,26 @@ export default {
       } catch (error) {
         this.password = "";
         this.isProcessing = false;
-        console.error(error)
-        Toast.fire({
-          icon: "error",
-          title: "帳號不存在",
-        });
+        console.error(error.message)
+        if (error.message === 'Account not exists for user') {
+          this.errorMsg = error.message
+            Toast.fire({
+            icon: "error",
+            title: "帳號不存在",
+          });
+        } else if (error.message === 'Password incorrect.') {
+          this.errorMsg = error.message
+          Toast.fire({
+            icon: "error",
+            title: "密碼錯誤",
+          });
+        } else {
+          this.errorMsg = error.message
+          Toast.fire({
+            icon: "error",
+            title: "無法成功登入，請稍後再試",
+          });
+        }
       }
     },
   },
@@ -141,12 +158,13 @@ export default {
       border-radius: 2px;
       .alert-msg {
         position: absolute;
-        top: 54px;
+        top: 50px;
         left: 0;
         width: 100%;
         margin: 4px 0 0 0;
         span {
           font-size: 12px;
+          color: $Error;
         }
       }
       > label {
