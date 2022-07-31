@@ -80,11 +80,10 @@ export default {
         }
         this.isProcessing = true;
         // 向後端驗證使用者登入資訊是否合法
-        const response = await authorizationAPI.adminSignIn({
+        const { data } = await authorizationAPI.adminSignIn({
           account: this.account,
           password: this.password,
         });
-        const { data } = response;
         if (data.status === "error") {
           throw new Error(data.message);
         }

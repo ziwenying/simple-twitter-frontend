@@ -11,7 +11,7 @@ export default new Vuex.Store({
       name: '',
       account: '',
       email: '',
-      image: '',
+      avatar: '',
       role: ''
     },
     isAuthenticated: false
@@ -24,6 +24,7 @@ export default new Vuex.Store({
         ...state.currentUser,
         ...currentUser  // 等API拉資料進來後覆蓋掉state的currentUser
       }
+      // 改變登入狀態
       state.isAuthenticated = true
     },
     // 登出
@@ -36,7 +37,6 @@ export default new Vuex.Store({
   actions: {
     async fetchCurrentUser({commit}) {
       try {
-        // TODO:確認response格式
         const { data } = await usersAPI.getCurrentUser()
         if (data.status === 'error') {
           throw new Error(data.message)

@@ -87,7 +87,7 @@ export default {
   name: "Navbar",
   // 取得Vuex中的currentUser資料
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser'])
   },
   methods: {
     logout() {

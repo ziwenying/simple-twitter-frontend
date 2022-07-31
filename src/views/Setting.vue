@@ -18,6 +18,9 @@
                 placeholder="請輸入帳號"
                 required
               />
+              <div class="alert-msg">
+                <span class="msg">account已重複註冊！</span>
+              </div>
             </div>
 
             <div class="form-field name-field">
@@ -47,6 +50,9 @@
                 placeholder="請輸入Email"
                 required
               />
+              <div class="alert-msg">
+                <span class="msg">Email已重複註冊！</span>
+              </div>
             </div>
 
             <div class="form-field password-field">
@@ -92,16 +98,7 @@ import Navbar from "./../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import { Toast } from './../utils/helpers'
 import { mapState } from 'vuex'
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: 'user1',
-    account: 'user1',
-    email: 'user1@example.com',
-    avatar: 'https://i.pravatar.cc/300',
-    role: 'user'
-  },
-}
+
 export default {
   name: "Setting",
   components: {
@@ -120,22 +117,51 @@ export default {
     }
   },
   created() {
+    // 避免currentUser資料還沒傳進來, 就已經渲染元件
+    if (this.currentUser.id === -1 ) {
+      return
+    }
     const { id } = this.$route.params 
+    console.log(id)
     this.fetchUserProfile(id)
   },
   computed: {
     ...mapState(['currentUser'])
   },
+  // 避免currentUser資料還沒傳進來, 就已經渲染元件
+  watch: {
+    currentUser(newVal) {
+      this.currentUser = {
+        ...this.currentUser,
+        ...newVal
+      }
+      this.id = this.currentUser.id,
+      this.account = this.currentUser.account,
+      this.name = this.currentUser.name,
+      this.email = this.currentUser.email
+    }
+  },
+  beforeRouteUpdate(to, from, next) {
+    // 避免currentUser資料還沒傳進來, 就已經渲染元件
+    if (this.currentUser.id === -1 ) {
+      return
+    }
+    const {id} = to.params
+    this.fetchUserProfile( id )
+    next()
+  }, 
   methods: {
     fetchUserProfile(userId) {
-      this.id = dummyUser.currentUser.id,
-      this.account = dummyUser.currentUser.account,
-      this.name = dummyUser.currentUser.name,
-      this.email = dummyUser.currentUser.email
+      this.id = this.currentUser.id,
+      this.account = this.currentUser.account,
+      this.name = this.currentUser.name,
+      this.email = this.currentUser.email
       
-      console.log(userId)
+      console.log('userId',userId)
       // 如果當前登入的使用者id和路由id不符合, 轉址
       if (this.id !== Number(userId)) {
+        console.log(this.id)
+        console.log(userId)
         this.$router.push('not-found')
       }
     }, 
