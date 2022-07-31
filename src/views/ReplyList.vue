@@ -14,7 +14,7 @@
       <!-- component TweetDetail -->
       <TweetDetail :initialTweet="tweet" @after-click-reply="afterClickReply" />
       <!-- component Reply -->
-      <Reply :initialTweet="tweet" />
+      <Reply :initialTweet="tweet" :replies="replies" />
     </div>
   </div>
 </template>
@@ -40,6 +40,150 @@ const DummyData = {
   replyCount: 101,
 };
 
+const DummyReplies = [
+  {
+    id: 1,
+    text: "早安午安晚安Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "nononono!!", //推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 2,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "apple", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 11,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "apple", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 3,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "apple1", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 4,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 5,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "apple", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 6,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "sleeping", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 7,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "you", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 8,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "haha", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 9,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "apple", //新增推文的主人
+
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+  {
+    id: 10,
+    text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
+    tweetMaster: "banana", //新增推文的主人
+    // 留言者的資料
+    user: {
+      id: 1,
+      name: "user1",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "user1",
+    },
+    createdAt: "2022-07-29T08:41:42.564Z",
+  },
+];
+
 export default {
   name: "ReplyList",
   components: {
@@ -49,6 +193,7 @@ export default {
   data() {
     return {
       tweet: {},
+      replies: [],
     };
   },
   created() {
@@ -58,9 +203,10 @@ export default {
     fetchTweet() {
       this.tweet = DummyData;
       // GET /api/tweets/:id 取得單一推文
+      this.replies = DummyReplies;
+      //  /api/tweets/:tweet_id/replies
     },
     afterClickReply(payload) {
-      console.log("pay", payload);
       this.$emit("after-click-reply", payload);
     },
   },

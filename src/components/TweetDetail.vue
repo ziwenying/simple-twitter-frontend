@@ -14,7 +14,7 @@
         {{ oneTweet.text }}
       </p>
       <!-- 這邊要重寫時間 -->
-      <p class="time">{{ oneTweet.createdAt | fromNow }}</p>
+      <p class="time">{{ oneTweet.createdAt | exactTime }}</p>
     </div>
     <div class="count">
       <div class="count-reply">
@@ -54,11 +54,11 @@
 </template>
 
 <script>
-import { fromNowFilter } from "./../utils/mixins";
+import { exactTimeFilter } from "./../utils/mixins";
 
 export default {
   name: "Reply",
-  mixins: [fromNowFilter],
+  mixins: [exactTimeFilter],
   props: {
     initialTweet: {
       type: Object,
@@ -83,8 +83,6 @@ export default {
       this.$emit("after-click-reply", this.oneTweet);
     },
     addLiked() {
-      console.log("like");
-      console.log(this.oneTweet);
       // /api/tweets/:id/like
       this.oneTweet = {
         ...this.oneTweet,

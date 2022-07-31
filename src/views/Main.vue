@@ -211,7 +211,6 @@ export default {
       });
     },
     afterClickReply(payload) {
-      console.log("payloadmain", payload);
       const { id, text, createdAt, user } = payload;
       this.replyModalData = {
         id,

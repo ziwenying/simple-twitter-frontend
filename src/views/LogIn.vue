@@ -40,7 +40,7 @@
 
       <div class="btn-container">
         <button class="login-btn" type="submit" :disabled="isProcessing">
-          {{ isProcessing? '驗證中' : '登入'}}
+          {{ isProcessing ? "驗證中" : "登入" }}
         </button>
       </div>
       <div class="router-link-container">
@@ -84,13 +84,13 @@ export default {
           password: this.password,
         });
         const { data } = response;
-        if (response.statusText !== "OK") {
+        if (data.status !== "success") {
           throw new Error(data.message);
         }
         // 把token存在localStorage裡
         localStorage.setItem("token", data.token);
         // 把API回傳的登入使用者資料存到Vuex
-        this.$store.commit('setCurrentUser', data.user)
+        this.$store.commit("setCurrentUser", data.user);
         // 登入成功, 直接轉址首頁
         this.$router.push("/main/mainpage");
       } catch (error) {
