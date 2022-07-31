@@ -7,11 +7,7 @@
     aria-labelledby="user-edit-label"
     aria-hidden="true"
   >
-    <form
-      action="submit"
-      @submit.stop.prevent="handleSubmit"
-      class="modal-dialog"
-    >
+    <form @submit.stop.prevent="handleSubmit" class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="user-edit-label">編輯個人資料</h5>
@@ -27,7 +23,8 @@
         </div>
         <div class="modal-body">
           <div class="modal-img">
-            <div class="black">
+            <div @click="$refs.cover.click()" class="black">
+              <!-- 背景圖這邊 -->
               <img
                 class="background-img"
                 :src="profile.cover"
@@ -35,27 +32,51 @@
               />
             </div>
             <div class="icon-add-delete">
+              <!-- 新增背景圖 -->
+              <input
+                id="image-cover"
+                ref="cover"
+                type="file"
+                name="image"
+                accept="image/*"
+                class="d-none"
+                @change="handleCoverChange"
+              />
               <img
+                @click="$refs.cover.click()"
                 class="add-avatar"
                 src="./../assets/image/add-avatar.png"
                 alt="add-avatar"
               />
+              <!-- 刪除預設圖片 -->
               <img
+                @click="restoreDefaultCover"
                 class="delete-img"
                 src="./../assets/image/delete-img.png"
                 alt="delete-img"
               />
             </div>
-
             <div class="avatar-wrapper">
-              <div class="black">
+              <input
+                id="image-avatar"
+                ref="avatar"
+                type="file"
+                name="image"
+                accept="image/*"
+                class="d-none"
+                @change="handleAvatarChange"
+              />
+              <div class="black" @click="$refs.avatar.click()">
+                <!-- 大頭貼 -->
                 <img
                   class="user-avatar"
                   :src="profile.avatar"
                   alt="user-avatar"
                 />
               </div>
+              <!-- 新增大頭貼圖片 -->
               <img
+                @click="$refs.avatar.click()"
                 class="add-avatar"
                 src="./../assets/image/add-avatar.png"
                 alt="add-avatar"
@@ -119,17 +140,33 @@ export default {
   props: {
     initialTargetProfile: {
       type: Object,
-      required: true,
+      default: () => ({
+        name: "",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        cover:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/profile-background.png?raw=true",
+        introduction: "",
+      }),
     },
   },
   data() {
     return {
-      profile: {},
+      profile: {
+        avatar: "",
+        cover: "",
+        name: "",
+        introduction: "",
+      },
     };
   },
   created() {
     // const { id: UserId } = this.$route.params;
-    console.log("profile", this.initialTargetProfile);
+    this.profile = {
+      ...this.profile,
+      //如果沒有資料傳過來，就呈現預設資料
+      ...this.initialTargetProfile,
+    };
     this.getProfile();
   },
   methods: {
@@ -141,11 +178,41 @@ export default {
         introduction: this.initialTargetProfile.introduction,
       };
       this.profile = { avatar, cover, name, introduction };
-      console.log(this.profile.introduction.trim().length);
     },
-    handleSubmit() {
+    handleCoverChange(e) {
+      const { files } = e.target;
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案，用原本的
+        return this.profile.cover;
+      } else {
+        // 否則產生預覽圖
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.profile.cover = imageURL;
+      }
+    },
+    handleAvatarChange(e) {
+      const { files } = e.target;
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案，用原本的
+        return this.avatar.cover;
+      } else {
+        // 否則產生預覽圖
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.profile.avatar = imageURL;
+      }
+    },
+    restoreDefaultCover() {
+      // bug 無法更新
+      this.profile.cover = this.initialTargetProfile.cover;
+    },
+    handleSubmit(e) {
       //關掉Modal
       $("#user-edit").modal("hide");
+      // 表單資料轉為物件傳回父層
+      const form = e.target; // <form></form>
+      const formData = new FormData(form);
+      // console.log(form);
+      this.$emit("after-submit", formData);
     },
   },
 };
@@ -194,6 +261,12 @@ export default {
         .modal-img {
           position: relative;
           width: 639px;
+          .black {
+            .background-img {
+              height: 200px;
+              width: 639px;
+            }
+          }
           .black::before {
             content: "";
             display: block;
@@ -232,22 +305,23 @@ export default {
             left: 16px;
             width: 140px;
             height: 140px;
+            border: 4px white solid;
+            border-radius: 50%;
             .black::before {
               display: block;
-              position: absolute;
-              top: 3px;
-              left: 2px;
               content: "";
-              width: 135px;
+              width: 132px;
               height: 132px;
               background: $black;
               border-radius: 50%;
               opacity: 0.5;
+              z-index: 1;
             }
             .black {
               .user-avatar {
                 border-radius: 50%;
-                border: 4px $white solid;
+                width: 132px;
+                height: 132px;
                 cursor: pointer;
                 object-fit: cover;
               }
@@ -260,6 +334,7 @@ export default {
               width: 20px;
               height: 20px;
               cursor: pointer;
+              z-index: 1;
             }
           }
         }

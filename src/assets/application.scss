@@ -118,6 +118,10 @@ input:invalid {
   box-shadow: none;
 }
 
+.d-none {
+  display: none;
+}
+
 %btn-style {
   height: 40px;
   background: $brand-color;

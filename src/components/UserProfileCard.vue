@@ -5,11 +5,14 @@
       src="./../assets/image/profile-background.png"
       alt="user-background"
     />
-    <img
-      class="user-avatar"
-      src="./../assets/image/avatar.png"
-      alt="user-avatar"
-    />
+    <div class="avatar">
+      <img
+        class="user-avatar"
+        src="./../assets/image/avatar.png"
+        alt="user-avatar"
+      />
+    </div>
+
     <button class="user-edit" data-toggle="modal" data-target="#user-edit">
       編輯個人資料
     </button>
@@ -56,7 +59,7 @@ export default {
   .background-img {
     height: 200px;
   }
-  .user-avatar {
+  .avatar {
     position: absolute;
     top: 124px;
     left: 16px;
@@ -64,7 +67,13 @@ export default {
     height: 140px;
     border-radius: 50%;
     border: 4px $white solid;
+    .user-avatar {
+      width: 132px;
+      height: 132px;
+      object-fit: cover;
+    }
   }
+
   .user-edit {
     @extend %btn-unfollowed-style;
     position: absolute;

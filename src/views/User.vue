@@ -30,7 +30,10 @@
     <!--component Populars -->
     <Populars class="col-3 popular" />
     <!-- component UserEditModal -->
-    <UserEditModal :initialTargetProfile="targetProfile" />
+    <UserEditModal
+      @after-submit="afterSubmit"
+      :initialTargetProfile="targetProfile"
+    />
     <CreateTweetModal />
     <ReplyModal :replyModalData="replyModalData" />
   </div>
@@ -375,11 +378,14 @@ export default {
     };
   },
   created() {
-    this.fetchData();
+    //透過 id 取得指定使用者的資料
+    const { id } = this.$route.params;
+    this.fetchData(id);
   },
   methods: {
     fetchData() {
       // /api/users/:id 取得指定使用者的資料
+      //用 this.$route.parmas 給後端去取
       this.targetProfile = dummyDataProfile;
       // /api/tweets 取得所有推文
       this.tweets = DummyData.tweets;
@@ -399,6 +405,20 @@ export default {
         userAccount: user.account,
         userAvatar: user.avatar,
       };
+    },
+    afterSubmit(formData) {
+      //Put /api/users/:id 編輯自己的資料
+      for (let [name, value] of formData.entries()) {
+        console.log([name, value]);
+      }
+      // 下面更新使用者的資料使用
+      // this.targetProfile = {
+      //   ...this.targetProfile,
+      //   name: "user1",
+      //   avatar: "https://avatar-url",
+      //   cover: "https://cover-url",
+      //   introduction: "balabababa",
+      // };
     },
   },
 };
