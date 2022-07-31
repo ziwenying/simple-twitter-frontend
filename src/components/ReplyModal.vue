@@ -87,6 +87,8 @@ export default {
       required: true,
     },
   },
+
+  // 待做功能，新增留言到指定的推文
 };
 </script>
 

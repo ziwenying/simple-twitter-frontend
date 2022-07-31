@@ -1,10 +1,16 @@
 <template>
   <ul class="nav-pills">
     <li class="nav-item nav-item-selected">
-      <a href="#" class="pills-link pills-link-active">追隨者</a>
+      <router-link
+        :to="{ name: 'user-followers' }"
+        class="pills-link pills-link-active"
+        >追隨者</router-link
+      >
     </li>
     <li class="nav-item">
-      <a href="#" class="pills-link">正在追隨</a>
+      <router-link :to="{ name: 'user-followings' }" class="pills-link"
+        >正在追隨</router-link
+      >
     </li>
   </ul>
 </template>

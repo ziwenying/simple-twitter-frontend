@@ -7,7 +7,7 @@
     aria-labelledby="user-edit-label"
     aria-hidden="true"
   >
-    <div class="modal-dialog">
+    <form @submit.stop.prevent="handleSubmit" class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="user-edit-label">編輯個人資料</h5>
@@ -19,39 +19,64 @@
           >
             <span aria-hidden="true">&times;</span>
           </button>
-          <button type="button" class="modal-close">儲存</button>
+          <button type="submit" class="modal-save">儲存</button>
         </div>
         <div class="modal-body">
           <div class="modal-img">
-            <div class="black">
+            <div @click="$refs.cover.click()" class="black">
+              <!-- 背景圖這邊 -->
               <img
                 class="background-img"
-                src="./../assets/image/profile-background.png"
+                :src="profile.cover"
                 alt="user-background"
               />
             </div>
             <div class="icon-add-delete">
+              <!-- 新增背景圖 -->
+              <input
+                id="image-cover"
+                ref="cover"
+                type="file"
+                name="image"
+                accept="image/*"
+                class="d-none"
+                @change="handleCoverChange"
+              />
               <img
+                @click="$refs.cover.click()"
                 class="add-avatar"
                 src="./../assets/image/add-avatar.png"
                 alt="add-avatar"
               />
+              <!-- 刪除前一次上傳的圖片 -->
               <img
+                @click="restoreDefaultCover"
                 class="delete-img"
                 src="./../assets/image/delete-img.png"
                 alt="delete-img"
               />
             </div>
-
             <div class="avatar-wrapper">
-              <div class="black">
+              <input
+                id="image-avatar"
+                ref="avatar"
+                type="file"
+                name="image"
+                accept="image/*"
+                class="d-none"
+                @change="handleAvatarChange"
+              />
+              <div class="black" @click="$refs.avatar.click()">
+                <!-- 大頭貼 -->
                 <img
                   class="user-avatar"
-                  src="./../assets/image/avatar.png"
+                  :src="profile.avatar"
                   alt="user-avatar"
                 />
               </div>
+              <!-- 新增大頭貼圖片 -->
               <img
+                @click="$refs.avatar.click()"
                 class="add-avatar"
                 src="./../assets/image/add-avatar.png"
                 alt="add-avatar"
@@ -63,6 +88,12 @@
             <div class="form-field name-field">
               <label for="name">名稱</label>
               <input
+                :class="{
+                  error:
+                    profile.name.trim().length > 50 ||
+                    profile.name.trim().length === 0,
+                }"
+                v-model="profile.name"
                 id="name"
                 name="name"
                 type="text"
@@ -70,32 +101,155 @@
                 required
               />
               <div class="alert-msg">
-                <span class="msg">8/50</span>
+                <span
+                  class="msg"
+                  v-if="
+                    profile.name.trim().length > 50 ||
+                    profile.name.trim().length === 0
+                  "
+                >
+                  {{
+                    profile.name.trim().length === 0
+                      ? "名稱不可空白！"
+                      : "字數超出上限！"
+                  }}</span
+                >
+                <span class="number">{{ profile.name.trim().length }}/50</span>
               </div>
             </div>
             <div class="form-field introduction-field">
               <label for="introduction">自我介紹</label>
               <textarea
+                :class="{ error: profile.introduction.length > 160 }"
+                v-model="profile.introduction"
                 id="introduction"
                 name="introduction"
                 type="text"
                 placeholder="請輸入自我介紹"
-                required
               />
-            </div>
-            <div class="alert-msg-intro">
-              <span class="msg">0/160</span>
+              <div class="alert-msg-intro">
+                <span class="msg" v-if="profile.introduction.length > 160"
+                  >字數超出上限！</span
+                >
+                <span class="number"
+                  >{{ profile.introduction.length }}/160</span
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
+import $ from "jquery";
+import { Toast } from "./../utils/helpers";
+
 export default {
   name: "UserEditModal",
+  props: {
+    initialTargetProfile: {
+      type: Object,
+      default: () => ({
+        name: "",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
+        cover:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/profile-background.png?raw=true",
+        introduction: "",
+      }),
+    },
+  },
+  data() {
+    return {
+      profile: {
+        avatar: "",
+        cover: "",
+        name: "",
+        introduction: "",
+      },
+    };
+  },
+  created() {
+    // const { id: UserId } = this.$route.params;
+    this.profile = {
+      ...this.profile,
+      //如果沒有資料傳過來，就呈現預設資料
+      ...this.initialTargetProfile,
+    };
+    this.getProfile();
+  },
+  methods: {
+    getProfile() {
+      const { avatar, cover, name, introduction } = {
+        avatar: this.initialTargetProfile.avatar,
+        cover: this.initialTargetProfile.cover,
+        name: this.initialTargetProfile.name,
+        introduction: this.initialTargetProfile.introduction,
+      };
+      this.profile = { avatar, cover, name, introduction };
+    },
+    handleCoverChange(e) {
+      const { files } = e.target;
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案，用原本的
+        return this.profile.cover;
+      } else {
+        // 否則產生預覽圖
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.profile.cover = imageURL;
+      }
+    },
+    handleAvatarChange(e) {
+      const { files } = e.target;
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案，用原本的
+        return this.avatar.cover;
+      } else {
+        // 否則產生預覽圖
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.profile.avatar = imageURL;
+      }
+    },
+    restoreDefaultCover() {
+      // 清掉上傳的 cover
+      //下面選到上傳檔案的 input，直接清空就好
+      document.querySelector("#image-cover").value = "";
+      // 恢復原本的 cover
+      this.profile.cover = this.initialTargetProfile.cover;
+    },
+    handleSubmit(e) {
+      if (!this.profile.name.trim()) {
+        Toast.fire({
+          icon: "warning",
+          title: "名稱不可空白！",
+        });
+        return;
+      } else if (
+        this.profile.name.trim().length > 50 ||
+        this.profile.introduction.length > 160
+      ) {
+        Toast.fire({
+          icon: "warning",
+          title: "字數超出上限！",
+        });
+        return;
+      } else {
+        Toast.fire({
+          icon: "success",
+          title: "推文發送成功",
+        });
+      }
+      //關掉Modal
+      $("#user-edit").modal("hide");
+      // 表單資料轉為物件傳回父層 User.vue
+      const form = e.target; // <form></form>
+      const formData = new FormData(form);
+      this.$emit("after-submit", formData);
+    },
+  },
 };
 </script>
 
@@ -126,8 +280,9 @@ export default {
           height: 15px;
           padding: 15px 0 0 0;
           color: $brand-color;
+          z-index: 2;
         }
-        .modal-close {
+        .modal-save {
           @extend %btn-style;
           position: absolute;
           top: 8px;
@@ -141,6 +296,12 @@ export default {
         .modal-img {
           position: relative;
           width: 639px;
+          .black {
+            .background-img {
+              height: 200px;
+              width: 639px;
+            }
+          }
           .black::before {
             content: "";
             display: block;
@@ -179,22 +340,23 @@ export default {
             left: 16px;
             width: 140px;
             height: 140px;
+            border: 4px white solid;
+            border-radius: 50%;
             .black::before {
               display: block;
-              position: absolute;
-              top: 3px;
-              left: 2px;
               content: "";
-              width: 135px;
+              width: 132px;
               height: 132px;
               background: $black;
               border-radius: 50%;
               opacity: 0.5;
+              z-index: 1;
             }
             .black {
               .user-avatar {
                 border-radius: 50%;
-                border: 4px $white solid;
+                width: 132px;
+                height: 132px;
                 cursor: pointer;
                 object-fit: cover;
               }
@@ -207,6 +369,7 @@ export default {
               width: 20px;
               height: 20px;
               cursor: pointer;
+              z-index: 1;
             }
           }
         }
@@ -226,9 +389,17 @@ export default {
             .alert-msg {
               position: absolute;
               top: 54px;
-              right: 0;
+              width: 100%;
               margin: 4px 0 0 0;
-              span {
+              .msg {
+                position: absolute;
+                left: 0;
+                color: $brand-color;
+                font-size: 12px;
+              }
+              .number {
+                position: absolute;
+                right: 0;
                 color: $gray1;
                 font-size: 12px;
               }
@@ -263,8 +434,8 @@ export default {
                 border-bottom: 2px solid $Error;
               }
               &::-webkit-input-placeholder {
-              color: $gray3;
-              font-size: 16px;
+                color: $gray3;
+                font-size: 16px;
               }
             }
             input {
@@ -273,6 +444,7 @@ export default {
           }
 
           .introduction-field {
+            position: relative;
             background-color: #f5f8fa;
             height: 145px;
             textarea {
@@ -280,15 +452,23 @@ export default {
               overflow: hidden;
               resize: none;
             }
-          }
-          .alert-msg-intro {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            margin: 4px 0 0 0;
-            span {
-              color: $gray1;
-              font-size: 12px;
+            .alert-msg-intro {
+              position: absolute;
+              bottom: -8px;
+              right: 0;
+              width: 100%;
+              .msg {
+                position: absolute;
+                left: 0;
+                color: $brand-color;
+                font-size: 12px;
+              }
+              .number {
+                position: absolute;
+                right: 0;
+                color: $gray1;
+                font-size: 12px;
+              }
             }
           }
         }

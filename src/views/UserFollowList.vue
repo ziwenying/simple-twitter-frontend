@@ -2,13 +2,14 @@
   <div class="row outer-follow-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
-    <!--  -->
     <div class="col-7 follow-page scrollbar">
       <div class="follow-outer">
         <div class="follow-lists-title">
-          <a href="#">
+          <router-link
+            :to="{ name: 'user', params: { userId: $route.params } }"
+          >
             <img class="arrow" src="./../assets/image/arrow.png" alt="arrow" />
-          </a>
+          </router-link>
           <div class="name-tweet">
             <p class="name">John Doe</p>
             <p class="tweet-count">25 推文</p>
@@ -37,6 +38,23 @@ export default {
     Navbar,
     Populars,
     FollowerNavPills,
+  },
+  data() {
+    return {
+      currentUser: {
+        id: -1,
+        name: "",
+        account: "",
+        email: "",
+        image: "",
+        role: "",
+      },
+      isAuthenticated: false,
+    };
+  },
+  created() {
+    const { id: userId } = this.$route.params;
+    console.log(userId);
   },
 };
 </script>
