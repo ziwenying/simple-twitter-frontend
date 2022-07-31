@@ -221,7 +221,7 @@ const DummyData = {
       createdAt: "2022-07-29T08:41:42.564Z",
     },
     {
-      id: 2,
+      id: 11,
       text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
       tweetMaster: "apple", //新增推文的主人
       // 留言者的資料
@@ -408,21 +408,19 @@ export default {
     },
     afterSubmit(formData) {
       //Put /api/users/:id 編輯自己的資料
-      let arrayFormData = [];
       for (let [name, value] of formData.entries()) {
+        console.log(name, value);
         // 撈出更新的資料
-        arrayFormData.push(value);
-        console.log([name]);
       }
-      console.log(1, arrayFormData);
       // 下面更新使用者的資料使用
-      this.targetProfile = {
-        ...this.targetProfile,
-        avatar: "https://avatar-url",
-        cover: "https://cover-url",
-        name: arrayFormData[2],
-        introduction: arrayFormData[3],
-      };
+      // /api/users/:id 取得指定使用者的資料
+      // this.targetProfile = {
+      //   ...this.targetProfile,
+      //   avatar: "https://avatar-url",
+      //   cover: "https://cover-url",
+      //   name: arrayFormData[2],
+      //   introduction: arrayFormData[3],
+      // };
     },
   },
 };

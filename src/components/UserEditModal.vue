@@ -202,7 +202,10 @@ export default {
       }
     },
     restoreDefaultCover() {
-      // bug 無法更新
+      // 清掉上傳的 cover
+      //下面選到上傳檔案的 input，直接清空就好
+      document.querySelector("#image-cover").value = "";
+      // 恢復原本的 cover
       this.profile.cover = this.initialTargetProfile.cover;
     },
     handleSubmit(e) {
@@ -211,7 +214,6 @@ export default {
       // 表單資料轉為物件傳回父層
       const form = e.target; // <form></form>
       const formData = new FormData(form);
-      // console.log(form);
       this.$emit("after-submit", formData);
     },
   },
