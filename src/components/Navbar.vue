@@ -75,49 +75,24 @@
           src="~@/assets/image/logout-icon.png"
           alt="logout-icon"
         />
-        <p class="nav-text">登出</p>
+        <button type="button" class="nav-text" @click="logout">登出</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: 'root',
-    account: 'root',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    role: 'admin'
-  },
-  isAuthenticated: true
-}
+import { mapState } from 'vuex'
 export default {
   name: "Navbar",
-  data () {
-    return {
-      currentUser: {
-      id: - 1,
-      name: '',
-      account: '',
-      email: '',
-      image: '',
-      role: ''
-    },
-    isAuthenticated: false
-    }
-  },
-  created () {
-    this.fetchUser()
+  // 取得Vuex中的currentUser資料
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...dummyUser.currentUser
-      }
-      this.isAuthenticated = dummyUser.isAuthenticated
+    logout() {
+      this.$store.commit('revokeAuthentication')
+      this.$router.push('/login')
     }
   }
 };

@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 // TODO: 更改Api baseURL
-const baseURL = ''
+const baseURL = 'https://rocky-sea-34138.herokuapp.com/api'
 
 export const apiHelper = axios.create({
-  baseURL,
+  baseURL
 })
 import Swal from 'sweetalert2'
 
