@@ -178,7 +178,7 @@ export default {
       }
       .input-footer {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         padding: 0 15px 15px 20px;
         border-bottom: $light-blue2 10px solid;
         .waring-msg {
