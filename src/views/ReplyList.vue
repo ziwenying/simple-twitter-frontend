@@ -23,7 +23,7 @@
 import Reply from "../components/Reply.vue";
 import TweetDetail from "../components/TweetDetail.vue";
 
-const DummyData = {
+const dummyData = {
   id: 1,
   text: "搭拉拉拉拉拉，加一加一遊  faj nhksssshmksaruiaj, aqiraoisshmksaruiaj, asshmksaruiaj, a",
   // 上午 10:05・2021年11月10日
@@ -39,8 +39,7 @@ const DummyData = {
   likeCount: 59,
   replyCount: 101,
 };
-
-const DummyReplies = [
+const dummyReplies = [
   {
     id: 1,
     text: "早安午安晚安Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
@@ -190,24 +189,77 @@ export default {
     TweetDetail,
     Reply,
   },
+  props: {
+    newReply: {
+      type: Object,
+      default: () => ({
+        id: -1,
+        text: "",
+        // 留言者的資料
+        user: {
+          id: -1,
+          name: "",
+          avatar: "",
+          account: "",
+        },
+        createdAt: "",
+      }),
+    },
+  },
   data() {
     return {
       tweet: {},
       replies: [],
+      currentUser: {
+        id: 33,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "apple",
+        email: "user1@example.com",
+        role: "user",
+      },
     };
+  },
+  watch: {
+    newReply() {
+      this.pushReply();
+    },
   },
   created() {
     this.fetchTweet();
   },
   methods: {
     fetchTweet() {
-      this.tweet = DummyData;
+      this.tweet = dummyData;
       // GET /api/tweets/:id 取得單一推文
-      this.replies = DummyReplies;
+      this.replies = dummyReplies;
       //  /api/tweets/:tweet_id/replies
     },
     afterClickReply(payload) {
       this.$emit("after-click-reply", payload);
+    },
+    pushReply() {
+      // 推文總數 + 1
+      this.tweet = {
+        ...this.tweet,
+        replyCount: this.tweet.replyCount + 1,
+      };
+
+      //及時新增推文到下面推文列
+      this.replies.push({
+        id: this.newReply.tweetId,
+        text: this.newReply.tweetText,
+        tweetMaster: this.newReply.tweetAccount, //推文的主人
+        // 留言者的資料
+        user: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          avatar: this.currentUser.avatar,
+          account: this.currentUser.account,
+        },
+        createdAt: new Date(),
+      });
     },
   },
 };

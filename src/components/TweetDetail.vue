@@ -13,7 +13,6 @@
       <p class="text">
         {{ oneTweet.text }}
       </p>
-      <!-- 這邊要重寫時間 -->
       <p class="time">{{ oneTweet.createdAt | exactTime }}</p>
     </div>
     <div class="count">
@@ -32,7 +31,7 @@
         class="icon"
         data-toggle="modal"
         data-target="#replyTweetModal"
-        src="./../assets/image/reply.png"
+        src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/reply.png?raw=true"
         alt="reply"
       />
       <img
@@ -69,6 +68,11 @@ export default {
     return {
       oneTweet: {},
     };
+  },
+  watch: {
+    initialTweet() {
+      this.fetchTweet();
+    },
   },
   created() {
     this.fetchTweet();

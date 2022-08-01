@@ -10,7 +10,7 @@
             <a href="">
               <img
                 class="user-avatar"
-                src="./../assets/image/avatar.png"
+                :src="currentUser.avatar"
                 alt="user-avatar"
               />
             </a>
@@ -64,6 +64,15 @@ export default {
       text: "",
       exceedText: false,
       newTweet: {},
+      currentUser: {
+        id: 33,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "apple",
+        email: "user1@example.com",
+        role: "user",
+      },
     };
   },
   created() {
@@ -95,6 +104,7 @@ export default {
           id: uuidv4(),
           tweetText: this.text,
         };
+        //POST /api/tweets
         // 新的推文資料(newTweet) -> 傳至父層 Main.vue
         this.$emit("after-submit-tweet", this.newTweet);
         // 將發推區內的文字清空

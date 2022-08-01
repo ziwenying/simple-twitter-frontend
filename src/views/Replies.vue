@@ -48,11 +48,13 @@ export default {
   max-height: 400px;
   border-left: $light-blue2 1px solid;
   border-right: $light-blue2 1px solid;
+
   .reply-list {
     display: flex;
     max-height: 158px;
     padding: 16px 23px 16px 23px;
     border-bottom: $light-blue2 1px solid;
+
     .user-avatar {
       width: 50px;
       height: 50px;

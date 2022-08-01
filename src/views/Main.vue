@@ -2,9 +2,10 @@
   <div class="row outer-main-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
-    <!-- MainPage.vue -->
+    <!-- MainPage.vue & ReplyList -->
     <router-view
       :initialTweets="tweets"
+      :newReply="newReply"
       :popular="popular"
       @after-submit-tweet="afterSubmitTweet"
       @after-click-reply="afterClickReply"
@@ -14,7 +15,10 @@
     <Populars class="col-3 popular" />
     <!-- Modal -->
     <CreateTweetModal @after-submit-tweet="afterSubmitTweet" />
-    <ReplyModal :replyModalData="replyModalData" />
+    <ReplyModal
+      @after-submit-reply="afterSubmitReply"
+      :replyModalData="replyModalData"
+    />
   </div>
 </template>
 
@@ -183,6 +187,7 @@ export default {
         role: "user",
       },
       replyModalData: {},
+      newReply: {},
     };
   },
   created() {
@@ -194,13 +199,14 @@ export default {
     },
     afterSubmitTweet(payload) {
       const { id, tweetText } = payload;
-      // 新增的推文加入下面的推文清單中
+      // 新增推文
+      // POST /api/tweets
       this.tweets.push({
         id: id,
         text: tweetText,
         likeCount: 0,
         commentCount: 0,
-        createdAt: "2022-07-29T08:41:42.564Z",
+        createdAt: new Date(),
         // 留言的那個人 (currentUser)
         user: {
           id: this.currentUser.id,
@@ -220,6 +226,9 @@ export default {
         userAccount: user.account,
         userAvatar: user.avatar,
       };
+    },
+    afterSubmitReply(payload) {
+      this.newReply = payload;
     },
   },
 };

@@ -1,9 +1,9 @@
 <template>
   <div class="reply-lists">
     <div class="reply-list" v-for="reply in replies" :key="reply.id">
-      <a href="#">
+      <router-link :to="{ name: 'main-page', params: reply.user.id }">
         <img class="user-avatar" :src="reply.user.avatar" alt="user-avatar" />
-      </a>
+      </router-link>
       <div class="reply-content">
         <div class="reply-title">
           <p class="name">{{ reply.user.name }}</p>
@@ -48,6 +48,7 @@ export default {
     display: flex;
     max-height: 158px;
     padding: 16px 23px 16px 23px;
+    border-top: $light-blue2 1px solid;
     border-bottom: $light-blue2 1px solid;
     .user-avatar {
       width: 50px;
@@ -82,6 +83,9 @@ export default {
       .text {
         margin: 8px 0 0 0;
       }
+    }
+    .reply-list div:nth-child(1) {
+      border-top: $light-blue2 1px solid;
     }
   }
 }
