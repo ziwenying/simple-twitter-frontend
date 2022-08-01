@@ -14,7 +14,7 @@ export default new Vuex.Store({
       avatar: '',
       role: ''
     },
-    isAuthenticated: false
+    isAuthenticated: false,
   },
   getters: {
   },
@@ -26,6 +26,7 @@ export default new Vuex.Store({
       }
       // 改變登入狀態
       state.isAuthenticated = true
+      state.token = localStorage.getItem('token')
     },
     // 登出
     revokeAuthentication(state) {
@@ -45,10 +46,11 @@ export default new Vuex.Store({
         commit('setCurrentUser', {
           id, name, account, email, avatar, role
         })
-        return true //登入有效
+        return {isAuthenticated : true, role: this.state.currentUser.role} //登入有效
       } catch (error) {
         console.error(error.message)
-        return false  //登入無效
+        commit('revokeAuthentication') // 登入無效直接把使用者登出
+        return { isAuthenticated: false, role: '' }  //登入無效
       }
     }
   },
