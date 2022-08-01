@@ -6,6 +6,7 @@ import User from '../views/User.vue'
 import NotFound from '../views/NotFound.vue'
 import store from './../store'
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -115,7 +116,7 @@ const router = new VueRouter({
 })
 
 // 每次切換路由都拉取一次currentUser資料
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   store.dispatch('fetchCurrentUser')
   next()
 }) 

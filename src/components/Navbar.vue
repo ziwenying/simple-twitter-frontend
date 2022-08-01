@@ -87,12 +87,25 @@ export default {
   name: "Navbar",
   // 取得Vuex中的currentUser資料
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser'])
+  },
+  data() {
+    return {
+      role: ''
+    }
   },
   methods: {
     logout() {
+      // 因為呼叫revokeAuthentication幫忙改state資料時, currentUser就會被清空, 先把role存起來, 以便等一下判別轉址到哪裡
+      this.role = this.currentUser.role
       this.$store.commit('revokeAuthentication')
-      this.$router.push('/login')
+      if (this.role === 'user') {
+        // 使用者登出-> 前台登入頁
+        this.$router.push('/login')
+      } else {
+        // 管理員登出-> 前台登入頁
+        this.$router.push('/admin/login')
+      }
     }
   }
 };
