@@ -18,7 +18,7 @@
             placeholder="請輸入帳號"
             required
           />
-          <div class="alert-msg">
+          <div class="alert-msg" v-if="errorMsg === 'Account already exists. Please try another one.'">
             <span class="msg">account已重複註冊！</span>
           </div>
         </div>
@@ -50,7 +50,7 @@
             placeholder="請輸入Email"
             required
           />
-          <div class="alert-msg">
+          <div class="alert-msg" v-if="errorMsg === 'Email already exists. Please try another one.'">
             <span class="msg">Email已重複註冊！</span>
           </div>
         </div>
@@ -101,7 +101,8 @@ export default {
       email: "",
       password: "",
       checkPassword: "",
-      isProcessing: false
+      isProcessing: false,
+      errorMsg: ''
     };
   },
   methods: {
@@ -142,7 +143,9 @@ export default {
           password: this.password,
           checkPassword: this.checkPassword,
         })
-        if (data.status !== 'success') {
+        
+        console.log(data)
+        if (data.status === 'error') {
           throw new Error (data.message)
         }
         // 如果註冊成功, 轉址登入頁
@@ -153,10 +156,26 @@ export default {
         this.$router.push("/login");
       } catch (error) {
         this.isProcessing = false
-        Toast.fire({
-          icon: 'error',
-          title: '註冊失敗，請重新嘗試'
-        })
+        console.error(error.message)
+        if (error.message === 'Account already exists. Please try another one.') {
+          this.errorMsg = error.message
+            Toast.fire({
+            icon: "error",
+            title: "account已重複註冊！",
+          });
+        } else if (error.message === 'Email already exists. Please try another one.') {
+          this.errorMsg = error.message
+          Toast.fire({
+            icon: "error",
+            title: "Email已重複註冊！",
+          });
+        } else {
+          this.errorMsg = error.message
+          Toast.fire({
+            icon: 'error',
+            title: '註冊失敗，請重新嘗試'
+          })
+        }
       }
     },
   },
