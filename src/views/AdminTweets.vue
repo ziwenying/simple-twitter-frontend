@@ -32,13 +32,12 @@ export default {
         if (data.status === 'error') {
           throw new Error (data.message)
         }
-        const tweets = data 
-        this.tweets = tweets
+        this.tweets = data
       } catch (error) {
-        console.error(error)
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
-          title: '無法取得推文資料，請稍後再試'
+          title: '無法取得推文清單資料，請稍後再試'
         })
       }
     },

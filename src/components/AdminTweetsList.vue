@@ -49,7 +49,7 @@ export default {
           title: '推文刪除成功'
         })
       } catch (error) {
-        console.error(error)
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
           title: '無法刪除此推文，請稍後再試'
@@ -59,11 +59,7 @@ export default {
   },
   filters: {
     onlyDisplay50Letters(string) {
-      if (string.length > 50) {
-        return string.slice(0, 50) + "..."
-      } else { 
-        return string 
-      }
+      return string.length > 50 ? string.slice(0, 50) + "..." : string 
     }
   }
 }
