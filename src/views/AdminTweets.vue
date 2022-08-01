@@ -8,125 +8,9 @@
 <script>
 import Navbar from './../components/Navbar.vue'
 import AdminTweetsList from './../components/AdminTweetsList.vue'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
 
-const dummyData = { 
-  tweets: [
-    {
-        "id": 18,
-        "UserId": 3,
-        "description": "balabala",
-        "createdAt": "2022-07-29T13:04:27.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "user2",
-            "account": "user2",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        }
-    },
-    {
-        "id": 8,
-        "UserId": 2,
-        "description": "balabababa",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 2,
-        "User": {
-            "id": 2,
-            "name": "user1",
-            "account": "user1",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    {
-        "id": 5,
-        "UserId": 3,
-        "description": "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "apple",
-            "account": "apple",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    {
-        "id": 9,
-        "UserId": 3,
-        "description": "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "apple",
-            "account": "apple",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    {
-        "id": 7,
-        "UserId": 3,
-        "description": "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "apple",
-            "account": "apple",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    {
-        "id": 66,
-        "UserId": 3,
-        "description": "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "apple",
-            "account": "apple",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    {
-        "id": 75,
-        "UserId": 3,
-        "description": "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum.",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "apple",
-            "account": "apple",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    {
-        "id": 45,
-        "UserId": 3,
-        "description": "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
-        "createdAt": "2022-07-29T09:08:43.000Z",
-        "updatedAt": "2022-07-29T14:25:43.000Z",
-        "userId": 3,
-        "User": {
-            "id": 3,
-            "name": "apple",
-            "account": "apple",
-            "avatar": "https://joeschmoe.io/api/v1/random"
-        },   
-    },
-    
-]
-
-}
 export default {
   name: "AdminTweets",
   components: {
@@ -142,8 +26,21 @@ export default {
     this.fetchTweets()
   },
   methods: {
-    fetchTweets() {
-      this.tweets = dummyData.tweets
+    async fetchTweets() {
+      try {
+        const {data} = await adminAPI.tweets.get()
+        if (data.status === 'error') {
+          throw new Error (data.message)
+        }
+        const tweets = data 
+        this.tweets = tweets
+      } catch (error) {
+        console.error(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推文資料，請稍後再試'
+        })
+      }
     },
     // 刪除tweet
     afterTweetDelete(tweetId) {

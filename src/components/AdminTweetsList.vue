@@ -22,6 +22,9 @@
 <script>
 import { fromNowFilter } from "./../utils/mixins";
 import { emptyImageFilter } from "./../utils/mixins";
+import { Toast } from './../utils/helpers'
+import adminAPI from './../apis/admin'
+
 export default {
   name: 'AdminTweetsList',
   mixins: [fromNowFilter, emptyImageFilter],
@@ -32,11 +35,26 @@ export default {
     }
   },
   methods: {
-    handleDeleteBtnClick(tweetId) {
-      //TODO:發送API請伺服器刪掉這則tweet
-      // 告訴父元件哪一條tweet被刪掉
-      console.log('delete', tweetId)
-      this.$emit('after-delete-tweet', tweetId)
+    async handleDeleteBtnClick(tweetId) {
+      try { 
+        // 發送API請伺服器刪掉這則tweet
+        const { data } = await adminAPI.tweets.delete({tweetId})
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        // 告訴父元件哪一條tweet被刪掉
+        this.$emit('after-delete-tweet', tweetId)
+        Toast.fire({
+          icon: 'success',
+          title: '推文刪除成功'
+        })
+      } catch (error) {
+        console.error(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法刪除此推文，請稍後再試'
+        }) 
+      }
     }
   },
   filters: {
