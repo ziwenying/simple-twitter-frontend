@@ -387,7 +387,7 @@ export default {
       // /api/users/:id 取得指定使用者的資料
       //用 this.$route.parmas 給後端去取
       this.targetProfile = dummyDataProfile;
-      // /api/tweets 取得所有推文
+      // /api/tweets 使用 id 取得所有推文
       this.tweets = DummyData.tweets;
       this.likeTweets = this.tweets.filter((tweet) => {
         return tweet.isLiked === true;

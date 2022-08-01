@@ -1,6 +1,6 @@
 <template>
   <!-- component Followers -->
-  <Followers />
+  <Followers :followerList="followerList" />
 </template>
 
 <script>
@@ -10,6 +10,12 @@ export default {
   name: "UserFollowers",
   components: {
     Followers,
+  },
+  props: {
+    followerList: {
+      type: Array,
+      required: true,
+    },
   },
 };
 </script>
