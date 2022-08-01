@@ -45,14 +45,14 @@
               <img
                 @click="$refs.cover.click()"
                 class="add-avatar"
-                src="./../assets/image/add-avatar.png"
+                src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/add-avatar.png?raw=true"
                 alt="add-avatar"
               />
               <!-- 刪除前一次上傳的圖片 -->
               <img
                 @click="restoreDefaultCover"
                 class="delete-img"
-                src="./../assets/image/delete-img.png"
+                src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/delete-img.png?raw=true"
                 alt="delete-img"
               />
             </div>
@@ -78,7 +78,7 @@
               <img
                 @click="$refs.avatar.click()"
                 class="add-avatar"
-                src="./../assets/image/add-avatar.png"
+                src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/add-avatar.png?raw=true"
                 alt="add-avatar"
               />
             </div>

@@ -54,8 +54,7 @@
             </div>
             <div class="reply-area">
               <div class="modal-user-avatar">
-                <!-- 這邊圖片之後記得改 currentUser 的大頭貼 -->
-                <img src="./../assets/image/avatar.png" alt="avatar" />
+                <img :src="currentUser.avatar" alt="avatar" />
               </div>
               <div class="modal-tweet-text">
                 <textarea
@@ -105,6 +104,15 @@ export default {
     return {
       text: "",
       newReply: {},
+      currentUser: {
+        id: 33,
+        name: "user1",
+        avatar:
+          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+        account: "apple",
+        email: "user1@example.com",
+        role: "user",
+      },
     };
   },
   methods: {

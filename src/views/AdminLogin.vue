@@ -2,7 +2,10 @@
   <div class="container">
     <form class="login-form" @submit.prevent.stop="handleSubmit">
       <div class="logo">
-        <img src="./../assets/image/logo.png" alt="logo" />
+        <img
+          src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/logo.png?raw=true"
+          alt="logo"
+        />
       </div>
       <div class="title">
         <h3>後台登入</h3>
@@ -40,7 +43,7 @@
 
       <div class="btn-container">
         <button class="login-btn" type="submit" :disabled="isProcessing">
-          {{isProcessing ? "驗證中" : "登入"}}
+          {{ isProcessing ? "驗證中" : "登入" }}
         </button>
       </div>
       <div class="router-link-container">
@@ -75,7 +78,7 @@ export default {
           });
           return;
         }
-        this.isProcessing = true
+        this.isProcessing = true;
         // 向後端驗證使用者登入資訊是否合法
         const response = await authorizationAPI.adminSignIn({
           account: this.account,
@@ -86,17 +89,17 @@ export default {
           throw new Error(data.message);
         }
         // 如果登入成功, 存下token, 並直接轉址首頁
-        localStorage.setItem("adminToken", data.token)
+        localStorage.setItem("adminToken", data.token);
         // 把API回傳的登入使用者資料存到Vuex
-        this.$store.commit('setCurrentUser', data.user)
+        this.$store.commit("setCurrentUser", data.user);
         this.$router.push("/admin/tweets");
       } catch (error) {
-        this.password = ""
-        this.isProcessing = false
+        this.password = "";
+        this.isProcessing = false;
         Toast.fire({
-          icon: 'error',
-          title: '帳號不存在'
-        })
+          icon: "error",
+          title: "帳號不存在",
+        });
       }
     },
   },

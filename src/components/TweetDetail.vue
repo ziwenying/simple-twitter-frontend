@@ -1,9 +1,9 @@
 <template>
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
-      <a href="#">
+      <router-link :to="{ name: 'main-tweets', params: oneTweet.user.id }">
         <img class="user-avatar" :src="oneTweet.user.avatar" alt="user-avatar"
-      /></a>
+      /></router-link>
       <div class="tweet-title-name-account">
         <p class="name">{{ oneTweet.user.name }}</p>
         <p class="account">@{{ oneTweet.user.account }}</p>
@@ -27,7 +27,7 @@
     </div>
     <div class="tweet-reply-heart">
       <img
-        @click="isClickedTweet(oneTweet.id)"
+        @click.prevent="isClickedTweet(oneTweet.id)"
         class="icon"
         data-toggle="modal"
         data-target="#replyTweetModal"
@@ -76,6 +76,7 @@ export default {
   },
   created() {
     this.fetchTweet();
+    console.log(this.oneTweet.user.id);
   },
   methods: {
     fetchTweet() {

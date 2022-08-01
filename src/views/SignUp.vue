@@ -2,33 +2,32 @@
   <div class="container">
     <form class="signup-form">
       <div class="logo">
-        <img src="./../assets/image/logo.png" alt="logo" />
+        <img
+          src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/logo.png?raw=true"
+          alt="logo"
+        />
       </div>
       <div class="title">
         <h3>建立你的帳號</h3>
       </div>
       <SettingForm />
       <div class="btn-container">
-        <button class="signup-btn" type="submit" >
-          註冊
-        </button>
+        <button class="signup-btn" type="submit">註冊</button>
       </div>
       <div class="router-link-container">
-        <router-link  to="/login"
-          >取消</router-link
-        >
+        <router-link to="/login">取消</router-link>
       </div>
     </form>
-   </div> 
+  </div>
 </template>
 
 <script>
-import SettingForm from './../components/SettingForm.vue'
+import SettingForm from "./../components/SettingForm.vue";
 export default {
   name: "SignUp",
   components: {
-    SettingForm
-  }
+    SettingForm,
+  },
 };
 </script>
 
@@ -55,9 +54,9 @@ export default {
       }
     }
     .btn-container {
-      width:100%;
+      width: 100%;
       height: 46px;
-      margin-top:40px;
+      margin-top: 40px;
       .signup-btn {
         width: 100%;
         height: 100%;
@@ -77,6 +76,6 @@ export default {
         color: $Primary;
       }
     }
- }
+  }
 }
 </style>
