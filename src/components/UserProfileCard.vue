@@ -8,10 +8,11 @@
     <div class="avatar">
       <img class="user-avatar" :src="targetProfile.avatar" alt="user-avatar" />
     </div>
-
     <button class="user-edit" data-toggle="modal" data-target="#user-edit">
       編輯個人資料
     </button>
+    <!-- v-if 如果此頁面非當前的使用者 -->
+
     <div class="user-title">
       <div class="name">{{ targetProfile.name }}</div>
       <div class="account">@{{ targetProfile.account }}</div>
@@ -77,6 +78,7 @@ export default {
     right: 16px;
     width: 128px;
   }
+
   .user-title {
     margin: 72px 0 0 16px;
     .name {

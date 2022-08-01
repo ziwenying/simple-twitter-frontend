@@ -1,17 +1,29 @@
 <template>
   <ul class="nav-pills">
-    <li class="nav-item nav-item-selected">
-      <router-link
-        :to="{ name: 'user-followers' }"
-        class="pills-link pills-link-active"
-        >追隨者</router-link
+    <router-link
+      :to="{ name: 'user-followers' }"
+      class="pills-link"
+      :class="{ 'pills-link-active': $route.name === 'user-followers' }"
+    >
+      <li
+        class="nav-item"
+        :class="{ 'nav-item-selected': $route.name === 'user-followers' }"
       >
-    </li>
-    <li class="nav-item">
-      <router-link :to="{ name: 'user-followings' }" class="pills-link"
-        >正在追隨</router-link
+        追隨者
+      </li>
+    </router-link>
+    <router-link
+      :to="{ name: 'user-followings' }"
+      class="pills-link"
+      :class="{ 'pills-link-active': $route.name === 'user-followings' }"
+    >
+      <li
+        class="nav-item"
+        :class="{ 'nav-item-selected': $route.name === 'user-followings' }"
       >
-    </li>
+        正在追隨
+      </li>
+    </router-link>
   </ul>
 </template>
 
@@ -33,31 +45,29 @@ export default {
   border-bottom: $light-blue2 1px solid;
   border-left: $light-blue2 1px solid;
   z-index: 1;
-  .nav-item {
-    text-align: center;
-    padding: 15px 0 15px 0;
-    font-weight: 700;
-    font-size: 15px;
-    width: 130px;
-    .pills-link {
-      color: $Secondary;
+  .pills-link {
+    color: $Secondary;
+    .nav-item {
+      text-align: center;
+      padding: 15px 0 15px 0;
+      font-weight: 700;
+      font-size: 15px;
+      width: 130px;
     }
-    .pills-link:hover {
-      color: $brand-color;
+    .nav-item-selected {
+      height: 100%;
+      border-bottom: 2px $brand-color solid;
     }
-    // 點擊後亮
-    .pills-link-active {
+    .nav-item:hover {
+      cursor: pointer;
       color: $brand-color;
     }
   }
-  .nav-item:hover {
-    cursor: pointer;
+  .pills-link:hover {
     color: $brand-color;
   }
-  // 點擊後亮
-  .nav-item-selected {
-    height: 100%;
-    border-bottom: 2px $brand-color solid;
+  .pills-link-active {
+    color: $brand-color;
   }
 }
 </style>
