@@ -88,7 +88,7 @@ export default {
           throw new Error(data.message);
         }
         // 如果登入成功, 存下token, 並直接轉址首頁
-        localStorage.setItem("adminToken", data.token);
+        localStorage.setItem("token", data.token);
         // 把API回傳的登入使用者資料存到Vuex
         this.$store.commit("setCurrentUser", data.user);
         // 登入成功, 直接轉址後台頁面

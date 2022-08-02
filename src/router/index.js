@@ -5,9 +5,20 @@ import UserFollowList from '../views/UserFollowList.vue'
 import User from '../views/User.vue'
 import NotFound from '../views/NotFound.vue'
 import store from './../store'
+import { Toast } from './../utils/helpers'
 
 
 Vue.use(VueRouter)
+
+const authorizeIsAdmin = (to, from, next) => {
+  const currentUser = store.state.currentUser
+  if (currentUser && currentUser.role !== 'admin') {
+    next('not-found')
+    return
+  }
+  next()
+}
+
 
 const routes = [
   {
@@ -28,7 +39,7 @@ const routes = [
   {
     path: '/users/:id/edit',
     name: 'setting',
-    component: () => import('../views/Setting.vue')
+    component: () => import('../views/Setting.vue'),
   },
   {
     path: '/main/',
@@ -39,12 +50,12 @@ const routes = [
       {
         name: 'main-page',
         path: 'mainpage',
-        component: () => import('../views/MainPage')
+        component: () => import('../views/MainPage'),
       },
       {
         name: 'reply-list',
         path: 'replylist/:id',
-        component: () => import('../views/ReplyList')
+        component: () => import('../views/ReplyList'),
       },
     ]
   },
@@ -57,12 +68,12 @@ const routes = [
       {
         name: 'user-followers',
         path: 'followers',
-        component: () => import('../views/UserFollowers')
+        component: () => import('../views/UserFollowers'),
       },
       {
         name: 'user-followings',
         path: 'followings',
-        component: () => import('../views/UserFollowings')
+        component: () => import('../views/UserFollowings'), 
       },
     ]
   },
@@ -75,17 +86,17 @@ const routes = [
       {
         name: 'main-tweets',
         path: 'tweets',
-        component: () => import('../views/MainTweets')
+        component: () => import('../views/MainTweets'),
       },
       {
         name: 'replies',
         path: 'replies',
-        component: () => import('../views/Replies')
+        component: () => import('../views/Replies'),
       },
       {
         name: 'liked-tweets',
         path: 'liked',
-        component: () => import('../views/likedTweets')
+        component: () => import('../views/likedTweets'),
       },
     ]
   },
@@ -97,12 +108,14 @@ const routes = [
   {
     path: '/admin/tweets',
     name: 'admin-tweets',
-    component: () => import('../views/AdminTweets.vue')
+    component: () => import('../views/AdminTweets.vue'),
+    beforeEnter: authorizeIsAdmin  // 進入前驗證是否為管理員, 不是就直接導向not-found
   },
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: () => import('../views/AdminUsers.vue')
+    component: () => import('../views/AdminUsers.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '*',
@@ -117,7 +130,49 @@ const router = new VueRouter({
 
 // 每次切換路由都拉取一次currentUser資料
 router.beforeEach(async (to, from, next) => {
-  store.dispatch('fetchCurrentUser')
+  // 拿出token
+  const token = localStorage.getItem('token')
+  // 無須驗證即可瀏覽的頁面
+  const pathWithoutToken = ['login', 'sign-up', 'admin-login']
+  // 管理員可以去的頁面(包含無須驗證即可瀏覽的頁面)
+  const pathAdminCanEnter = ['login', 'sign-up', 'admin-login', 'admin-tweets', 'admin-users']
+  // 如果沒有token(沒有登入), 並且要去的頁面是其他需要驗證的頁面, 直接導向登入頁
+  if (!token && !pathWithoutToken.includes(to.name)) {
+    Toast.fire({
+      icon: 'warning',
+      title: '您無權訪問該頁面，請先進行登入'
+    })
+    next('login')
+    return
+  //如果有token
+  } else if (token) {
+    // fetchCurrentUser時, 取得是否通過驗證, 以及是user還是admin
+    let { isAuthenticated, role } = await store.dispatch('fetchCurrentUser')
+    // 驗證無效, 要去的地方是需驗證的頁面, 直接導向登入頁
+    if (!isAuthenticated && !pathWithoutToken.includes(to.name)) {
+      next('/login')
+      return
+    }
+    // 驗證有效, 且身分是user: 如果要去註冊或前台登入頁, 轉址到首頁
+    if (isAuthenticated && role === 'user') {
+      if (to.name === 'login' || to.name === 'sign-up') {
+        next('/main/mainpage')
+        return
+      }
+    // 驗證有效, 且身分是admin: 如果要去後台登入頁, 轉址到後台推文清單
+    } else if(isAuthenticated && role === 'admin') {
+      if (to.name === 'admin-login') {
+        next('/admin/tweets')
+        return
+        // 如果要去管理員無權瀏覽的頁面, 轉址登入頁
+      } else if (!pathAdminCanEnter.includes(to.name)) {
+        next('/login')
+        return
+      }
+    } 
+    next()
+  }
+  
   next()
 }) 
 
