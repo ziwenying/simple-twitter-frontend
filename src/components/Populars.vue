@@ -2,154 +2,37 @@
   <div class="popular-wrapper">
     <h4 class="popular-title">推薦跟隨</h4>
     <div class="popular-lists">
-      <div class="popular-list">
-        <a href="#">
+      <router-link
+        :to="{ path: `/users/${popular.id}/tweets` }"
+        v-for="popular in topPopular"
+        :key="popular.id"
+      >
+        <div class="popular-list">
           <img
             class="user-avatar"
             src="./../assets/image/user-image.png"
             alt="user-avatar"
           />
-        </a>
-        <div class="name-account">
-          <p class="name">Pizza Hut</p>
-          <p class="account">@pizzahut</p>
+          <div class="name-account">
+            <p class="name">{{ popular.name }}</p>
+            <p class="account">@{{ popular.account }}</p>
+          </div>
+          <button
+            @click.stop.prevent="deleteFollowed(popular.id)"
+            v-if="popular.isFollowed"
+            class="btn-follow btn-setting"
+          >
+            正在跟隨
+          </button>
+          <button
+            @click.stop.prevent="addFollowed(popular.id)"
+            v-if="!popular.isFollowed"
+            class="btn-unfollow btn-setting"
+          >
+            跟隨
+          </button>
         </div>
-        <button class="btn-setting">正在跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="#">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-        <div class="name-account">
-          <p class="name">McDona ...</p>
-          <p class="account">@McDona ...</p>
-        </div>
-        <button class="btn-setting">正在跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="#">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
-      <div class="popular-list">
-        <a href="">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
-        </a>
-
-        <div class="name-account">
-          <p class="name">Bank of ...</p>
-          <p class="account">@BankOfA ...</p>
-        </div>
-        <button class="btn-unfollowed">跟隨</button>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -157,6 +40,47 @@
 <script>
 export default {
   name: "Populars",
+  props: {
+    initialTopPopular: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      topPopular: [],
+    };
+  },
+  created() {
+    this.fetchTopPupular();
+  },
+  methods: {
+    fetchTopPupular() {
+      this.topPopular = this.initialTopPopular;
+    },
+    addFollowed(userId) {
+      // POST /api/followships 加追蹤
+      this.topPopular = this.topPopular.map((popular) => {
+        return userId === popular.id
+          ? {
+              ...popular,
+              isFollowed: !popular.isFollowed,
+            }
+          : popular;
+      });
+    },
+    deleteFollowed(userId) {
+      // Delete /api/followships/:followingId 刪追蹤
+      this.topPopular = this.topPopular.map((popular) => {
+        return userId === popular.id
+          ? {
+              ...popular,
+              isFollowed: !popular.isFollowed,
+            }
+          : popular;
+      });
+    },
+  },
 };
 </script>
 
@@ -174,7 +98,7 @@ export default {
   .popular-lists {
     .popular-list {
       display: flex;
-      justify-content: space-between;
+      position: relative;
       padding: 16px 0 16px 0;
       .user-avatar {
         width: 50px;
@@ -183,7 +107,12 @@ export default {
       .name-account {
         padding: 0 13px 0 8px;
         .name {
+          width: 74px;
+          color: $black;
           font-weight: 700;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         .account {
           color: $gray2;
@@ -191,12 +120,17 @@ export default {
         }
       }
       .btn-setting {
-        @extend %btn-style;
         padding: 8px 16px 8px 16px;
       }
-      .btn-unfollowed {
+      .btn-unfollow {
+        position: absolute;
+        right: 16px;
         @extend %btn-unfollowed-style;
-        padding: 8px 16px 8px 16px;
+      }
+      .btn-follow {
+        position: absolute;
+        right: 16px;
+        @extend %btn-style;
       }
     }
   }

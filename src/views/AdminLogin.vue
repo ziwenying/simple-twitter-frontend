@@ -19,7 +19,7 @@
           required
         />
         <div class="alert-msg">
-          <span class="msg">message</span>
+          <span class="msg" v-if="errorMsg === 'Account not exists for admin'">帳號不存在</span>
         </div>
       </div>
 
@@ -34,7 +34,7 @@
           required
         />
         <div class="alert-msg">
-          <span class="msg">message</span>
+          <span class="msg" v-if="errorMsg === 'Password incorrect.' ">密碼錯誤</span>
         </div>
       </div>
 
@@ -62,11 +62,14 @@ export default {
       account: "",
       password: "",
       isProcessing: false,
+      errorMsg: "",
     };
   },
   methods: {
     async handleSubmit() {
       try {
+        // 先把錯誤訊息清空
+        this.errorMsg = "";
         // 表單驗證
         if (!this.account || !this.password) {
           Toast.fire({
@@ -77,26 +80,42 @@ export default {
         }
         this.isProcessing = true;
         // 向後端驗證使用者登入資訊是否合法
-        const response = await authorizationAPI.adminSignIn({
+        const { data } = await authorizationAPI.adminSignIn({
           account: this.account,
           password: this.password,
         });
-        const { data } = response;
-        if (response.statusText !== "OK") {
+        if (data.status === "error") {
           throw new Error(data.message);
         }
         // 如果登入成功, 存下token, 並直接轉址首頁
-        localStorage.setItem("adminToken", data.token);
+        localStorage.setItem("token", data.token);
         // 把API回傳的登入使用者資料存到Vuex
         this.$store.commit("setCurrentUser", data.user);
+        // 登入成功, 直接轉址後台頁面
         this.$router.push("/admin/tweets");
       } catch (error) {
         this.password = "";
         this.isProcessing = false;
-        Toast.fire({
-          icon: "error",
-          title: "帳號不存在",
-        });
+        console.error(error.message)
+        if (error.message === "Account not exists for admin") {
+          this.errorMsg = error.message;
+          Toast.fire({
+            icon: "error",
+            title: "帳號不存在",
+          });
+        } else if (error.message === "Password incorrect.") {
+          this.errorMsg = error.message;
+          Toast.fire({
+            icon: "error",
+            title: "密碼錯誤",
+          });
+        } else {
+          this.errorMsg = error.message;
+          Toast.fire({
+            icon: "error",
+            title: "無法成功登入，請稍後再試",
+          });
+        }
       }
     },
   },
@@ -136,12 +155,13 @@ export default {
       border-radius: 2px;
       .alert-msg {
         position: absolute;
-        top: 54px;
+        top: 50px;
         left: 0;
         width: 100%;
         margin: 4px 0 0 0;
         span {
           font-size: 12px;
+          color: $Error;
         }
       }
       > label {

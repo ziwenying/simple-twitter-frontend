@@ -1,10 +1,13 @@
+
 import axios from 'axios'
 
-// TODO: 更改Api baseURL
-const baseURL = 'https://rocky-sea-34138.herokuapp.com/api'
+const baseURL = 'https://twitter-api-2022.herokuapp.com/api'
 
 export const apiHelper = axios.create({
-  baseURL
+  baseURL,
+  validateStatus: function (status) {
+    return status >= 200 && status < 500; 
+  },
 })
 import Swal from 'sweetalert2'
 

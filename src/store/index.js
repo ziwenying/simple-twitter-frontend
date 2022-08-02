@@ -1,3 +1,4 @@
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 import usersAPI from './../apis/users'
@@ -11,10 +12,10 @@ export default new Vuex.Store({
       name: '',
       account: '',
       email: '',
-      image: '',
+      avatar: '',
       role: ''
     },
-    isAuthenticated: false
+    isAuthenticated: false,
   },
   getters: {
   },
@@ -24,7 +25,9 @@ export default new Vuex.Store({
         ...state.currentUser,
         ...currentUser  // 等API拉資料進來後覆蓋掉state的currentUser
       }
+      // 改變登入狀態
       state.isAuthenticated = true
+      state.token = localStorage.getItem('token')
     },
     // 登出
     revokeAuthentication(state) {
@@ -36,7 +39,6 @@ export default new Vuex.Store({
   actions: {
     async fetchCurrentUser({commit}) {
       try {
-        // TODO:確認response格式
         const { data } = await usersAPI.getCurrentUser()
         if (data.status === 'error') {
           throw new Error(data.message)
@@ -45,8 +47,11 @@ export default new Vuex.Store({
         commit('setCurrentUser', {
           id, name, account, email, avatar, role
         })
+        return {isAuthenticated : true, role: this.state.currentUser.role} //登入有效
       } catch (error) {
         console.error(error.message)
+        commit('revokeAuthentication') // 登入無效直接把使用者登出
+        return { isAuthenticated: false, role: '' }  //登入無效
       }
     }
   },
