@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { Toast } from '../utils/helpers';
+import usersAPI from './../apis/users'
 export default {
   name: "FollowerNavPills",
   props: {
@@ -77,27 +79,58 @@ export default {
     }
   },
   methods: {
-    addFollowed(userId) {
-      // POST /api/followships 加追蹤
-      this.showFollowLists = this.showFollowLists.map((showFollowList) => {
-        return userId === showFollowList.followingId
-          ? {
-              ...showFollowList,
-              isFollowing: !showFollowList.isFollowing,
-            }
-          : showFollowList;
-      });
+    async addFollowed(userId) {
+      try {
+        const {data} = await usersAPI.follow({userId})
+        console.log(data)
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        this.showFollowLists = this.showFollowLists.map((showFollowList) => {
+          return userId === showFollowList.followingId
+            ? {
+                ...showFollowList,
+                isFollowing: !showFollowList.isFollowing,
+              }
+            : showFollowList;
+        });
+        Toast.fire({
+          icon: 'success',
+          title: '成功追蹤該使用者'
+        })
+      } catch(error) {
+        console.error(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: '無法追蹤該使用者，請稍後再試'
+        })
+      }
     },
-    deleteFollowed(userId) {
-      // Delete /api/followships/:followingId 刪追蹤
-      this.showFollowLists = this.showFollowLists.map((showFollowList) => {
-        return userId === showFollowList.followingId
-          ? {
-              ...showFollowList,
-              isFollowing: !showFollowList.isFollowing,
-            }
-          : showFollowList;
-      });
+    async deleteFollowed(userId) {
+      try {
+        const { data } = await usersAPI.unfollow({userId}) 
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        this.showFollowLists = this.showFollowLists.map((showFollowList) => {
+          return userId === showFollowList.followingId
+            ? {
+                ...showFollowList,
+                isFollowing: !showFollowList.isFollowing,
+              }
+            : showFollowList;
+        });
+        Toast.fire({
+          icon: 'success',
+          title: '已取消追蹤該使用者'
+        })
+      } catch(error) {
+        console.error(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消追蹤該使用者，請稍後再試'
+        })
+      }
     },
   },
 };

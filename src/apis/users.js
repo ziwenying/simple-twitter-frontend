@@ -21,5 +21,15 @@ export default {
     return apiHelper.get(`/users/${userId}/followings`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  follow({ userId }) {
+    return apiHelper.post(`/followships`, {userId}, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  unfollow({ userId }) {
+    return apiHelper.delete(`/followships/${userId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 } 
