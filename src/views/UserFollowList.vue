@@ -23,7 +23,7 @@
     </div>
 
     <!--component Populars -->
-    <Populars class="col-3 popular" />
+    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
   </div>
 </template>
 
@@ -31,6 +31,89 @@
 import Navbar from "../components/Navbar.vue";
 import FollowerNavPills from "../components/FollowerNavPills.vue";
 import Populars from "../components/Populars.vue";
+
+const DummyData = [
+  {
+    id: 31,
+    name: "GOOOOOOOOOOOO!",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: false,
+  },
+  {
+    id: 32,
+    name: "sgjs",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+  {
+    id: 33,
+    name: "Fhkhh",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+  {
+    id: 34,
+    name: "Wfjgj",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+  {
+    id: 35,
+    name: "zHtts",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+  {
+    id: 36,
+    name: "你好",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: false,
+  },
+  {
+    id: 37,
+    name: "很好",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+  {
+    id: 38,
+    name: "非常好啊啊",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: false,
+  },
+  {
+    id: 39,
+    name: "啊啊啊啊啊",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+  {
+    id: 40,
+    name: "Lahjkh",
+    avatar:
+      "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+    account: "ahjkh",
+    isFollowed: true,
+  },
+];
 
 export default {
   name: "UserFollowList",
@@ -50,11 +133,19 @@ export default {
         role: "",
       },
       isAuthenticated: false,
+      topPopular: [],
     };
   },
   created() {
     const { id: userId } = this.$route.params;
     console.log(userId);
+    this.fetchPopular();
+  },
+  methods: {
+    fetchPopular() {
+      //GET /api/followships
+      this.topPopular = DummyData;
+    },
   },
 };
 </script>
