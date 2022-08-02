@@ -6,5 +6,20 @@ export default {
     return apiHelper.get('/users/currentUser', {
       headers: { Authorization : `Bearer ${getToken()}`}
     })
+  },
+  getTopUser() {
+    return apiHelper.get('/followships', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getFollowers({ userId }) {
+    return apiHelper.get(`/users/${userId}/followers`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getFollowings({ userId }) {
+    return apiHelper.get(`/users/${userId}/followings`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
-}
+} 

@@ -46,6 +46,14 @@ export default {
       required: true,
     },
   },
+  watch: {
+    initialTopPopular(newVal) {
+      this.topPopular = {
+        ...this.initialTopPopular,
+        newVal
+      }
+    }
+  },
   data() {
     return {
       topPopular: [],
