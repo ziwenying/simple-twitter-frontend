@@ -41,7 +41,7 @@
                   >
                 </div>
                 <p class="tweet-text">
-                  {{ replyModalData.text }}
+                  {{ replyModalData.description }}
                 </p>
                 <div class="reply-to">
                   <span>回覆給</span>&nbsp;<span class="reply-to-account"
@@ -77,10 +77,14 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
+import { mapState } from "vuex";
 
 export default {
   name: "ReplyModal",
   mixins: [fromNowFilter],
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   props: {
     replyModalData: {
       type: Object,

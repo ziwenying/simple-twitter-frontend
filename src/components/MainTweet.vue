@@ -2,20 +2,20 @@
   <div class="tweet-lists">
     <div v-for="tweet in tweets" :key="tweet.id" class="tweet-list">
       <a href="#">
-        <img class="user-avatar" :src="tweet.user.avatar" alt="user-avatar" />
+        <img class="user-avatar" :src="tweet.User.avatar" alt="user-avatar" />
       </a>
       <div class="tweet-content">
         <div class="tweet-title">
-          <p class="name">{{ tweet.user.name }}</p>
+          <p class="name">{{ tweet.User.name }}</p>
           <p class="account">
-            @{{ tweet.user.account }}&nbsp;‧&nbsp;{{
+            @{{ tweet.User.account }}&nbsp;‧&nbsp;{{
               tweet.createdAt | fromNow
             }}
           </p>
         </div>
         <div class="tweet-text">
           <p>
-            {{ tweet.text }}
+            {{ tweet.description }}
           </p>
         </div>
         <div class="tweet-reply-heart">
@@ -56,6 +56,8 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "MainTweets",
@@ -72,6 +74,12 @@ export default {
       oneTweet: {},
     };
   },
+  watch: {
+    initialTweets(newValue) {
+      // 監聽：為了發推文後，即時更新
+      this.tweets = [...newValue];
+    },
+  },
   created() {
     this.fetchTweets();
   },
@@ -81,33 +89,61 @@ export default {
     },
     isClickedTweet(tweetId) {
       // 回覆推
+
       this.oneTweet = this.tweets.find((tweet) => {
         return tweet.id === tweetId;
       });
-      // 得到，被點擊那則推文的資料 -> 傳到父曾 MainPage.vue
+      // 得到，被點擊那則推文的資料 -> 傳到父層 MainPage.vue
       this.$emit("after-click-reply", this.oneTweet);
     },
-    addLiked(tweetId) {
-      this.tweets = this.tweets.map((tweet) => {
-        return tweetId === tweet.id
-          ? {
-              ...tweet,
-              isLiked: !tweet.isLiked,
-              likeCount: tweet.likeCount + 1,
-            }
-          : tweet;
-      });
+    async addLiked(tweetId) {
+      try {
+        const { data } = await usersAPI.addLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        //顯示紅心 & 愛心數加一
+        this.tweets = this.tweets.map((tweet) => {
+          return tweetId === tweet.id
+            ? {
+                ...tweet,
+                isLiked: !tweet.isLiked,
+                likeCount: tweet.likeCount + 1,
+              }
+            : tweet;
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文加入喜歡的內容，請稍後再試",
+        });
+      }
     },
-    deleteLiked(tweetId) {
-      this.tweets = this.tweets.map((tweet) => {
-        return tweetId === tweet.id
-          ? {
-              ...tweet,
-              isLiked: !tweet.isLiked,
-              likeCount: tweet.likeCount - 1,
-            }
-          : tweet;
-      });
+    async deleteLiked(tweetId) {
+      try {
+        const { data } = await usersAPI.deleteLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        console.log(data.status);
+        //顯示空心 & 愛心數減一
+        this.tweets = this.tweets.map((tweet) => {
+          return tweetId === tweet.id
+            ? {
+                ...tweet,
+                isLiked: !tweet.isLiked,
+                likeCount: tweet.likeCount - 1,
+              }
+            : tweet;
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文從喜歡的內容移除，請稍後再試",
+        });
+      }
     },
   },
 };

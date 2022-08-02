@@ -2,18 +2,17 @@
   <div class="row outer-main-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
-    <!-- MainPage.vue -->
+    <!-- MainPage.vue & ReplyList.vue -->
     <router-view
       :initialTweets="tweets"
       :popular="popular"
-      @after-submit-tweet="afterSubmitTweet"
       @after-click-reply="afterClickReply"
       class="col-7 main-page scrollbar"
     />
     <!--component Populars -->
     <Populars class="col-3 popular" />
     <!-- Modal -->
-    <CreateTweetModal @after-submit-tweet="afterSubmitTweet"/>
+    <CreateTweetModal @after-submit-tweet="afterSubmitTweet" />
     <ReplyModal :replyModalData="replyModalData" />
   </div>
 </template>
@@ -23,146 +22,15 @@ import Populars from "../components/Populars.vue";
 import Navbar from "../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
-
-const DummyData = {
-  currentUser: {
-    id: -1,
-    name: "",
-    email: "",
-    avatar: "",
-    role: "user",
-  },
-  tweets: [
-    {
-      id: 7,
-      text: "這個時間11Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      createdAt: "2022-07-29T08:41:42.564Z",
-      isLiked: true,
-      likeCount: 5,
-      commentCount: 3,
-      user: {
-        id: 1,
-        name: "Orange",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "orange",
-      },
-    },
-    {
-      id: 1,
-      text: "213Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 2,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 3,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 4,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 5,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 6,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-  ],
-  // 活躍使用者
-  users: [
-    {
-      id: -1,
-      name: "",
-      avatar: "",
-      isFollowed: false,
-    },
-  ],
-  newTweet: {
-    user: {
-      id: -1,
-      name: "",
-      avatar: "",
-      account: "",
-    },
-    tweetText: "",
-    likeCount: 0,
-    commentCount: 0,
-  },
-};
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   name: "MainPage",
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   components: {
     Populars,
     Navbar,
@@ -173,15 +41,6 @@ export default {
     return {
       tweets: [],
       popular: [],
-      currentUser: {
-        id: -1,
-        name: "user1",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple01",
-        email: "user1@example.com",
-        role: "user",
-      },
       replyModalData: {},
     };
   },
@@ -189,20 +48,33 @@ export default {
     this.fetchTweets();
   },
   methods: {
-    fetchTweets() {
-      this.tweets = DummyData.tweets;
+    async fetchTweets() {
+      try {
+        const response = await tweetsAPI.getTweets();
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
     },
     afterSubmitTweet(payload) {
-      const { id, tweetText } = payload;
+      const { tweetId, description } = payload;
       // 新增的推文加入下面的推文清單中
       this.tweets.push({
-        id: id,
-        text: tweetText,
+        id: tweetId,
+        description: description,
         likeCount: 0,
-        commentCount: 0,
-        createdAt: "2022-07-29T08:41:42.564Z",
+        replyCount: 0,
+        isLiked: false,
+        createdAt: new Date(),
         // 留言的那個人 (currentUser)
-        user: {
+        User: {
           id: this.currentUser.id,
           name: this.currentUser.name,
           avatar: this.currentUser.avatar,
@@ -211,14 +83,15 @@ export default {
       });
     },
     afterClickReply(payload) {
-      const { id, text, createdAt, user } = payload;
+      console.log("one", payload);
+      const { id, description, createdAt, User } = payload;
       this.replyModalData = {
         id,
-        text,
+        description,
         createdAt,
-        userName: user.name,
-        userAccount: user.account,
-        userAvatar: user.avatar,
+        userName: User.name,
+        userAccount: User.account,
+        userAvatar: User.avatar,
       };
     },
   },
