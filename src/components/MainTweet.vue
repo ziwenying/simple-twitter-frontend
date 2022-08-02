@@ -26,7 +26,7 @@
               data-toggle="modal"
               data-target="#replyTweetModal"
               class="icon"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/reply.png?raw=true"
+              src="~@/assets/image/reply.png"
               alt="reply"
             />
             <p>{{ tweet.commentCount }}</p>
@@ -36,14 +36,14 @@
               v-if="tweet.isLiked"
               @click.stop.prevent="deleteLiked(tweet.id)"
               class="icon"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/red-heart.png?raw=true"
+              src="~@/assets/image/red-heart.png"
               alt="heart"
             />
             <img
               v-if="!tweet.isLiked"
               @click.stop.prevent="addLiked(tweet.id)"
               class="icon"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/heart.png?raw=true"
+              src="~@/assets/image/heart.png"
               alt="heart"
             />
             <p>{{ tweet.likeCount }}</p>
@@ -84,7 +84,7 @@ export default {
       this.oneTweet = this.tweets.find((tweet) => {
         return tweet.id === tweetId;
       });
-      // 得到，被點擊那則推文的資料 -> 傳到父曾 MainPage.vue
+      // 得到，被點擊那則推文的資料 -> 傳到父層MainPage.vue
       this.$emit("after-click-reply", this.oneTweet);
     },
     addLiked(tweetId) {

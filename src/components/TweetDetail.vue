@@ -1,45 +1,109 @@
 <template>
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-      /></a>
+      <router-link :to="{ path: `/users/${oneTweet.user.id}/tweets` }">
+        <img class="user-avatar" :src="oneTweet.user.avatar" alt="user-avatar"
+      /></router-link>
       <div class="tweet-title-name-account">
-        <p class="name">Apple</p>
-        <p class="account">@apple</p>
+        <p class="name">{{ oneTweet.user.name }}</p>
+        <p class="account">@{{ oneTweet.user.account }}</p>
       </div>
     </div>
     <div class="tweet-text">
       <p class="text">
-        Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-        cillum dolor. Voluptate exercitation incididunt aliquip deserunt.
+        {{ oneTweet.text }}
       </p>
-      <p class="time">上午 10:05・2021年11月10日</p>
+      <p class="time">{{ oneTweet.createdAt | exactTime }}</p>
     </div>
     <div class="count">
       <div class="count-reply">
-        <p>34</p>
+        <p>{{ oneTweet.replyCount }}</p>
         <p>回覆</p>
       </div>
       <div class="count-like">
-        <p>808</p>
+        <p>{{ oneTweet.likeCount }}</p>
         <p>喜歡次數</p>
       </div>
     </div>
     <div class="tweet-reply-heart">
-      <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-      <img class="icon" src="./../assets/image/heart.png" alt="heart" />
+      <img
+        @click.prevent="isClickedTweet(oneTweet.id)"
+        class="icon"
+        data-toggle="modal"
+        data-target="#replyTweetModal"
+        src="~@/assets/image/reply.png"
+        alt="reply"
+      />
+      <img
+        v-if="oneTweet.isLiked"
+        @click.stop.prevent="deleteLiked(oneTweet.id)"
+        class="icon"
+        src="~@/assets/image/red-heart.png"
+        alt="heart"
+      />
+      <img
+        v-if="!oneTweet.isLiked"
+        @click.stop.prevent="addLiked(oneTweet.id)"
+        class="icon"
+        src="~@/assets/image/heart.png"
+        alt="heart"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { exactTimeFilter } from "./../utils/mixins";
+
 export default {
   name: "Reply",
+  mixins: [exactTimeFilter],
+  props: {
+    initialTweet: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      oneTweet: {},
+    };
+  },
+  watch: {
+    // 當新增評論時，及時更新評論數使用
+    initialTweet() {
+      this.fetchTweet();
+    },
+  },
+  created() {
+    this.fetchTweet();
+  },
+  methods: {
+    fetchTweet() {
+      this.oneTweet = this.initialTweet;
+    },
+    isClickedTweet() {
+      // 被點擊的那則留言的資料，傳到父層 User.vue
+      this.oneTweet = this.initialTweet;
+      this.$emit("after-click-reply", this.oneTweet);
+    },
+    addLiked() {
+      // /api/tweets/:id/like
+      this.oneTweet = {
+        ...this.oneTweet,
+        isLiked: !this.oneTweet.isLiked,
+        likeCount: this.oneTweet.likeCount + 1,
+      };
+    },
+    deleteLiked() {
+      // /api/tweets/:id/unlike
+      this.oneTweet = {
+        ...this.oneTweet,
+        isLiked: !this.oneTweet.isLiked,
+        likeCount: this.oneTweet.likeCount - 1,
+      };
+    },
+  },
 };
 </script>
 
