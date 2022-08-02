@@ -22,7 +22,7 @@
         正在跟隨
       </button>
       <button
-        @click.stop.prevent="addFollowed(followList.followingId)"
+        @click.stop.prevent="addFollowed(followList.followerId)"
         v-if="!followList.isFollowing"
         class="btn-unfollow"
       >
@@ -35,6 +35,7 @@
 <script>
 import { Toast } from '../utils/helpers';
 import usersAPI from './../apis/users'
+import { mapState } from 'vuex'
 export default {
   name: "FollowerNavPills",
   props: {
@@ -42,7 +43,7 @@ export default {
       type: Array,
       default: () => [
         {
-          followingId: -1,
+          followerId: -1,
           name: "",
           account: "",
           avatar: "",
@@ -55,7 +56,7 @@ export default {
       type: Array,
       default: () => [
         {
-          followingId: -1,
+          followerId: -1,
           name: "",
           account: "",
           avatar: "",
@@ -64,6 +65,9 @@ export default {
         },
       ],
     },
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   data() {
     return {
@@ -81,7 +85,7 @@ export default {
   methods: {
     async addFollowed(userId) {
       try {
-        const {data} = await usersAPI.follow({userId})
+        const {data} = await usersAPI.addfollowed({userId})
         console.log(data)
         if (data.status === 'error') {
           throw new Error(data.message)
@@ -108,7 +112,7 @@ export default {
     },
     async deleteFollowed(userId) {
       try {
-        const { data } = await usersAPI.unfollow({userId}) 
+        const { data } = await usersAPI.deletefollowed({userId}) 
         if (data.status === 'error') {
           throw new Error(data.message)
         }

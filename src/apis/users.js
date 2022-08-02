@@ -22,12 +22,12 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  follow({ userId }) {
+  addfollowed({ userId }) {
     return apiHelper.post(`/followships`, {userId}, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  unfollow({ userId }) {
+  deletefollowed({ userId }) {
     return apiHelper.delete(`/followships/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
