@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { Toast } from './../utils/helpers'
+import usersAPI from './../apis/users'
 export default {
   name: "Populars",
   props: {
@@ -66,20 +68,37 @@ export default {
     fetchTopPupular() {
       this.topPopular = this.initialTopPopular;
     },
-    addFollowed(userId) {
-      // POST /api/followships 加追蹤
-      this.topPopular = this.topPopular.map((popular) => {
+    async addFollowed(userId) {
+      try {
+        const {data} = await usersAPI.addfollowed({userId})
+        console.log(data)
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        this.topPopular = this.topPopular.map((popular) => {
         return userId === popular.id
           ? {
               ...popular,
               isFollowed: !popular.isFollowed,
             }
           : popular;
-      });
+        });
+      } catch(error) {
+        console.error(error.message)
+        Toast.fire({
+          icon:'error',
+          title: '無法追蹤該使用者，請稍後再試'
+        })
+      }
     },
-    deleteFollowed(userId) {
-      // Delete /api/followships/:followingId 刪追蹤
-      this.topPopular = this.topPopular.map((popular) => {
+    async deleteFollowed(userId) {
+      try {
+        const { data } = await usersAPI.deletefollowed({userId}) 
+        console.log(data)
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        this.topPopular = this.topPopular.map((popular) => {
         return userId === popular.id
           ? {
               ...popular,
@@ -87,6 +106,13 @@ export default {
             }
           : popular;
       });
+      } catch(error) {
+        console.error(error.message)
+        Toast.fire({
+          icon:'error',
+          title: '無法取消追蹤該使用者，請稍後再試'
+        })
+      }
     },
   },
 };
