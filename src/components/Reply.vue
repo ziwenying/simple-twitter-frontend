@@ -1,7 +1,7 @@
 <template>
   <div class="reply-lists">
     <div class="reply-list" v-for="reply in replies" :key="reply.id">
-      <router-link :to="{ name: 'main-page', params: reply.user.id }">
+      <router-link :to="{ path: `/users/${reply.user.id}/tweets` }">
         <img class="user-avatar" :src="reply.user.avatar" alt="user-avatar" />
       </router-link>
       <div class="reply-content">

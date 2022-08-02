@@ -8,11 +8,7 @@
           <router-link
             :to="{ name: 'user', params: { userId: $route.params } }"
           >
-            <img
-              class="arrow"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/arrow.png?raw=true"
-              alt="arrow"
-            />
+            <img class="arrow" src="~@/assets/image/arrow.png" alt="arrow" />
           </router-link>
           <div class="name-tweet">
             <p class="name">John Doe</p>

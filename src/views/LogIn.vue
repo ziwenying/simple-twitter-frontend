@@ -2,10 +2,7 @@
   <div class="container">
     <form class="login-form" @submit.prevent.stop="handleSubmit">
       <div class="logo">
-        <img
-          src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/logo.png?raw=true"
-          alt="logo"
-        />
+        <img src="~@/assets/image/logo.png" alt="logo" />
       </div>
       <div class="title">
         <h3>登入 Alphitter</h3>

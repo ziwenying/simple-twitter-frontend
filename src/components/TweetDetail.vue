@@ -1,7 +1,7 @@
 <template>
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
-      <router-link :to="{ name: 'main-tweets', params: oneTweet.user.id }">
+      <router-link :to="{ path: `/users/${oneTweet.user.id}/tweets` }">
         <img class="user-avatar" :src="oneTweet.user.avatar" alt="user-avatar"
       /></router-link>
       <div class="tweet-title-name-account">
@@ -31,21 +31,21 @@
         class="icon"
         data-toggle="modal"
         data-target="#replyTweetModal"
-        src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/reply.png?raw=true"
+        src="~@/assets/image/reply.png"
         alt="reply"
       />
       <img
         v-if="oneTweet.isLiked"
         @click.stop.prevent="deleteLiked(oneTweet.id)"
         class="icon"
-        src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/red-heart.png?raw=true"
+        src="~@/assets/image/red-heart.png"
         alt="heart"
       />
       <img
         v-if="!oneTweet.isLiked"
-        @click.stop.prevent="addLiked(initialTweet.id)"
+        @click.stop.prevent="addLiked(oneTweet.id)"
         class="icon"
-        src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/heart.png?raw=true"
+        src="~@/assets/image/heart.png"
         alt="heart"
       />
     </div>
@@ -70,13 +70,13 @@ export default {
     };
   },
   watch: {
+    // 當新增評論時，及時更新評論數使用
     initialTweet() {
       this.fetchTweet();
     },
   },
   created() {
     this.fetchTweet();
-    console.log(this.oneTweet.user.id);
   },
   methods: {
     fetchTweet() {

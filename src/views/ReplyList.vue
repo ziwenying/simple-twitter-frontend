@@ -2,11 +2,7 @@
   <div class="reply-outer">
     <div class="reply-lists-title">
       <router-link :to="{ name: 'main-page' }">
-        <img
-          class="arrow"
-          src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/arrow.png?raw=true"
-          alt="arrow"
-        />
+        <img class="arrow" src="~@/assets/image/arrow.png" alt="arrow" />
       </router-link>
       <h4 class="pb-4">推文</h4>
     </div>
@@ -43,21 +39,21 @@ const dummyReplies = [
   {
     id: 1,
     text: "早安午安晚安Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "nononono!!", //推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
-      id: 1,
-      name: "user1",
+      id: 5,
+      name: "user555",
       avatar:
         "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "user1",
+      account: "user555",
     },
     createdAt: "2022-07-29T08:41:42.564Z",
   },
   {
     id: 2,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "apple", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
@@ -71,11 +67,11 @@ const dummyReplies = [
   {
     id: 11,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "apple", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
-      name: "user1",
+      name: "海你好",
       avatar:
         "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
       account: "user1",
@@ -85,7 +81,7 @@ const dummyReplies = [
   {
     id: 3,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "apple1", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 4,
@@ -99,7 +95,7 @@ const dummyReplies = [
   {
     id: 5,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "apple", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
@@ -113,7 +109,7 @@ const dummyReplies = [
   {
     id: 6,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "sleeping", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
@@ -127,7 +123,7 @@ const dummyReplies = [
   {
     id: 7,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "you", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
@@ -141,7 +137,7 @@ const dummyReplies = [
   {
     id: 8,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "haha", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
@@ -155,7 +151,7 @@ const dummyReplies = [
   {
     id: 9,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "apple", //新增推文的主人
+    tweetMaster: "banana",
 
     // 留言者的資料
     user: {
@@ -170,7 +166,7 @@ const dummyReplies = [
   {
     id: 10,
     text: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-    tweetMaster: "banana", //新增推文的主人
+    tweetMaster: "banana",
     // 留言者的資料
     user: {
       id: 1,
@@ -245,7 +241,6 @@ export default {
         ...this.tweet,
         replyCount: this.tweet.replyCount + 1,
       };
-
       //及時新增推文到下面推文列
       this.replies.push({
         id: this.newReply.tweetId,

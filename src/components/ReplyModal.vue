@@ -19,7 +19,7 @@
             >
               <img
                 aria-hidden="true"
-                src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/modal-close-icon.png?raw=true"
+                src="~@/assets/image/modal-close-icon.png"
                 alt="close-icon"
               />
             </button>

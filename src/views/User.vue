@@ -8,7 +8,7 @@
           <router-link :to="{ name: 'main-page' }">
             <img
               class="arrow"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/arrow.png?raw=true"
+              src="~@/assets/image/arrow.png"
               alt="arrow"
             />
           </router-link>
