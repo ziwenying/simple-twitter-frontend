@@ -99,8 +99,8 @@ export default {
         }
         // 伺服器新增 Comment 成功後...
         this.$emit("after-submit-tweet", {
-          id: data.tweetId, 
-          tweetText: this.description,
+          tweetId: data.tweetId, 
+          description: this.description,
         });
         // 送出後清空新增推文區塊的文字
         this.description = "";
