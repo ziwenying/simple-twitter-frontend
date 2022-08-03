@@ -13,8 +13,8 @@
             />
           </router-link>
           <div class="name-tweet">
-            <p class="name">{{ this.tweets[0].User.name }}</p>
-            <p class="tweet-count">{{ this.tweets.length }}&ensp;推文</p>
+            <p class="name">{{ userName }}</p>
+            <p class="tweet-count">{{ tweets.length }}&ensp;推文</p>
           </div>
         </div>
         <!-- component FollowerNavPills.vue -->
@@ -39,7 +39,7 @@ import FollowerNavPills from "../components/FollowerNavPills.vue";
 import Populars from "../components/Populars.vue";
 import { Toast } from './../utils/helpers'
 import userAPI from './../apis/users'
-import tweetAPI from './../apis/tweet'
+import tweetsAPI from './../apis/tweets'
 
 export default {
   name: "UserFollowList",
@@ -54,6 +54,7 @@ export default {
       followerList: [],
       followingList: [],
       tweets: [],
+      userName: ''  // 渲染頁面上方標題
     };
   },
   created() {
@@ -74,34 +75,52 @@ export default {
         this.followerList = data
       } catch (error) {
         console.error(error.message)
-        Toast.fire({
-          icon: 'error',
-          title: '無法取得跟隨者資料'
-        })
+        // 沒有跟隨者的情況
+        if (error.message === 'No followers found.') {
+          this.followingList = []
+          return
+        } else {
+          Toast.fire({
+            icon: 'error',
+            title: '無法取得跟隨者資料'
+          })
+        }
       }
     },
     async fetchFollowings(userId) {
       try {
         const response = await userAPI.getFollowings( {userId} )
         const { data } = response
+        if (response.statusText !== 'OK') {
+          throw new Error (data.message)
+        }
         this.followingList = data
       } catch(error) {
         console.error(error.message)
-        Toast.fire({
-          icon: 'error',
-          title: '無法取得跟隨中的使用者資料'
-        })
+        // 沒有跟隨中對象的情況
+        if (error.message === 'No followings found.') {
+          this.followingList = []
+          return
+        } else {
+          Toast.fire({
+            icon: 'error',
+            title: '無法取得跟隨中的使用者資料'
+          })
+        }
       }
     },
     // 利用使用者 id 取得所有推文，計算推文數量使用
     async fetchTweets(userId) {
       try {
-        const response = await tweetAPI.getTweets( {userId} )
+        const response = await tweetsAPI.tweets.getUsersTweets( {userId} )
         const { data } = response
+
         if (response.statusText !== 'OK') {
           throw new Error (data.message)
         }
         this.tweets = data;
+        console.log(data)
+        this.userName = data[0].User.name
       } catch (error) {
         console.error(error.message)
         Toast.fire({

@@ -52,7 +52,7 @@ export default {
     initialTopPopular(newVal) {
       this.topPopular = {
         ...this.initialTopPopular,
-        newVal
+        ...newVal
       }
     }
   },

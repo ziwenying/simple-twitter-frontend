@@ -22,8 +22,8 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  addfollowed({ userId }) {
-    return apiHelper.post(`/followships`, {userId}, {
+  addfollowed({ id }) {
+    return apiHelper.post(`/followships`, { id }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
