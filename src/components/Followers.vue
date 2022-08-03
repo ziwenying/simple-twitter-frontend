@@ -117,7 +117,7 @@ export default {
         });
       } catch (error) {
         console.error(error.message);
-        if (error.message === "Can not follow yourself") {
+        if (error.message === "Can not follow yourself.") {
           Toast.fire({
             icon: "warning",
             title: "不能追蹤自己唷！",

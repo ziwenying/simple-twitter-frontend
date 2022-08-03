@@ -50,11 +50,8 @@ export default {
   },
   watch: {
     initialTopPopular(newVal) {
-      this.topPopular = {
-        ...this.initialTopPopular,
-        ...newVal
+      this.topPopular = [...newVal]
       }
-    }
   },
   data() {
     return {
@@ -70,8 +67,7 @@ export default {
     },
     async addFollowed(userId) {
       try {
-        const {data} = await usersAPI.addfollowed({userId})
-        console.log(data)
+        const {data} = await usersAPI.addfollowed({id: userId})
         if (data.status === 'error') {
           throw new Error(data.message)
         }
@@ -83,18 +79,28 @@ export default {
             }
           : popular;
         });
+        Toast.fire({
+          icon: "success",
+          title: "成功追蹤該使用者",
+        });
       } catch(error) {
         console.error(error.message)
-        Toast.fire({
-          icon:'error',
-          title: '無法追蹤該使用者，請稍後再試'
-        })
+        if (error.message === "Can not follow yourself.") {
+          Toast.fire({
+            icon: "warning",
+            title: "不能追蹤自己唷！",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "無法追蹤該使用者，請稍後再試",
+          });
+        }
       }
     },
     async deleteFollowed(userId) {
       try {
         const { data } = await usersAPI.deletefollowed({userId}) 
-        console.log(data)
         if (data.status === 'error') {
           throw new Error(data.message)
         }
@@ -106,6 +112,10 @@ export default {
             }
           : popular;
       });
+      Toast.fire({
+          icon: "success",
+          title: "已取消追蹤該使用者",
+        });
       } catch(error) {
         console.error(error.message)
         Toast.fire({
