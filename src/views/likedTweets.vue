@@ -26,7 +26,7 @@
               data-toggle="modal"
               data-target="#replyTweetModal"
               class="icon"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/reply.png?raw=true"
+              src="~@/assets/image/reply.png"
               alt="reply"
             />
             <p>{{ tweet.commentCount }}</p>
@@ -36,14 +36,14 @@
               v-if="tweet.isLiked"
               @click.stop.prevent="deleteLiked(tweet.id)"
               class="icon"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/red-heart.png?raw=true"
+              src="~@/assets/image/red-heart.png"
               alt="heart"
             />
             <img
               v-if="!tweet.isLiked"
               @click.stop.prevent="addLiked(tweet.id)"
               class="icon"
-              src="https://github.com/ziwenying/simple-twitter-frontend/blob/followpage/src/assets/image/heart.png?raw=true"
+              src="~@/assets/image/heart.png"
               alt="heart"
             />
             <p>{{ tweet.likeCount }}</p>

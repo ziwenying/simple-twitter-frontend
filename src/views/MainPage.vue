@@ -10,7 +10,7 @@
             <router-link :to="{ name: 'main-page' }">
               <img
                 class="user-avatar"
-                src="./../assets/image/avatar.png"
+                :src="currentUser.avatar"
                 alt="user-avatar"
               />
             </router-link>

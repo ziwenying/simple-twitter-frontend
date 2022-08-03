@@ -49,14 +49,14 @@
               <img
                 @click="$refs.cover.click()"
                 class="add-avatar"
-                src="./../assets/image/add-avatar.png"
+                src="~@/assets/image/add-avatar.png"
                 alt="add-avatar"
               />
               <!-- 刪除前一次上傳的圖片 -->
               <img
                 @click="restoreDefaultCover"
                 class="delete-img"
-                src="./../assets/image/delete-img.png"
+                src="~@/assets/image/delete-img.png"
                 alt="delete-img"
               />
             </div>
@@ -82,7 +82,7 @@
               <img
                 @click="$refs.avatar.click()"
                 class="add-avatar"
-                src="./../assets/image/add-avatar.png"
+                src="~@/assets/image/add-avatar.png"
                 alt="add-avatar"
               />
             </div>

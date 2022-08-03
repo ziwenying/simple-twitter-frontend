@@ -6,9 +6,9 @@
     aria-labelledby="replyTweetModalLabe"
     aria-hidden="true"
   >
-    <form @submit.stop.prevent="handleSubmitReply">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form class="form-wrapper" @submit.stop.prevent="handleSubmitReply">
           <div class="modal-header">
             <button
               type="button"
@@ -79,9 +79,9 @@
               回覆
             </button>
           </div>
-        </div>
+        </form>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -170,134 +170,136 @@ export default {
   background-clip: padding-box;
   border-radius: 14px;
   z-index: 10;
-  .modal-header {
-    width: 100%;
-    height: 11%;
-    border-bottom: 1px solid $light-blue2;
-    display: flex;
-    .close-btn {
-      align-items: center;
-      img {
-        width: 24px;
-        height: 24px;
+  .form-wrapper {
+    .modal-header {
+      width: 100%;
+      height: 11%;
+      border-bottom: 1px solid $light-blue2;
+      display: flex;
+      .close-btn {
+        align-items: center;
+        img {
+          width: 24px;
+          height: 24px;
+        }
       }
     }
-  }
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 89%;
-    padding: 16px 24px;
-    .tweet-area {
+    .modal-body {
       display: flex;
       flex-direction: column;
-      .tweet {
+      width: 100%;
+      height: 450px;
+      padding: 16px 24px;
+      .tweet-area {
         display: flex;
-        position: relative;
-        // 連結線
-        &::before {
-          content: "";
-          position: absolute;
-          left: 25px;
-          top: 60px;
-          height: 85px;
-          background-color: $gray3;
-          border-right: 1px solid $gray3;
-          border-left: 1px solid $gray3;
+        flex-direction: column;
+        .tweet {
+          display: flex;
+          position: relative;
+          // 連結線
+          &::before {
+            content: "";
+            position: absolute;
+            left: 25px;
+            top: 60px;
+            height: 85px;
+            background-color: $gray3;
+            border-right: 1px solid $gray3;
+            border-left: 1px solid $gray3;
+          }
+          .avatar {
+            height: 50px;
+            width: 50px;
+            margin-right: 8px;
+          }
+          .tweet-info {
+            display: flex;
+            flex-direction: column;
+            .tweet-detail {
+              align-items: center;
+              > span {
+                font-size: 16px;
+                font-weight: 700;
+                color: $black;
+                margin-right: 8px;
+              }
+              .account-created-time {
+                font-size: 14px;
+                font-weight: 400;
+                color: $gray4;
+              }
+            }
+            .tweet-text {
+              margin-right: 0;
+              margin-top: 8px;
+              color: $black;
+              font-size: 16px;
+              font-weight: 400;
+            }
+            .reply-to {
+              margin-top: 10px;
+              span {
+                font-size: 14px;
+                font-weight: 400;
+                color: $gray4;
+              }
+              .reply-to-account {
+                color: $brand-color;
+              }
+            }
+          }
         }
-        .avatar {
-          height: 50px;
+      }
+      .reply-area {
+        display: flex;
+        flex: 1;
+        width: 100%;
+        margin-top: 23px;
+        .modal-user-avatar {
           width: 50px;
+          height: 50px;
+          border-radius: 50%;
           margin-right: 8px;
         }
-        .tweet-info {
-          display: flex;
-          flex-direction: column;
-          .tweet-detail {
-            align-items: center;
-            > span {
-              font-size: 16px;
-              font-weight: 700;
-              color: $black;
-              margin-right: 8px;
+        .modal-tweet-text {
+          flex: 1;
+          textarea {
+            width: 90%;
+            height: 75%;
+            border-color: transparent;
+            border-radius: 5px;
+            resize: none;
+            padding: 0;
+            &::-webkit-scrollbar {
+              width: 6px;
             }
-            .account-created-time {
-              font-size: 14px;
-              font-weight: 400;
-              color: $gray4;
+            &::-webkit-scrollbar-thumb {
+              background-color: $light-blue2;
+              border-radius: 3px;
             }
-          }
-          .tweet-text {
-            margin-right: 0;
-            margin-top: 8px;
-            color: $black;
-            font-size: 16px;
-            font-weight: 400;
-          }
-          .reply-to {
-            margin-top: 10px;
-            span {
-              font-size: 14px;
-              font-weight: 400;
-              color: $gray4;
-            }
-            .reply-to-account {
-              color: $brand-color;
+            &::placeholder {
+              margin-left: 0;
             }
           }
         }
       }
-    }
-    .reply-area {
-      display: flex;
-      flex: 1;
-      width: 100%;
-      margin-top: 23px;
-      .modal-user-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 8px;
+      .alert-msg {
+        position: absolute;
+        right: 100px;
+        bottom: 28px;
+        font-size: 15px;
+        font-weight: 500;
+        color: $Error;
       }
-      .modal-tweet-text {
-        flex: 1;
-        textarea {
-          width: 90%;
-          height: 75%;
-          border-color: transparent;
-          border-radius: 5px;
-          resize: none;
-          padding: 0;
-          &::-webkit-scrollbar {
-            width: 6px;
-          }
-          &::-webkit-scrollbar-thumb {
-            background-color: $light-blue2;
-            border-radius: 3px;
-          }
-          &::placeholder {
-            margin-left: 0;
-          }
-        }
+      .modal-reply-btn {
+        @extend %btn-style;
+        width: 64px;
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        font-size: 16px;
+        font-weight: 400;
       }
-    }
-    .alert-msg {
-      position: absolute;
-      right: 100px;
-      bottom: 28px;
-      font-size: 15px;
-      font-weight: 500;
-      color: $Error;
-    }
-    .modal-reply-btn {
-      @extend %btn-style;
-      width: 64px;
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      font-size: 16px;
-      font-weight: 400;
     }
   }
 }

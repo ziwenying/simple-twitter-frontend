@@ -6,5 +6,5 @@ export default {
     return apiHelper.get('/users/currentUser', {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  },
+  }
 }

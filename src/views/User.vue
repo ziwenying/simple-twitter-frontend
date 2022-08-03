@@ -6,7 +6,11 @@
       <div class="user-outer">
         <div class="reply-lists-title">
           <router-link :to="{ name: 'main-page' }">
-            <img class="arrow" src="./../assets/image/arrow.png" alt="arrow" />
+            <img
+              class="arrow"
+              src="~@/assets/image/arrow.png"
+              alt="arrow"
+            />
           </router-link>
           <div class="name-tweet">
             <p class="name">{{ targetProfile.name }}</p>
@@ -28,7 +32,7 @@
       </div>
     </div>
     <!--component Populars -->
-    <Populars class="col-3 popular" />
+    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
     <!-- component UserEditModal -->
     <UserEditModal
       @after-submit="afterSubmit"
@@ -184,10 +188,84 @@ const DummyData = {
   // 活躍使用者
   users: [
     {
-      id: -1,
-      name: "",
-      avatar: "",
+      id: 31,
+      name: "GOOOOOOOOOOOO!",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
       isFollowed: false,
+    },
+    {
+      id: 32,
+      name: "sgjs",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
+    },
+    {
+      id: 33,
+      name: "Fhkhh",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
+    },
+    {
+      id: 34,
+      name: "Wfjgj",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
+    },
+    {
+      id: 35,
+      name: "zHtts",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
+    },
+    {
+      id: 36,
+      name: "你好",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: false,
+    },
+    {
+      id: 37,
+      name: "很好",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
+    },
+    {
+      id: 38,
+      name: "非常好啊啊",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: false,
+    },
+    {
+      id: 39,
+      name: "啊啊啊啊啊",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
+    },
+    {
+      id: 40,
+      name: "Lahjkh",
+      avatar:
+        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
+      account: "ahjkh",
+      isFollowed: true,
     },
   ],
   // 使用者回覆過的留言
@@ -364,7 +442,7 @@ export default {
       tweets: [],
       likeTweets: [],
       replies: [],
-      popular: [],
+      topPopular: [],
       currentUser: {
         id: -1,
         name: "user1",
@@ -392,8 +470,10 @@ export default {
       this.likeTweets = this.tweets.filter((tweet) => {
         return tweet.isLiked === true;
       });
-      //GET  /api/tweets/:tweet_id/replies 取得
+      //GET  /api/tweets/:tweet_id/replies 取得所有回覆
       this.replies = DummyData.replies;
+      //GET /api/followships 取得前十使用者
+      this.topPopular = DummyData.users;
     },
     afterClickReply(payload) {
       const { id, text, createdAt, user } = payload;
