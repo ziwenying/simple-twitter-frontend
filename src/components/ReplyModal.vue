@@ -1,15 +1,14 @@
 <template>
   <div
-    class="modal fade reply-tweet-modal-container"
+    class="modal fade"
     id="replyTweetModal"
     tabindex="-1"
-    role="dialog"
-    aria-labelledby="replyTweetModal"
+    aria-labelledby="replyTweetModalLabe"
     aria-hidden="true"
   >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <form class="form-wrapper" @submit.stop.prevent="handleSubmit">
+        <form class="form-wrapper" @submit.stop.prevent="handleSubmitReply">
           <div class="modal-header">
             <button
               type="button"
@@ -42,7 +41,7 @@
                     >
                   </div>
                   <p class="tweet-text">
-                    {{ replyModalData.text }}
+                    {{ replyModalData.description }}
                   </p>
                   <div class="reply-to">
                     <span>回覆給</span>&nbsp;<span class="reply-to-account"
@@ -54,11 +53,12 @@
             </div>
             <div class="reply-area">
               <div class="modal-user-avatar">
+                <!-- 這邊圖片之後記得改 currentUser 的大頭貼 -->
                 <img :src="currentUser.avatar" alt="avatar" />
               </div>
               <div class="modal-tweet-text">
                 <textarea
-                  v-model="text"
+                  v-model="description"
                   class="form-control"
                   id="tweet-text"
                   name="tweet-text"
@@ -68,13 +68,13 @@
                 />
               </div>
             </div>
-            <span v-if="!text.trim().length" class="alert-msg"
+            <span v-if="description.trim().length === 0" class="alert-msg"
               >內容不可空白</span
             >
             <button
               class="modal-reply-btn"
               type="submit"
-              :disabled="!text.trim().length"
+              :disabled="!description.trim().length"
             >
               回覆
             </button>
@@ -86,14 +86,19 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
-import { fromNowFilter } from "./../utils/mixins";
-import { Toast } from "./../utils/helpers";
+// import { v4 as uuidv4 } from "uuid";
 import $ from "jquery";
+import { fromNowFilter } from "./../utils/mixins";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   name: "ReplyModal",
   mixins: [fromNowFilter],
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   props: {
     replyModalData: {
       type: Object,
@@ -102,49 +107,49 @@ export default {
   },
   data() {
     return {
-      text: "",
-      newReply: {},
-      currentUser: {
-        id: 33,
-        name: "user1",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-        account: "apple",
-        email: "user1@example.com",
-        role: "user",
-      },
+      description: "",
     };
   },
   methods: {
-    handleSubmit() {
-      // 表單驗證
-      if (!this.text.trim()) {
-        Toast.fire({
-          icon: "warning",
-          title: "內容不可空白",
+    async handleSubmitReply() {
+      try {
+        // 檢驗內容是否符合標準
+        if (!this.description.trim()) {
+          Toast.fire({
+            icon: "warning",
+            title: "內容不可空白",
+          });
+          return;
+        }
+        const { data } = await tweetsAPI.tweets.createReply({
+          tweetId: this.replyModalData.id,
+          comment: this.description,
         });
-        return;
-      } else {
+        console.log("res", this.replyModalData);
+        if (data.status !== "success") {
+          throw new Error(data.status);
+        }
+        // 如果在單一貼文頁面使用回覆功能，需要即時顯示新回覆內容，傳 ->> ReplyList.vue
+        if (this.$route.name === "reply-list") {
+          this.$emit("after-submit-reply", this.replyModalData.id);
+        }
         Toast.fire({
           icon: "success",
           title: "回覆推文成功",
         });
+        // 送出後清空新增推文區塊的文字
+        this.description = "";
+        //關掉Modal
+        $("#replyTweetModal").modal("hide");
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法發送回覆，請稍後再試",
+        });
       }
-      // 新增留言 POST /api/tweets/:tweet_id/replies
-      // 新回覆內容傳父層 ->> Main.vue
-      this.$emit("after-submit-reply", {
-        id: uuidv4(), // 尚未串接 API 暫時使用隨機的 id, POST後伺服器會回傳id
-        tweetText: this.text,
-        tweetAccount: this.replyModalData.userAccount,
-      });
-      // 送出後清空新增推文區塊的文字
-      this.text = "";
-      //關掉Modal
-      $("#replyTweetModal").modal("hide");
     },
   },
-
-  // 待做功能，新增留言到指定的推文
 };
 </script>
 

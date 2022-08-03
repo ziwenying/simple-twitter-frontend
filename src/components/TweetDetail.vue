@@ -1,23 +1,23 @@
 <template>
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
-      <router-link :to="{ path: `/users/${oneTweet.user.id}/tweets` }">
-        <img class="user-avatar" :src="oneTweet.user.avatar" alt="user-avatar"
-      /></router-link>
+      <router-link :to="{ path: `/users/${oneTweet.userId}/tweets` }">
+        <img class="user-avatar" :src="oneTweet.userAvatar" alt="user-avatar" />
+      </router-link>
       <div class="tweet-title-name-account">
-        <p class="name">{{ oneTweet.user.name }}</p>
-        <p class="account">@{{ oneTweet.user.account }}</p>
+        <p class="name">{{ oneTweet.userName }}</p>
+        <p class="account">@{{ oneTweet.userAccount }}</p>
       </div>
     </div>
     <div class="tweet-text">
       <p class="text">
-        {{ oneTweet.text }}
+        {{ oneTweet.description }}
       </p>
       <p class="time">{{ oneTweet.createdAt | exactTime }}</p>
     </div>
     <div class="count">
       <div class="count-reply">
-        <p>{{ oneTweet.replyCount }}</p>
+        <p>{{ repliesLength }}</p>
         <p>回覆</p>
       </div>
       <div class="count-like">
@@ -54,6 +54,8 @@
 
 <script>
 import { exactTimeFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   name: "Reply",
@@ -63,16 +65,63 @@ export default {
       type: Object,
       required: true,
     },
+    initialRepliesLength: {
+      type: Number,
+      require: true,
+    },
   },
   data() {
     return {
       oneTweet: {},
+      repliesLength: 0,
     };
   },
   watch: {
+    initialTweet(newValue) {
+      this.oneTweet = {
+        ...this.oneTweet,
+        ...newValue,
+      };
+      // 拆成一層，不然會報錯
+      const {
+        userAvatar,
+        userId,
+        userAccount,
+        userName,
+        createdAt,
+        description,
+        id,
+        isLiked,
+        likeCount,
+        replyCount,
+      } = {
+        userAvatar: this.oneTweet.User.avatar,
+        userId: this.oneTweet.User.id,
+        userAccount: this.oneTweet.User.account,
+        userName: this.oneTweet.User.name,
+        createdAt: this.oneTweet.createdAt,
+        description: this.oneTweet.description,
+        id: this.oneTweet.id,
+        isLiked: this.oneTweet.isLiked,
+        likeCount: this.oneTweet.likeCount,
+        replyCount: this.oneTweet.replyCount,
+      };
+      this.oneTweet = {
+        userAvatar,
+        userId,
+        userAccount,
+        userName,
+        createdAt,
+        description,
+        id,
+        isLiked,
+        likeCount,
+        replyCount,
+      };
+    },
     // 當新增評論時，及時更新評論數使用
-    initialTweet() {
-      this.fetchTweet();
+    initialRepliesLength(newValue) {
+      this.repliesLength = newValue;
     },
   },
   created() {
@@ -83,25 +132,50 @@ export default {
       this.oneTweet = this.initialTweet;
     },
     isClickedTweet() {
-      // 被點擊的那則留言的資料，傳到父層 User.vue
+      // 被點擊的那則留言的資料，顯示 modal 使用
       this.oneTweet = this.initialTweet;
       this.$emit("after-click-reply", this.oneTweet);
     },
-    addLiked() {
-      // /api/tweets/:id/like
-      this.oneTweet = {
-        ...this.oneTweet,
-        isLiked: !this.oneTweet.isLiked,
-        likeCount: this.oneTweet.likeCount + 1,
-      };
+    async addLiked(tweetId) {
+      try {
+        const { data } = await tweetsAPI.tweets.addLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        //顯示紅心 & 愛心數加一
+        this.oneTweet = {
+          ...this.oneTweet,
+          isLiked: !this.oneTweet.isLiked,
+          likeCount: this.oneTweet.likeCount + 1,
+        };
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文加入喜歡的內容，請稍後再試",
+        });
+      }
     },
-    deleteLiked() {
-      // /api/tweets/:id/unlike
-      this.oneTweet = {
-        ...this.oneTweet,
-        isLiked: !this.oneTweet.isLiked,
-        likeCount: this.oneTweet.likeCount - 1,
-      };
+    async deleteLiked(tweetId) {
+      try {
+        const { data } = await tweetsAPI.tweets.deleteLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        console.log(data.status);
+        //顯示空心 & 愛心數減一
+        this.oneTweet = {
+          ...this.oneTweet,
+          isLiked: !this.oneTweet.isLiked,
+          likeCount: this.oneTweet.likeCount - 1,
+        };
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文從喜歡的內容移除，請稍後再試",
+        });
+      }
     },
   },
 };

@@ -7,15 +7,15 @@
       <div class="main-wrapper">
         <div class="main-tweet-wrapper">
           <div class="avatar-input">
-            <a href="">
+            <router-link :to="{ name: 'main-page' }">
               <img
                 class="user-avatar"
                 :src="currentUser.avatar"
                 alt="user-avatar"
               />
-            </a>
+            </router-link>
             <textarea
-              v-model="text"
+              v-model="description"
               class="textarea-tweet"
               type="text"
               placeholder="有什麼新鮮事？"
@@ -23,34 +23,38 @@
           </div>
           <!-- if more 140 show waring-msg-->
           <div class="input-footer">
-            <p v-if="text.trim().length > 140" class="waring-msg">
+            <p v-if="description.trim().length > 140" class="waring-msg">
               字數不可超過 140 字
             </p>
             <button
               type="submit"
               class="btn-setting"
-              :disabled="text.trim().length > 140"
+              :disabled="description.trim().length > 140"
             >
               推文
             </button>
           </div>
         </div>
-        <!-- component MainTweet -->
       </div>
     </form>
+    <!-- component MainTweet -->
     <MainTweet @after-click-reply="afterClickReply" :initialTweets="tweets" />
   </div>
 </template>
 
 <script>
 import MainTweet from "../components/MainTweet.vue";
-import { v4 as uuidv4 } from "uuid";
 import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
+import { mapState } from "vuex";
 
 export default {
   name: "MainPage",
   components: {
     MainTweet,
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
   props: {
     initialTweets: {
@@ -61,54 +65,72 @@ export default {
   data() {
     return {
       tweets: [],
-      text: "",
-      exceedText: false,
-      newTweet: {},
-      currentUser: {
-        id: 33,
-        name: "user1",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-        account: "apple",
-        email: "user1@example.com",
-        role: "user",
-      },
+      description: "",
     };
+  },
+  watch: {
+    initialTweets(newValue) {
+      this.tweets = [...this.tweets, ...newValue];
+    },
   },
   created() {
     this.tweets = this.initialTweets;
   },
   methods: {
-    handleSubmit() {
-      if (this.exceedText === true) {
-        return Toast.fire({
-          icon: "warning",
-          title: "字數不可超過 140 字",
+    async handleSubmit() {
+      try {
+        // 先判斷有無超過字數
+        if (this.description.length > 140) {
+          Toast.fire({
+            icon: "warning",
+            title: "字數不可超過 140 字",
+          });
+          return;
+        }
+        // 若沒超過，刪掉空白後再檢查一次
+        this.description = this.description.trim();
+        if (!this.description) {
+          Toast.fire({
+            icon: "warning",
+            title: "內容不可空白",
+          });
+          return;
+        }
+        // api post
+        const response = await tweetsAPI.tweets.create({
+          userId: this.currentUser.id,
+          description: this.description,
         });
-      }
-      // 刪掉空白
-      this.text = this.text.trim();
-      if (!this.text) {
-        Toast.fire({
-          icon: "warning",
-          title: "內容不可空白",
+        if (response.data.status !== "success") {
+          throw new Error(response.data.status);
+        }
+        // 新的推文資料放入陣列第一筆
+        this.tweets.unshift({
+          id: response.data.tweetId,
+          description: this.description,
+          likeCount: 0,
+          replyCount: 0,
+          isLiked: false,
+          createdAt: new Date(),
+          User: {
+            id: this.currentUser.id,
+            name: this.currentUser.name,
+            avatar: this.currentUser.avatar,
+            account: this.currentUser.account,
+          },
         });
-        return;
-      } else {
+        // 將發推區內的文字清空
+        this.description = "";
         Toast.fire({
           icon: "success",
           title: "推文發送成功",
         });
-        //把使用者寫的推文內容存入 newTweet
-        this.newTweet = {
-          id: uuidv4(),
-          tweetText: this.text,
-        };
-        //POST /api/tweets
-        // 新的推文資料(newTweet) -> 傳至父層 Main.vue
-        this.$emit("after-submit-tweet", this.newTweet);
-        // 將發推區內的文字清空
-        this.text = "";
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "推文發送失敗，請稍後再試",
+        });
       }
     },
     afterClickReply(payload) {

@@ -7,7 +7,11 @@
     aria-labelledby="user-edit-label"
     aria-hidden="true"
   >
-    <form @submit.stop.prevent="handleSubmit" class="modal-dialog">
+    <form
+      @submit.stop.prevent="handleSubmit"
+      class="modal-dialog"
+      role="document"
+    >
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="user-edit-label">編輯個人資料</h5>
