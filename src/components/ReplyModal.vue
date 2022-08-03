@@ -54,7 +54,7 @@
             <div class="reply-area">
               <div class="modal-user-avatar">
                 <!-- 這邊圖片之後記得改 currentUser 的大頭貼 -->
-                <img src="./../assets/image/avatar.png" alt="avatar" />
+                <img :src="currentUser.avatar" alt="avatar" />
               </div>
               <div class="modal-tweet-text">
                 <textarea
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import $ from "jquery";
 import { fromNowFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
@@ -121,7 +121,7 @@ export default {
           });
           return;
         }
-        const { data } = await tweetsAPI.createReply({
+        const { data } = await tweetsAPI.tweets.createReply({
           tweetId: this.replyModalData.id,
           comment: this.description,
         });
@@ -129,13 +129,9 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.status);
         }
-        // 如果在單一貼文頁面，需要即時顯示新回覆內容，傳父層 ->> Main.vue
+        // 如果在單一貼文頁面使用回覆功能，需要即時顯示新回覆內容，傳 ->> ReplyList.vue
         if (this.$route.name === "reply-list") {
-          this.$emit("after-submit-reply", {
-            id: uuidv4(),
-            description: this.description,
-            User: this.replyModalData,
-          });
+          this.$emit("after-submit-reply", this.replyModalData.id);
         }
         Toast.fire({
           icon: "success",

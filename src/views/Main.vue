@@ -264,7 +264,7 @@ export default {
   methods: {
     async fetchTweets() {
       try {
-        const response = await tweetsAPI.getTweets();
+        const response = await tweetsAPI.tweets.getTweets();
         if (response.statusText !== "OK") {
           throw new Error("無法取得推文資料，請稍後再試");
         }
@@ -291,7 +291,6 @@ export default {
         replyCount: 0,
         isLiked: false,
         createdAt: new Date(),
-        // 留言的那個人 (currentUser)
         User: {
           id: this.currentUser.id,
           name: this.currentUser.name,
@@ -301,7 +300,7 @@ export default {
       });
     },
     afterClickReply(payload) {
-      console.log("one", payload);
+      // 點擊回覆，顯示 modal 使用的資料
       const { id, description, User, createdAt } = payload;
       this.replyModalData = {
         id,

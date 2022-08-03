@@ -1,24 +1,32 @@
 <template>
   <div class="reply-lists">
     <div class="reply-list" v-for="reply in replies" :key="reply.id">
-      <router-link :to="{ path: `/users/${reply.user.id}/tweets` }">
-        <img class="user-avatar" :src="reply.user.avatar" alt="user-avatar" />
+      <router-link :to="{ path: `/users/${reply.User.id}/tweets` }">
+        <img class="user-avatar" :src="reply.User.avatar" alt="user-avatar" />
       </router-link>
       <div class="reply-content">
         <div class="reply-title">
-          <p class="name">{{ reply.user.name }}</p>
-          <p class="account-time">
-            @{{ reply.user.account }}&nbsp;‧&nbsp;{{
-              reply.createdAt | fromNow
-            }}
+          <router-link :to="{ path: `/users/${reply.User.id}/tweets` }">
+            <p class="name">{{ reply.User.name }}</p>
+          </router-link>
+          <router-link :to="{ path: `/users/${reply.User.id}/tweets` }">
+            <p class="account-time account">@{{ reply.User.account }}</p>
+          </router-link>
+          <p class="account-time time">
+            &nbsp;‧&nbsp;{{ reply.createdAt | fromNow }}
           </p>
         </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@{{ reply.tweetMaster }}</p>
-        </div>
+        <router-link
+          :to="{ path: `/users/${reply.tweetAuthorId}/tweets` }"
+          class="reply-link"
+        >
+          <div class="reply-who">
+            <p class="reply">回覆</p>
+            <p class="account">@{{ reply.tweetAuthorAccount }}</p>
+          </div>
+        </router-link>
         <p class="text">
-          {{ reply.text }}
+          {{ reply.comment }}
         </p>
       </div>
     </div>
@@ -32,10 +40,23 @@ export default {
   name: "Reply",
   mixins: [fromNowFilter],
   props: {
-    replies: {
+    initialReplies: {
       type: Array,
       required: true,
     },
+  },
+  data() {
+    return {
+      replies: [],
+    };
+  },
+  watch: {
+    initialReplies(newValue) {
+      this.replies = [...newValue];
+    },
+  },
+  created() {
+    this.replies = this.initialReplies;
   },
 };
 </script>
@@ -63,23 +84,36 @@ export default {
           margin: 0 8px 0 0;
           font-weight: 700;
           color: $black;
+          &:hover {
+            text-decoration: underline;
+          }
         }
         .account-time {
           color: $Secondary;
           font-size: 14px;
         }
-      }
-      .reply-who {
-        display: flex;
-        .reply {
-          color: $Secondary;
-        }
-        .account {
-          margin: 0 0 0 8px;
-          color: $brand-color;
+        .account:hover {
+          text-decoration: underline;
         }
       }
-      .reply-who,
+      .reply-link {
+        cursor: auto;
+        .reply-who {
+          display: flex;
+          margin: 8px 0 0 0;
+          .reply {
+            color: $Secondary;
+          }
+          .account {
+            margin: 0 0 0 8px;
+            color: $brand-color;
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
       .text {
         margin: 8px 0 0 0;
       }

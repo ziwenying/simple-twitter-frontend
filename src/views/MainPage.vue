@@ -71,7 +71,6 @@ export default {
   watch: {
     initialTweets(newValue) {
       this.tweets = [...this.tweets, ...newValue];
-      console.log("main-tweet1", this.tweets);
     },
   },
   created() {
@@ -98,7 +97,7 @@ export default {
           return;
         }
         // api post
-        const response = await tweetsAPI.create({
+        const response = await tweetsAPI.tweets.create({
           userId: this.currentUser.id,
           description: this.description,
         });
