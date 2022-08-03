@@ -57,7 +57,7 @@
 <script>
 import { fromNowFilter } from "./../utils/mixins";
 import { Toast } from "./../utils/helpers";
-import usersAPI from "./../apis/users";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   name: "MainTweets",
@@ -98,7 +98,7 @@ export default {
     },
     async addLiked(tweetId) {
       try {
-        const { data } = await usersAPI.addLiked({ tweetId });
+        const { data } = await tweetsAPI.addLiked({ tweetId });
         if (data.status !== "success") {
           throw new Error(data.message);
         }
@@ -122,7 +122,7 @@ export default {
     },
     async deleteLiked(tweetId) {
       try {
-        const { data } = await usersAPI.deleteLiked({ tweetId });
+        const { data } = await tweetsAPI.deleteLiked({ tweetId });
         if (data.status !== "success") {
           throw new Error(data.message);
         }

@@ -7,13 +7,13 @@
       <div class="main-wrapper">
         <div class="main-tweet-wrapper">
           <div class="avatar-input">
-            <a href="">
+            <router-link :to="{ name: 'main-page' }">
               <img
                 class="user-avatar"
                 src="./../assets/image/avatar.png"
                 alt="user-avatar"
               />
-            </a>
+            </router-link>
             <textarea
               v-model="description"
               class="textarea-tweet"
@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
 import MainTweet from "../components/MainTweet.vue";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
@@ -108,13 +107,12 @@ export default {
         }
         // 新的推文資料放入陣列第一筆
         this.tweets.unshift({
-          id: uuidv4(),
+          id: response.data.tweetId,
           description: this.description,
           likeCount: 0,
           replyCount: 0,
           isLiked: false,
           createdAt: new Date(),
-          // 留言的那個人 (currentUser)
           User: {
             id: this.currentUser.id,
             name: this.currentUser.name,

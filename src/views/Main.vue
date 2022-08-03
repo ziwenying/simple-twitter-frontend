@@ -6,7 +6,7 @@
     <router-view
       :initialTweets="tweets"
       :popular="popular"
-      @after-click-reply="afterClickReply"
+      @after-submit-reply="afterSubmitReply"
       class="col-7 main-page scrollbar"
     />
     <!--component Populars -->
@@ -82,13 +82,12 @@ export default {
         },
       });
     },
-    afterClickReply(payload) {
+    afterSubmitReply(payload) {
       console.log("one", payload);
-      const { id, description, createdAt, User } = payload;
+      const { id, description, User } = payload;
       this.replyModalData = {
         id,
         description,
-        createdAt,
         userName: User.name,
         userAccount: User.account,
         userAvatar: User.avatar,

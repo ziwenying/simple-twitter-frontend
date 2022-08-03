@@ -12,4 +12,19 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  addLiked({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/like`, null, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  deleteLiked({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/unlike`, null, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  createReply({ tweetId, comment }) {
+    return apiHelper.post(`tweets/${tweetId}/replies`, { tweetId, comment }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
 }
