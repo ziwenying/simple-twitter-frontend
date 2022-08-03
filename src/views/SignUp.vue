@@ -2,7 +2,7 @@
   <div class="container">
     <form class="signup-form" @submit.prevent.stop="handleSubmit">
       <div class="logo">
-        <img src="./../assets/image/logo.png" alt="logo" />
+        <img src="~@/assets/image/logo.png" alt="logo" />
       </div>
       <div class="title">
         <h3>建立你的帳號</h3>

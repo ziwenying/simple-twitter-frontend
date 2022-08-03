@@ -7,7 +7,11 @@
     aria-labelledby="user-edit-label"
     aria-hidden="true"
   >
-    <form @submit.stop.prevent="handleSubmit" class="modal-dialog">
+    <form
+      @submit.stop.prevent="handleSubmit"
+      class="modal-dialog"
+      role="document"
+    >
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="user-edit-label">編輯個人資料</h5>
@@ -45,14 +49,14 @@
               <img
                 @click="$refs.cover.click()"
                 class="add-avatar"
-                src="./../assets/image/add-avatar.png"
+                src="~@/assets/image/add-avatar.png"
                 alt="add-avatar"
               />
               <!-- 刪除前一次上傳的圖片 -->
               <img
                 @click="restoreDefaultCover"
                 class="delete-img"
-                src="./../assets/image/delete-img.png"
+                src="~@/assets/image/delete-img.png"
                 alt="delete-img"
               />
             </div>
@@ -78,7 +82,7 @@
               <img
                 @click="$refs.avatar.click()"
                 class="add-avatar"
-                src="./../assets/image/add-avatar.png"
+                src="~@/assets/image/add-avatar.png"
                 alt="add-avatar"
               />
             </div>

@@ -4,7 +4,7 @@ const getToken = () => localStorage.getItem('token')
 export default {
   getCurrentUser() {
     return apiHelper.get('/users/currentUser', {
-      headers: { Authorization : `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getTopUser() {

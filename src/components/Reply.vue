@@ -1,186 +1,32 @@
 <template>
   <div class="reply-lists">
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
+    <div class="reply-list" v-for="reply in replies" :key="reply.id">
+      <router-link :to="{ path: `/users/${reply.User.id}/tweets` }">
+        <img class="user-avatar" :src="reply.User.avatar" alt="user-avatar" />
+      </router-link>
       <div class="reply-content">
         <div class="reply-title">
-          <p class="name">Devon Lane</p>
-          <p class="account-time">@devon_lane・12 小時</p>
+          <router-link :to="{ path: `/users/${reply.User.id}/tweets` }">
+            <p class="name">{{ reply.User.name }}</p>
+          </router-link>
+          <router-link :to="{ path: `/users/${reply.User.id}/tweets` }">
+            <p class="account-time account">@{{ reply.User.account }}</p>
+          </router-link>
+          <p class="account-time time">
+            &nbsp;‧&nbsp;{{ reply.createdAt | fromNow }}
+          </p>
         </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
+        <router-link
+          :to="{ path: `/users/${reply.tweetAuthorId}/tweets` }"
+          class="reply-link"
+        >
+          <div class="reply-who">
+            <p class="reply">回覆</p>
+            <p class="account">@{{ reply.tweetAuthorAccount }}</p>
+          </div>
+        </router-link>
         <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Marvin McKinney</p>
-          <p class="account-time">@MMcK・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          Use your options to stand out from the crowd | Companies and Creatives
-          Profiles
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Devon Lane</p>
-          <p class="account-time">@devon_lane・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Marvin McKinney</p>
-          <p class="account-time">@MMcK・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          Use your options to stand out from the crowd | Companies and Creatives
-          Profiles
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Devon Lane</p>
-          <p class="account-time">@devon_lane・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Marvin McKinney</p>
-          <p class="account-time">@MMcK・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          Use your options to stand out from the crowd | Companies and Creatives
-          Profiles
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Devon Lane</p>
-          <p class="account-time">@devon_lane・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          former apple engineer shares a simple DIY fix to seal your surgical
-          mask
-        </p>
-      </div>
-    </div>
-    <div class="reply-list">
-      <a href="">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-        />
-      </a>
-      <div class="reply-content">
-        <div class="reply-title">
-          <p class="name">Marvin McKinney</p>
-          <p class="account-time">@MMcK・12 小時</p>
-        </div>
-        <div class="reply-who">
-          <p class="reply">回覆</p>
-          <p class="account">@apple</p>
-        </div>
-        <p class="text">
-          Use your options to stand out from the crowd | Companies and Creatives
-          Profiles
+          {{ reply.comment }}
         </p>
       </div>
     </div>
@@ -188,8 +34,30 @@
 </template>
 
 <script>
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
   name: "Reply",
+  mixins: [fromNowFilter],
+  props: {
+    initialReplies: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      replies: [],
+    };
+  },
+  watch: {
+    initialReplies(newValue) {
+      this.replies = [...newValue];
+    },
+  },
+  created() {
+    this.replies = this.initialReplies;
+  },
 };
 </script>
 
@@ -201,6 +69,7 @@ export default {
     display: flex;
     max-height: 158px;
     padding: 16px 23px 16px 23px;
+    border-top: $light-blue2 1px solid;
     border-bottom: $light-blue2 1px solid;
     .user-avatar {
       width: 50px;
@@ -215,26 +84,42 @@ export default {
           margin: 0 8px 0 0;
           font-weight: 700;
           color: $black;
+          &:hover {
+            text-decoration: underline;
+          }
         }
         .account-time {
           color: $Secondary;
           font-size: 14px;
         }
-      }
-      .reply-who {
-        display: flex;
-        .reply {
-          color: $Secondary;
-        }
-        .account {
-          margin: 0 0 0 8px;
-          color: $brand-color;
+        .account:hover {
+          text-decoration: underline;
         }
       }
-      .reply-who,
+      .reply-link {
+        cursor: auto;
+        .reply-who {
+          display: flex;
+          margin: 8px 0 0 0;
+          .reply {
+            color: $Secondary;
+          }
+          .account {
+            margin: 0 0 0 8px;
+            color: $brand-color;
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
       .text {
         margin: 8px 0 0 0;
       }
+    }
+    .reply-list div:nth-child(1) {
+      border-top: $light-blue2 1px solid;
     }
   }
 }

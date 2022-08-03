@@ -73,7 +73,7 @@ const routes = [
       {
         name: 'user-followings',
         path: 'followings',
-        component: () => import('../views/UserFollowings'), 
+        component: () => import('../views/UserFollowings'),
       },
     ]
   },
@@ -144,7 +144,7 @@ router.beforeEach(async (to, from, next) => {
     })
     next('login')
     return
-  //如果有token
+    //如果有token
   } else if (token) {
     // fetchCurrentUser時, 取得是否通過驗證, 以及是user還是admin
     let { isAuthenticated, role } = await store.dispatch('fetchCurrentUser')
@@ -159,8 +159,8 @@ router.beforeEach(async (to, from, next) => {
         next('/main/mainpage')
         return
       }
-    // 驗證有效, 且身分是admin: 如果要去後台登入頁, 轉址到後台推文清單
-    } else if(isAuthenticated && role === 'admin') {
+      // 驗證有效, 且身分是admin: 如果要去後台登入頁, 轉址到後台推文清單
+    } else if (isAuthenticated && role === 'admin') {
       if (to.name === 'admin-login') {
         next('/admin/tweets')
         return
@@ -169,12 +169,12 @@ router.beforeEach(async (to, from, next) => {
         next('/login')
         return
       }
-    } 
+    }
     next()
   }
-  
+
   next()
-}) 
+})
 
 
 export default router

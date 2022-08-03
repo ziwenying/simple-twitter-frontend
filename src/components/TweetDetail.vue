@@ -1,45 +1,183 @@
 <template>
   <div class="main-tweet-wrapper">
     <div class="tweet-title">
-      <a href="#">
-        <img
-          class="user-avatar"
-          src="./../assets/image/user-image.png"
-          alt="user-avatar"
-      /></a>
+      <router-link :to="{ path: `/users/${oneTweet.userId}/tweets` }">
+        <img class="user-avatar" :src="oneTweet.userAvatar" alt="user-avatar" />
+      </router-link>
       <div class="tweet-title-name-account">
-        <p class="name">Apple</p>
-        <p class="account">@apple</p>
+        <p class="name">{{ oneTweet.userName }}</p>
+        <p class="account">@{{ oneTweet.userAccount }}</p>
       </div>
     </div>
     <div class="tweet-text">
       <p class="text">
-        Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco
-        cillum dolor. Voluptate exercitation incididunt aliquip deserunt.
+        {{ oneTweet.description }}
       </p>
-      <p class="time">上午 10:05・2021年11月10日</p>
+      <p class="time">{{ oneTweet.createdAt | exactTime }}</p>
     </div>
     <div class="count">
       <div class="count-reply">
-        <p>34</p>
+        <p>{{ repliesLength }}</p>
         <p>回覆</p>
       </div>
       <div class="count-like">
-        <p>808</p>
+        <p>{{ oneTweet.likeCount }}</p>
         <p>喜歡次數</p>
       </div>
     </div>
     <div class="tweet-reply-heart">
-      <img class="icon" data-toggle="modal"
-      data-target="#replyTweetModal" src="./../assets/image/reply.png" alt="reply" />
-      <img class="icon" src="./../assets/image/heart.png" alt="heart" />
+      <img
+        @click.prevent="isClickedTweet(oneTweet.id)"
+        class="icon"
+        data-toggle="modal"
+        data-target="#replyTweetModal"
+        src="~@/assets/image/reply.png"
+        alt="reply"
+      />
+      <img
+        v-if="oneTweet.isLiked"
+        @click.stop.prevent="deleteLiked(oneTweet.id)"
+        class="icon"
+        src="~@/assets/image/red-heart.png"
+        alt="heart"
+      />
+      <img
+        v-if="!oneTweet.isLiked"
+        @click.stop.prevent="addLiked(oneTweet.id)"
+        class="icon"
+        src="~@/assets/image/heart.png"
+        alt="heart"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { exactTimeFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
+
 export default {
   name: "Reply",
+  mixins: [exactTimeFilter],
+  props: {
+    initialTweet: {
+      type: Object,
+      required: true,
+    },
+    initialRepliesLength: {
+      type: Number,
+      require: true,
+    },
+  },
+  data() {
+    return {
+      oneTweet: {},
+      repliesLength: 0,
+    };
+  },
+  watch: {
+    initialTweet(newValue) {
+      this.oneTweet = {
+        ...this.oneTweet,
+        ...newValue,
+      };
+      // 拆成一層，不然會報錯
+      const {
+        userAvatar,
+        userId,
+        userAccount,
+        userName,
+        createdAt,
+        description,
+        id,
+        isLiked,
+        likeCount,
+        replyCount,
+      } = {
+        userAvatar: this.oneTweet.User.avatar,
+        userId: this.oneTweet.User.id,
+        userAccount: this.oneTweet.User.account,
+        userName: this.oneTweet.User.name,
+        createdAt: this.oneTweet.createdAt,
+        description: this.oneTweet.description,
+        id: this.oneTweet.id,
+        isLiked: this.oneTweet.isLiked,
+        likeCount: this.oneTweet.likeCount,
+        replyCount: this.oneTweet.replyCount,
+      };
+      this.oneTweet = {
+        userAvatar,
+        userId,
+        userAccount,
+        userName,
+        createdAt,
+        description,
+        id,
+        isLiked,
+        likeCount,
+        replyCount,
+      };
+    },
+    // 當新增評論時，及時更新評論數使用
+    initialRepliesLength(newValue) {
+      this.repliesLength = newValue;
+    },
+  },
+  created() {
+    this.fetchTweet();
+  },
+  methods: {
+    fetchTweet() {
+      this.oneTweet = this.initialTweet;
+    },
+    isClickedTweet() {
+      // 被點擊的那則留言的資料，顯示 modal 使用
+      this.oneTweet = this.initialTweet;
+      this.$emit("after-click-reply", this.oneTweet);
+    },
+    async addLiked(tweetId) {
+      try {
+        const { data } = await tweetsAPI.tweets.addLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        //顯示紅心 & 愛心數加一
+        this.oneTweet = {
+          ...this.oneTweet,
+          isLiked: !this.oneTweet.isLiked,
+          likeCount: this.oneTweet.likeCount + 1,
+        };
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文加入喜歡的內容，請稍後再試",
+        });
+      }
+    },
+    async deleteLiked(tweetId) {
+      try {
+        const { data } = await tweetsAPI.tweets.deleteLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        console.log(data.status);
+        //顯示空心 & 愛心數減一
+        this.oneTweet = {
+          ...this.oneTweet,
+          isLiked: !this.oneTweet.isLiked,
+          likeCount: this.oneTweet.likeCount - 1,
+        };
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文從喜歡的內容移除，請稍後再試",
+        });
+      }
+    },
+  },
 };
 </script>
 

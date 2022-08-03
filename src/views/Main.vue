@@ -2,10 +2,11 @@
   <div class="row outer-main-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
-    <!-- MainPage.vue -->
+    <!-- MainPage.vue & ReplyList -->
     <router-view
       :initialTweets="tweets"
-      @after-submit-tweet="afterSubmitTweet"
+      :newReply="newReply"
+      :popular="popular"
       @after-click-reply="afterClickReply"
       class="col-7 main-page scrollbar"
     />
@@ -22,6 +23,9 @@ import Populars from "../components/Populars.vue";
 import Navbar from "../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
 
 const DummyData = {
   currentUser: {
@@ -236,6 +240,9 @@ const DummyData = {
 
 export default {
   name: "MainPage",
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   components: {
     Populars,
     Navbar,
@@ -245,17 +252,9 @@ export default {
   data() {
     return {
       tweets: [],
-      topPopular: [],
-      currentUser: {
-        id: -1,
-        name: "user1",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple01",
-        email: "user1@example.com",
-        role: "user",
-      },
+      popular: [],
       replyModalData: {},
+      newReply: {},
     };
   },
   created() {
@@ -263,25 +262,36 @@ export default {
     this.fetchPopular();
   },
   methods: {
-    fetchTweets() {
-      // GET /api/tweets
-      this.tweets = DummyData.tweets;
+    async fetchTweets() {
+      try {
+        const response = await tweetsAPI.tweets.getTweets();
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
     },
     fetchPopular() {
       //GET /api/followships
       this.topPopular = DummyData.users;
     },
     afterSubmitTweet(payload) {
-      const { id, tweetText } = payload;
+      const { tweetId, description } = payload;
       // 新增的推文加入下面的推文清單中
-      this.tweets.push({
-        id: id,
-        text: tweetText,
+      this.tweets.unshift({
+        id: tweetId,
+        description: description,
         likeCount: 0,
-        commentCount: 0,
-        createdAt: "2022-07-29T08:41:42.564Z",
-        // 留言的那個人 (currentUser)
-        user: {
+        replyCount: 0,
+        isLiked: false,
+        createdAt: new Date(),
+        User: {
           id: this.currentUser.id,
           name: this.currentUser.name,
           avatar: this.currentUser.avatar,
@@ -290,14 +300,15 @@ export default {
       });
     },
     afterClickReply(payload) {
-      const { id, text, createdAt, user } = payload;
+      // 點擊回覆，顯示 modal 使用的資料
+      const { id, description, User, createdAt } = payload;
       this.replyModalData = {
         id,
-        text,
-        createdAt,
-        userName: user.name,
-        userAccount: user.account,
-        userAvatar: user.avatar,
+        description,
+        userName: User.name,
+        userAccount: User.account,
+        userAvatar: User.avatar,
+        createdAt: createdAt,
       };
     },
   },
