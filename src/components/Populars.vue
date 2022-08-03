@@ -10,7 +10,7 @@
         <div class="popular-list">
           <img
             class="user-avatar"
-            src="./../assets/image/user-image.png"
+            :src="popular.avatar"
             alt="user-avatar"
           />
           <div class="name-account">

@@ -6,7 +6,7 @@
     <router-view
       :initialTweets="tweets"
       :newReply="newReply"
-      :popular="popular"
+      :popular="topPopular"
       @after-click-reply="afterClickReply"
       class="col-7 main-page scrollbar"
     />
@@ -26,217 +26,7 @@ import ReplyModal from "../components/ReplyModal.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
-
-const DummyData = {
-  currentUser: {
-    id: -1,
-    name: "",
-    email: "",
-    avatar: "",
-    role: "user",
-  },
-  tweets: [
-    {
-      id: 7,
-      text: "這個時間11Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      createdAt: "2022-07-29T08:41:42.564Z",
-      isLiked: true,
-      likeCount: 5,
-      commentCount: 3,
-      user: {
-        id: 1,
-        name: "Orange",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "orange",
-      },
-    },
-    {
-      id: 1,
-      text: "213Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 2,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 3,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 4,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 5,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-    {
-      id: 6,
-      text: "Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliquip deserunt reprehenderit elit laborum. ",
-      user: {
-        id: 1,
-        name: "Apple",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple",
-      },
-      createdAt: "2022-07-04T00:55:09.000Z",
-      isLiked: false,
-      likeCount: 5,
-      commentCount: 3,
-    },
-  ],
-  // 活躍使用者
-  users: [
-    {
-      id: 31,
-      name: "GOOOOOOOOOOOO!",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: false,
-    },
-    {
-      id: 32,
-      name: "sgjs",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-    {
-      id: 33,
-      name: "Fhkhh",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-    {
-      id: 34,
-      name: "Wfjgj",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-    {
-      id: 35,
-      name: "zHtts",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-    {
-      id: 36,
-      name: "你好",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: false,
-    },
-    {
-      id: 37,
-      name: "很好",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-    {
-      id: 38,
-      name: "非常好啊啊",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: false,
-    },
-    {
-      id: 39,
-      name: "啊啊啊啊啊",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-    {
-      id: 40,
-      name: "Lahjkh",
-      avatar:
-        "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-      account: "ahjkh",
-      isFollowed: true,
-    },
-  ],
-  newTweet: {
-    user: {
-      id: -1,
-      name: "",
-      avatar: "",
-      account: "",
-    },
-    tweetText: "",
-    likeCount: 0,
-    commentCount: 0,
-  },
-};
+import userAPI from './../apis/users'
 
 export default {
   name: "MainPage",
@@ -252,7 +42,7 @@ export default {
   data() {
     return {
       tweets: [],
-      popular: [],
+      topPopular: [],
       replyModalData: {},
       newReply: {},
     };
@@ -277,9 +67,21 @@ export default {
         });
       }
     },
-    fetchPopular() {
-      //GET /api/followships
-      this.topPopular = DummyData.users;
+    async fetchPopular() {
+      try {
+        const response = await userAPI.getTopUser()
+        const { data } = response
+        if (response.statusText !== 'OK') {
+          throw new Error(data.message)
+        }
+        this.topPopular = data 
+      } catch (error) {
+        console.error(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推薦追蹤名單'
+        })
+      }
     },
     afterSubmitTweet(payload) {
       const { tweetId, description } = payload;
