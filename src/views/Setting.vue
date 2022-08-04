@@ -124,7 +124,6 @@ export default {
       return
     }
     const { id } = this.$route.params 
-    console.log(id)
     this.fetchUserProfile(id)
   },
   computed: {
@@ -190,7 +189,7 @@ export default {
         this.isProcessing = true
         const form = e.target
         const formData = new FormData(form)
-        const response = await usersAPI.updateUserSetting({
+        const response = await usersAPI.update({
           userId: this.id, formData
         })
         const { data } = response
@@ -201,6 +200,9 @@ export default {
           icon: 'success',
           title: '更新帳戶資料成功'
         })
+        // 更新成功, 清空密碼
+        this.password = ''
+        this.checkPassword = ''
         this.isProcessing = false
       } catch (error) {
         this.isProcessing = false

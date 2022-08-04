@@ -68,7 +68,7 @@
                 />
               </div>
             </div>
-            <span v-if="description.trim().length === 0" class="alert-msg"
+            <span v-if="description && description.trim().length === 0" class="alert-msg"
               >內容不可空白</span
             >
             <button
@@ -197,7 +197,7 @@ export default {
             position: absolute;
             left: 25px;
             top: 60px;
-            height: 85px;
+            height: calc(100% - 45px);  // 裝飾線長度自動調整
             background-color: $gray3;
             border-right: 1px solid $gray3;
             border-left: 1px solid $gray3;
@@ -209,9 +209,11 @@ export default {
             border-radius: 50%;
           }
           .tweet-info {
+            width: 85%;
             display: flex;
             flex-direction: column;
             .tweet-detail {
+              width: 100%;
               align-items: center;
               > span {
                 font-size: 16px;
@@ -226,13 +228,17 @@ export default {
               }
             }
             .tweet-text {
+              width: 100%;
               margin-right: 0;
               margin-top: 8px;
               color: $black;
               font-size: 16px;
               font-weight: 400;
+              // 避免文字過長溢出
+              overflow-wrap: break-word;
             }
             .reply-to {
+              width: 100%;
               margin-top: 10px;
               span {
                 font-size: 14px;

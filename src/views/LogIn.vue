@@ -19,7 +19,7 @@
           required
         />
         <div class="alert-msg">
-          <span class="msg" v-if="errorMsg === 'Account not exists for user'">帳號不存在</span>
+          <span class="msg" v-if="errorMsg === 'Account not exists for users'">帳號不存在</span>
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export default {
         this.password = "";
         this.isProcessing = false;
         console.error(error.message)
-        if (error.message === 'Account not exists for user') {
+        if (error.message === 'Account not exists for users') {
           this.errorMsg = error.message
             Toast.fire({
             icon: "error",
