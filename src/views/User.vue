@@ -19,9 +19,6 @@
         <UserNavPills />
         <!-- view MainTweets.vue or Replies.vue or likedTweets.vue -->
         <router-view
-          :initialTweets="tweets"
-          :initialLikeTweets="likeTweets"
-          :initialReplies="replies"
           @after-click-reply="afterClickReply"
           class="scrollbar bottom-lists"
         />
@@ -50,7 +47,6 @@ import ReplyModal from "../components/ReplyModal.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
-import tweetsAPI from "./../apis/tweets";
 
 const DummyData = {
   currentUser: {
@@ -422,7 +418,7 @@ export default {
         introduction: "",
         role: "",
       },
-      tweets: [],
+      // tweets: [],
       likeTweets: [],
       replies: [],
       topPopular: [],
@@ -433,9 +429,6 @@ export default {
     // 監聽路由
     const { id } = to.params;
     this.fetchProfile(id);
-    this.fetchTweets();
-    this.fetchLikeTweets();
-    this.fetchReplies(id);
     next();
   },
   created() {
@@ -443,9 +436,6 @@ export default {
     const { id } = this.$route.params;
     this.fetchData(id);
     this.fetchProfile(id);
-    this.fetchTweets();
-    this.fetchLikeTweets();
-    this.fetchReplies(id);
   },
   methods: {
     async fetchProfile(userId) {
@@ -472,7 +462,9 @@ export default {
           name: response.data.name,
           avatar: response.data.avatar,
           cover: response.data.cover,
-          introduction: response.data.introduction,
+          introduction: !response.data.introduction
+            ? ""
+            : response.data.introduction,
           role: response.data.role,
           followerCount: response.data.followerCount,
           followingCount: response.data.followingCount,
@@ -497,58 +489,6 @@ export default {
         });
       }
     },
-    async fetchTweets() {
-      try {
-        const response = await tweetsAPI.tweets.getTweets();
-        if (response.statusText !== "OK") {
-          throw new Error("無法取得推文資料，請稍後再試");
-        }
-        this.tweets = response.data;
-        console.log(this.tweets);
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得推文資料，請稍後再試",
-        });
-      }
-    },
-    async fetchReplies(id) {
-      try {
-        const response = await usersAPI.getTheUserReplies({
-          userId: id,
-        });
-        if (response.statusText !== "OK") {
-          throw new Error("無法取得留言資料，請稍後再試");
-        }
-        this.replies = response.data;
-        console.log("reply1", response.data);
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得留言資料，請稍後再試",
-        });
-      }
-    },
-    async fetchLikeTweets() {
-      try {
-        const response = await tweetsAPI.tweets.getTweets();
-        if (response.statusText !== "OK") {
-          throw new Error("無法取得推文資料，請稍後再試");
-        }
-        this.tweets = response.data;
-        this.likeTweets = this.tweets.filter((tweet) => {
-          return tweet.isLiked === true;
-        });
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得推文資料，請稍後再試",
-        });
-      }
-    },
     fetchData() {
       //GET /api/followships 取得前十使用者
       this.topPopular = DummyData.users;
@@ -566,16 +506,11 @@ export default {
       };
     },
     async afterSubmitProfile(formData) {
-      // for (let [name, value] of formData.entries()) {
-      //   console.log(name, value);
-      // }
       try {
         const response = await usersAPI.update({
           userId: this.currentUser.id,
           formData,
         });
-        // console.log("id", this.currentUser.id);
-        // console.log("edit", response.data);
         // 更新後的資料，渲染用
         if (response.statusText === "OK") {
           throw new Error("無法編輯個人資料，請稍後再試");

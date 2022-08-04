@@ -62,30 +62,40 @@ import tweetsAPI from "./../apis/tweets";
 export default {
   name: "likedTweets",
   mixins: [fromNowFilter],
-  props: {
-    initialLikeTweets: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       likeTweets: [],
       oneTweet: {},
     };
   },
-  watch: {
-    initialLikeTweets(newValue) {
-      this.likeTweets = [...newValue];
-      console.log("like", this.likeTweets);
-    },
+  beforeRouteUpdate(to, from, next) {
+    // 監聽路由
+    this.fetchTweets();
+    next();
   },
   created() {
     this.fetchLikeTweets();
   },
   methods: {
-    fetchLikeTweets() {
-      this.likeTweets = this.initialLikeTweets;
+    async fetchLikeTweets() {
+      try {
+        // 先有全部的 tweets
+        const response = await tweetsAPI.tweets.getTweets();
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+        // 再撈出喜歡的 tweets
+        this.likeTweets = this.tweets.filter((tweet) => {
+          return tweet.isLiked === true;
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
     },
     isClickedTweet(tweetId) {
       // 被點擊的那則留言的資料，傳到父層 User.vue

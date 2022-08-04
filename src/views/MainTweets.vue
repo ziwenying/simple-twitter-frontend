@@ -58,33 +58,44 @@
 import { fromNowFilter } from "./../utils/mixins";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "MainTweets",
   mixins: [fromNowFilter],
-  props: {
-    initialTweets: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       tweets: [],
       oneTweet: {},
     };
   },
-  watch: {
-    initialTweets(newValue) {
-      this.tweets = [...newValue];
-    },
+  beforeRouteUpdate(to, from, next) {
+    // 監聽路由
+    const { id } = to.params;
+    this.fetchTweets(id);
+    next();
   },
   created() {
-    this.fetchTweets();
+    const { id } = this.$route.params;
+    this.fetchTweets(id);
   },
   methods: {
-    fetchTweets() {
-      this.tweets = this.initialTweets;
+    async fetchTweets(id) {
+      try {
+        const response = await usersAPI.getTheUserTweets({
+          userId: id,
+        });
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
     },
     isClickedTweet(tweetId) {
       // 被點擊的那則留言的資料，傳到父層 User.vue

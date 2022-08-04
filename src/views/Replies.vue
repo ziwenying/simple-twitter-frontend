@@ -25,36 +25,57 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "Replies",
   mixins: [fromNowFilter],
-  props: {
-    initialReplies: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       replies: [],
     };
   },
-  watch: {
-    initialReplies(newValue) {
-      this.replies = [...newValue];
-      // 拆層
-      this.replies = this.replies.map((reply) => {
-        return {
-          id: reply.id,
-          avatar: reply.User.avatar,
-          name: reply.User.name,
-          account: reply.User.account,
-          createdAt: reply.createdAt,
-          comment: reply.comment,
-          targetAccount: reply.Tweet.User.account,
-        };
-      });
+  beforeRouteUpdate(to, from, next) {
+    // 監聽路由
+    const { id } = to.params;
+    this.fetchReplies(id);
+    next();
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchReplies(id);
+  },
+  methods: {
+    async fetchReplies(id) {
+      try {
+        const response = await usersAPI.getTheUserReplies({
+          userId: id,
+        });
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得留言資料，請稍後再試");
+        }
+
+        this.replies = response.data;
+        // 資料拆層
+        this.replies = this.replies.map((reply) => {
+          return {
+            id: reply.id,
+            avatar: reply.User.avatar,
+            name: reply.User.name,
+            account: reply.User.account,
+            createdAt: reply.createdAt,
+            comment: reply.comment,
+            targetAccount: reply.Tweet.User.account,
+          };
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得留言資料，請稍後再試",
+        });
+      }
     },
   },
 };
