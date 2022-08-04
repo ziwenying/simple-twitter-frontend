@@ -2,27 +2,27 @@
   <div class="follow-lists">
     <div
       v-for="followList in showFollowLists"
-      :key="followList.followingId"
+      :key="followList.followId"
       class="follow-list"
     >
-      <router-link :to="{ path: `/users/${followList.followingId}/tweets` }">
+      <router-link :to="{ path: `/users/${followList.followId}/tweets` }">
         <img class="user-avatar" :src="followList.avatar" alt="user-avatar" />
       </router-link>
       <div class="follow-content">
         <p class="follow-name">{{ followList.name }}</p>
         <p class="follow-intro">
-          {{ followList.selfIntroduction }}
+          {{ followList.introduction }}
         </p>
       </div>
       <button
-        @click.stop.prevent="deleteFollowed(followList.followingId)"
+        @click.stop.prevent="deleteFollowed(followList.followId)"
         v-if="followList.isFollowing"
         class="btn-follow"
       >
         正在跟隨
       </button>
       <button
-        @click.stop.prevent="addFollowed(followList.followingId)"
+        @click.stop.prevent="addFollowed(followList.followId)"
         v-if="!followList.isFollowing"
         class="btn-unfollow"
       >
@@ -33,6 +33,9 @@
 </template>
 
 <script>
+import { Toast } from "../utils/helpers";
+import usersAPI from "./../apis/users";
+import { mapState } from "vuex";
 export default {
   name: "FollowerNavPills",
   props: {
@@ -40,11 +43,12 @@ export default {
       type: Array,
       default: () => [
         {
-          followingId: -1,
+          followId: -1,
+          followerId: -1,
           name: "",
           account: "",
           avatar: "",
-          selfIntroduction: "",
+          introduction: "",
           isFollowing: false,
         },
       ],
@@ -53,51 +57,105 @@ export default {
       type: Array,
       default: () => [
         {
+          followId: -1,
           followingId: -1,
           name: "",
           account: "",
           avatar: "",
-          selfIntroduction: "",
+          introduction: "",
           isFollowing: false,
         },
       ],
     },
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
   data() {
     return {
       showFollowLists: [],
     };
   },
+  watch: {
+    followerList(newVal) {
+      this.showFollowLists = [...newVal];
+    },
+    followingList(newVal) {
+      this.showFollowLists = [...newVal];
+    },
+  },
   created() {
     // 使用路由判斷 要顯示追蹤者，還是正在追蹤的資料
     if (this.$route.name === "user-followers") {
-      this.showFollowLists = this.followerList;
+      // 如果沒有跟隨者, 賦值空陣列
+      this.showFollowLists = this.followerList.length ? this.followerList : [];
     } else if (this.$route.name === "user-followings") {
-      this.showFollowLists = this.followingList;
+      // 如果沒有跟隨中對象, 賦值空陣列
+      this.showFollowLists = this.followingList.length
+        ? this.followingList
+        : [];
     }
   },
   methods: {
-    addFollowed(userId) {
-      // POST /api/followships 加追蹤
-      this.showFollowLists = this.showFollowLists.map((showFollowList) => {
-        return userId === showFollowList.followingId
-          ? {
-              ...showFollowList,
-              isFollowing: !showFollowList.isFollowing,
-            }
-          : showFollowList;
-      });
+    async addFollowed(userId) {
+      try {
+        const { data } = await usersAPI.addfollowed({ id: userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.showFollowLists = this.showFollowLists.map((showFollowList) => {
+          return userId === showFollowList.followId
+            ? {
+                ...showFollowList,
+                isFollowing: !showFollowList.isFollowing,
+              }
+            : showFollowList;
+        });
+        Toast.fire({
+          icon: "success",
+          title: "成功追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        if (error.message === "Can not follow yourself.") {
+          Toast.fire({
+            icon: "warning",
+            title: "不能追蹤自己唷！",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "無法追蹤該使用者，請稍後再試",
+          });
+        }
+      }
     },
-    deleteFollowed(userId) {
-      // Delete /api/followships/:followingId 刪追蹤
-      this.showFollowLists = this.showFollowLists.map((showFollowList) => {
-        return userId === showFollowList.followingId
-          ? {
-              ...showFollowList,
-              isFollowing: !showFollowList.isFollowing,
-            }
-          : showFollowList;
-      });
+    async deleteFollowed(userId) {
+      try {
+        const { data } = await usersAPI.deletefollowed({ userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        console.log(this.showFollowLists)
+        this.showFollowLists = this.showFollowLists.map((showFollowList) => {
+          return userId === showFollowList.followId
+            ? {
+                ...showFollowList,
+                isFollowing: !showFollowList.isFollowing,
+              }
+            : showFollowList;
+        });
+        Toast.fire({
+          icon: "success",
+          title: "已取消追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤該使用者，請稍後再試",
+        });
+      }
     },
   },
 };

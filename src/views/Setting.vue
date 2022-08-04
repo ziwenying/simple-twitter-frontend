@@ -18,7 +18,7 @@
                 placeholder="請輸入帳號"
                 required
               />
-              <div class="alert-msg">
+              <div class="alert-msg" v-if="errorMsg === 'The account is registered.'">
                 <span class="msg">account已重複註冊！</span>
               </div>
             </div>
@@ -35,7 +35,7 @@
                 required
               />
               <div class="alert-msg">
-                <span class="msg" v-if="name.length>50">字數超過上限！</span>
+                <span class="msg" v-if="name.length > 50">字數超過上限！</span>
                 <span class="letter-count" >{{name.length}}/50</span>
               </div>
             </div>
@@ -50,7 +50,7 @@
                 placeholder="請輸入Email"
                 required
               />
-              <div class="alert-msg">
+              <div class="alert-msg" v-if="errorMsg === 'The email is registered.'">
                 <span class="msg">Email已重複註冊！</span>
               </div>
             </div>
@@ -67,12 +67,12 @@
               />
             </div>
 
-            <div class="form-field password-check-field">
-              <label for="password-check">密碼確認</label>
+            <div class="form-field check-password-field">
+              <label for="check-password">密碼確認</label>
               <input
                 v-model="checkPassword"
-                id="password-check"
-                name="password-check"
+                id="check-password"
+                name="checkPassword"
                 type="password"
                 placeholder="請再次輸入密碼"
                 required
@@ -84,7 +84,7 @@
         </div>
         <div class="btn-container">
           <button class="processing-btn" disabled v-if="isProcessing">處理中</button>
-          <button class="save-btn" type="submit" v-else>儲存</button>
+          <button class="save-btn" type="submit" v-else :disabled="name.length > 50 ">儲存</button>
         </div>
       </form>
     </div>
@@ -98,6 +98,7 @@ import Navbar from "./../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import { Toast } from './../utils/helpers'
 import { mapState } from 'vuex'
+import usersAPI from './../apis/users'
 
 export default {
   name: "Setting",
@@ -113,7 +114,8 @@ export default {
       email: "",
       password: "",
       checkPassword: "",
-      isProcessing: false
+      isProcessing: false,
+      errorMsg : ""
     }
   },
   created() {
@@ -156,21 +158,18 @@ export default {
       this.account = this.currentUser.account,
       this.name = this.currentUser.name,
       this.email = this.currentUser.email
-      
-      console.log('userId',userId)
       // 如果當前登入的使用者id和路由id不符合, 轉址
       if (this.id !== Number(userId)) {
-        console.log(this.id)
-        console.log(userId)
         this.$router.push('not-found')
       }
     }, 
-    handleSubmit(e) {
-      
-      if (!this.account.trim() || !this.email.trim() || !this.name.trim() || !this.password.trim() || !this.checkPassword.trim()) {
+      async handleSubmit(e) {
+      try {
+        this.errorMsg = ''
+        if (!this.account.trim() || !this.email.trim() || !this.name.trim() || !this.password.trim() || !this.checkPassword.trim()) {
         Toast.fire({
           icon: 'warning',
-          title: '請輸入所有欄位'
+          title: '請輸入所有欄位，如不更新密碼，請輸入舊密碼'
         })
         return
       } else if ( this.password !== this.checkPassword) {
@@ -188,13 +187,55 @@ export default {
         })
         return
       }
-      this.isProcessing = true
-      console.log('submit')
-      const form = e.target
-      const formData = new FormData(form)
-      // TODO: 發送API給後端更改資料, 並檢查帳號跟信箱是否有重複; 等待資料回傳前isProcessing改變按鈕字樣
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ': ' + value)
+        this.isProcessing = true
+        const form = e.target
+        const formData = new FormData(form)
+        const response = await usersAPI.updateUserSetting({
+          userId: this.id, formData
+        })
+        const { data } = response
+        if (response.statusText !== 'OK') {
+          throw new Error (data.message)
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '更新帳戶資料成功'
+        })
+        this.isProcessing = false
+      } catch (error) {
+        this.isProcessing = false
+        console.error(error.message)
+        if (error.message === 'The email is registered.') {
+          this.errorMsg = error.message
+            Toast.fire({
+            icon: 'error',
+            title: 'Email已重複註冊！'
+          })
+        } else if (error.message === 'The account is registered.') {
+          this.errorMsg = error.message
+            Toast.fire({
+            icon: 'error',
+            title: 'account已重複註冊！'
+          })
+        } else if (error.message === 'Name is too long.') {
+          this.errorMsg = error.message
+            Toast.fire({
+            icon: 'error',
+            title: '暱稱不可超過50字'
+          })
+        } else if (error.message === 'Password and checkPassword are not same.') {
+          this.errorMsg = error.message
+          Toast.fire({
+            icon: 'error',
+            title: '兩次密碼輸入不相符'
+          })
+        } else {
+          this.errorMsg = error.message
+            Toast.fire({
+            icon: 'error',
+            title: '資料更新失敗'
+          })
+        }
       }
     }
   }
@@ -242,7 +283,7 @@ export default {
           margin-bottom: 32px;
           background-color: #f5f8fa;
           border-radius: 2px;
-          &.password-check-field {
+          &.check-password-field {
             margin-bottom: 0;
           }
           .alert-msg {
@@ -322,6 +363,9 @@ export default {
         padding: 8px 24px;
         font-size: 20px;
         color: $white;
+        &:disabled {
+          background-color: $gray3;
+        }
       }
     }
   }

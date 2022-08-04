@@ -36,6 +36,7 @@
 <script>
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
+
 export default {
   name: "Populars",
   props: {

@@ -143,8 +143,6 @@ export default {
           password: this.password,
           checkPassword: this.checkPassword,
         })
-        
-        console.log(data)
         if (data.status === 'error') {
           throw new Error (data.message)
         }
