@@ -29,13 +29,22 @@
         alt="message-btn"
         class="message-btn"
       />
+      <!-- 小鈴鐺 -->
       <!-- <img src="~@/assets/image/bell.png" alt="bell-btn" class="bell-btn" /> -->
       <img src="~@/assets/image/notfi.png" alt="bell-btn" class="bell-btn" />
       <button
-        class="handle-follow"
-        :class="{ 'btn-follow': false, 'btn-unfollow': true }"
+        @click.stop.prevent="addFollowed(targetProfile.id)"
+        v-if="!this.followShip"
+        class="handle-follow btn-unfollow"
       >
         跟隨
+      </button>
+      <button
+        @click.stop.prevent="deleteFollowed(targetProfile.id)"
+        v-if="this.followShip"
+        class="handle-follow btn-follow"
+      >
+        正在跟隨
       </button>
     </div>
     <div class="user-title">
@@ -60,6 +69,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "UserProfileCard",
@@ -68,9 +79,104 @@ export default {
       type: Object,
       require: true,
     },
+    initialChangeFollow: {
+      type: Boolean,
+      require: true,
+    },
   },
   computed: {
     ...mapState(["currentUser"]),
+  },
+  data() {
+    return {
+      followingList: [],
+      followShip: false,
+    };
+  },
+  watch: {
+    initialChangeFollow(newVal) {
+      this.followShip = newVal;
+    },
+  },
+  methods: {
+    async fetchFollowings() {
+      //追蹤功能需使用的資料
+      try {
+        const response = await usersAPI.getFollowings({
+          userId: this.$route.params.id,
+        });
+        const { data } = response;
+        console.log(response);
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
+        }
+        this.followingList = data;
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    async addFollowed(userId) {
+      try {
+        const { data } = await usersAPI.addfollowed({ id: userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.followingList = this.followingList.map((following) => {
+          return userId === following.followId
+            ? {
+                ...following,
+                isFollowing: !following.isFollowing,
+              }
+            : following;
+        });
+        this.followShip = true;
+        Toast.fire({
+          icon: "success",
+          title: "成功追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        if (error.message === "Can not follow yourself.") {
+          Toast.fire({
+            icon: "warning",
+            title: "不能追蹤自己唷！",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "無法追蹤該使用者，請稍後再試",
+          });
+        }
+      }
+    },
+    async deleteFollowed(userId) {
+      try {
+        const { data } = await usersAPI.deletefollowed({ userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        console.log(this.followingList);
+        this.followingList = this.followingList.map((following) => {
+          return userId === following.followId
+            ? {
+                ...following,
+                isFollowing: !following.isFollowing,
+              }
+            : following;
+        });
+        this.followShip = false;
+        Toast.fire({
+          icon: "success",
+          title: "已取消追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤該使用者，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>

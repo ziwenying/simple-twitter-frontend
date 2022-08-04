@@ -8,11 +8,7 @@
         :key="popular.id"
       >
         <div class="popular-list">
-          <img
-            class="user-avatar"
-            src="./../assets/image/user-image.png"
-            alt="user-avatar"
-          />
+          <img class="user-avatar" :src="popular.avatar" alt="user-avatar" />
           <div class="name-account">
             <p class="name">{{ popular.name }}</p>
             <p class="account">@{{ popular.account }}</p>
@@ -38,12 +34,19 @@
 </template>
 
 <script>
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
 export default {
   name: "Populars",
   props: {
     initialTopPopular: {
       type: Array,
       required: true,
+    },
+  },
+  watch: {
+    initialTopPopular(newVal) {
+      this.topPopular = [...newVal];
     },
   },
   data() {
@@ -58,27 +61,64 @@ export default {
     fetchTopPupular() {
       this.topPopular = this.initialTopPopular;
     },
-    addFollowed(userId) {
-      // POST /api/followships 加追蹤
-      this.topPopular = this.topPopular.map((popular) => {
-        return userId === popular.id
-          ? {
-              ...popular,
-              isFollowed: !popular.isFollowed,
-            }
-          : popular;
-      });
+    async addFollowed(userId) {
+      try {
+        const { data } = await usersAPI.addfollowed({ id: userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.topPopular = this.topPopular.map((popular) => {
+          return userId === popular.id
+            ? {
+                ...popular,
+                isFollowed: !popular.isFollowed,
+              }
+            : popular;
+        });
+        Toast.fire({
+          icon: "success",
+          title: "成功追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        if (error.message === "Can not follow yourself.") {
+          Toast.fire({
+            icon: "warning",
+            title: "不能追蹤自己唷！",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "無法追蹤該使用者，請稍後再試",
+          });
+        }
+      }
     },
-    deleteFollowed(userId) {
-      // Delete /api/followships/:followingId 刪追蹤
-      this.topPopular = this.topPopular.map((popular) => {
-        return userId === popular.id
-          ? {
-              ...popular,
-              isFollowed: !popular.isFollowed,
-            }
-          : popular;
-      });
+    async deleteFollowed(userId) {
+      try {
+        const { data } = await usersAPI.deletefollowed({ userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.topPopular = this.topPopular.map((popular) => {
+          return userId === popular.id
+            ? {
+                ...popular,
+                isFollowed: !popular.isFollowed,
+              }
+            : popular;
+        });
+        Toast.fire({
+          icon: "success",
+          title: "已取消追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤該使用者，請稍後再試",
+        });
+      }
     },
   },
 };
