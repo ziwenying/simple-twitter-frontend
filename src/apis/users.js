@@ -31,5 +31,10 @@ export default {
     return apiHelper.delete(`/followships/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  updateUserSetting({ userId, formData }) {
+    return apiHelper.put(`/users/${userId}`,  formData , {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 } 
