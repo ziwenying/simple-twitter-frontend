@@ -17,7 +17,7 @@
         <UserProfileCard :targetProfile="targetProfile" />
         <!-- component UserNavPills.vue -->
         <UserNavPills />
-        <!-- view MainTweets.vue or Replies.vue -->
+        <!-- view MainTweets.vue or Replies.vue or likedTweets.vue -->
         <router-view
           :initialTweets="tweets"
           :initialLikeTweets="likeTweets"
@@ -434,6 +434,7 @@ export default {
     const { id } = to.params;
     this.fetchProfile(id);
     this.fetchTweets();
+    this.fetchLikeTweets();
     this.fetchReplies(id);
     next();
   },
@@ -443,6 +444,7 @@ export default {
     this.fetchData(id);
     this.fetchProfile(id);
     this.fetchTweets();
+    this.fetchLikeTweets();
     this.fetchReplies(id);
   },
   methods: {
@@ -529,26 +531,38 @@ export default {
         });
       }
     },
+    async fetchLikeTweets() {
+      try {
+        const response = await tweetsAPI.tweets.getTweets();
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+        this.likeTweets = this.tweets.filter((tweet) => {
+          return tweet.isLiked === true;
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
+    },
     fetchData() {
-      // /api/tweets 使用 id 取得所有推文
-      // this.tweets = DummyData.tweets;
-      this.likeTweets = this.tweets.filter((tweet) => {
-        return tweet.isLiked === true;
-      });
-      //GET  /api/tweets/:tweet_id/replies 取得所有回覆
-      this.replies = DummyData.replies;
       //GET /api/followships 取得前十使用者
       this.topPopular = DummyData.users;
     },
     afterClickReply(payload) {
-      const { id, text, createdAt, user } = payload;
+      // 點擊回覆，顯示 modal 使用的資料
+      const { id, description, User, createdAt } = payload;
       this.replyModalData = {
         id,
-        text,
-        createdAt,
-        userName: user.name,
-        userAccount: user.account,
-        userAvatar: user.avatar,
+        description,
+        userName: User.name,
+        userAccount: User.account,
+        userAvatar: User.avatar,
+        createdAt: createdAt,
       };
     },
     async afterSubmitProfile(formData) {
