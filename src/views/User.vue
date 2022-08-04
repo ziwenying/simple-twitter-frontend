@@ -6,11 +6,7 @@
       <div class="user-outer">
         <div class="reply-lists-title">
           <router-link :to="{ name: 'main-page' }">
-            <img
-              class="arrow"
-              src="~@/assets/image/arrow.png"
-              alt="arrow"
-            />
+            <img class="arrow" src="~@/assets/image/arrow.png" alt="arrow" />
           </router-link>
           <div class="name-tweet">
             <p class="name">{{ targetProfile.name }}</p>
@@ -25,7 +21,7 @@
         <router-view
           :initialTweets="tweets"
           :initialLikeTweets="likeTweets"
-          :replies="replies"
+          :initialReplies="replies"
           @after-click-reply="afterClickReply"
           class="scrollbar bottom-lists"
         />
@@ -35,7 +31,7 @@
     <Populars :initialTopPopular="topPopular" class="col-3 popular" />
     <!-- component UserEditModal -->
     <UserEditModal
-      @after-submit="afterSubmit"
+      @after-submit-profile="afterSubmitProfile"
       :initialTargetProfile="targetProfile"
     />
     <CreateTweetModal />
@@ -51,25 +47,11 @@ import Populars from "../components/Populars.vue";
 import UserEditModal from "../components/UserEditModal.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
+import tweetsAPI from "./../apis/tweets";
 
-const dummyDataProfile = {
-  id: 2,
-  account: "user1",
-  email: "user1@example.com",
-  name: "user1",
-  avatar:
-    "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/avatar.png?raw=true",
-  cover:
-    "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/profile-background.png?raw=true",
-  introduction:
-    "balabababa, Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. ",
-  role: "user",
-  createdAt: "2022-07-29T14:25:42.000Z",
-  updatedAt: "2022-07-29T14:25:42.000Z",
-  followerCount: 59, //新增
-  followingCount: 34, //新增
-  tweetsCount: 25, //新增
-};
 const DummyData = {
   currentUser: {
     id: -1,
@@ -425,48 +407,131 @@ export default {
     ReplyModal,
     CreateTweetModal,
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   data() {
     return {
       targetProfile: {
-        id: 2,
-        account: "user1",
-        email: "user1@example.com",
-        name: "user1",
-        avatar: "https://avatar-url",
-        cover: "https://cover-url",
-        introduction: "balabababa",
-        role: "user",
-        createdAt: "2022-07-29T14:25:42.000Z",
-        updatedAt: "2022-07-29T14:25:42.000Z",
+        id: -1,
+        account: "",
+        email: "",
+        name: "",
+        avatar: "",
+        cover: "",
+        introduction: "",
+        role: "",
       },
       tweets: [],
       likeTweets: [],
       replies: [],
       topPopular: [],
-      currentUser: {
-        id: -1,
-        name: "user1",
-        avatar:
-          "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
-        account: "apple01",
-        email: "user1@example.com",
-        role: "user",
-      },
       replyModalData: {},
     };
+  },
+  beforeRouteUpdate(to, from, next) {
+    // 監聽路由
+    const { id } = to.params;
+    this.fetchProfile(id);
+    this.fetchTweets();
+    this.fetchReplies(id);
+    next();
   },
   created() {
     //透過 id 取得指定使用者的資料
     const { id } = this.$route.params;
     this.fetchData(id);
+    this.fetchProfile(id);
+    this.fetchTweets();
+    this.fetchReplies(id);
   },
   methods: {
+    async fetchProfile(userId) {
+      try {
+        const response = await usersAPI.getTheUser({ userId });
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得使用者資料，請稍後再試");
+        }
+        const {
+          id,
+          account,
+          email,
+          name,
+          avatar,
+          cover,
+          introduction,
+          role,
+          followerCount,
+          followingCount,
+        } = {
+          id: response.data.id,
+          account: response.data.account,
+          email: response.data.email,
+          name: response.data.name,
+          avatar: response.data.avatar,
+          cover: response.data.cover,
+          introduction: response.data.introduction,
+          role: response.data.role,
+          followerCount: response.data.followerCount,
+          followingCount: response.data.followingCount,
+        };
+        this.targetProfile = {
+          id,
+          account,
+          email,
+          name,
+          avatar,
+          cover,
+          introduction,
+          role,
+          followerCount,
+          followingCount,
+        };
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
+    async fetchTweets() {
+      try {
+        const response = await tweetsAPI.tweets.getTweets();
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+        console.log(this.tweets);
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
+    },
+    async fetchReplies(id) {
+      try {
+        const response = await usersAPI.getTheUserReplies({
+          userId: id,
+        });
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得留言資料，請稍後再試");
+        }
+        this.replies = response.data;
+        console.log("reply1", response.data);
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得留言資料，請稍後再試",
+        });
+      }
+    },
     fetchData() {
-      // /api/users/:id 取得指定使用者的資料
-      //用 this.$route.parmas 給後端去取
-      this.targetProfile = dummyDataProfile;
       // /api/tweets 使用 id 取得所有推文
-      this.tweets = DummyData.tweets;
+      // this.tweets = DummyData.tweets;
       this.likeTweets = this.tweets.filter((tweet) => {
         return tweet.isLiked === true;
       });
@@ -486,21 +551,47 @@ export default {
         userAvatar: user.avatar,
       };
     },
-    afterSubmit(formData) {
-      //Put /api/users/:id 編輯自己的資料
-      for (let [name, value] of formData.entries()) {
-        console.log(name, value);
-        // 撈出更新的資料
+    async afterSubmitProfile(formData) {
+      // for (let [name, value] of formData.entries()) {
+      //   console.log(name, value);
+      // }
+      try {
+        const response = await usersAPI.update({
+          userId: this.currentUser.id,
+          formData,
+        });
+        // console.log("id", this.currentUser.id);
+        // console.log("edit", response.data);
+        // 更新後的資料，渲染用
+        if (response.statusText === "OK") {
+          throw new Error("無法編輯個人資料，請稍後再試");
+        }
+        // 及時更新圖
+        const data = response.data;
+        const { name, avatar, cover, introduction } = {
+          name: data.name,
+          avatar: data.avatar,
+          cover: data.cover,
+          introduction: data.introduction,
+        };
+        this.targetProfile = {
+          ...this.targetProfile,
+          name,
+          avatar,
+          cover,
+          introduction,
+        };
+        Toast.fire({
+          icon: "success",
+          title: "個人資料編輯成功",
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法編輯個人資料，請稍後再試",
+        });
       }
-      // 下面更新使用者的資料使用
-      // /api/users/:id 取得指定使用者的資料
-      // this.targetProfile = {
-      //   ...this.targetProfile,
-      //   avatar: "https://avatar-url",
-      //   cover: "https://cover-url",
-      //   name: arrayFormData[2],
-      //   introduction: arrayFormData[3],
-      // };
     },
   },
 };

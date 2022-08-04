@@ -2,23 +2,21 @@
   <div class="reply-lists">
     <div class="reply-list" v-for="reply in replies" :key="reply.id">
       <a href="#">
-        <img class="user-avatar" :src="reply.user.avatar" alt="user-avatar" />
+        <img class="user-avatar" :src="reply.avatar" alt="user-avatar" />
       </a>
       <div class="reply-content">
         <div class="reply-title">
-          <p class="name">{{ reply.user.name }}</p>
+          <p class="name">{{ reply.name }}</p>
           <p class="account-time">
-            @{{ reply.user.account }}&nbsp;‧&nbsp;{{
-              reply.createdAt | fromNow
-            }}
+            @{{ reply.account }}&nbsp;‧&nbsp;{{ reply.createdAt | fromNow }}
           </p>
         </div>
         <div class="reply-who">
           <p class="reply">回覆</p>
-          <p class="account">@{{ reply.tweetMaster }}</p>
+          <p class="account">@{{ reply.targetAccount }}</p>
         </div>
         <p class="text">
-          {{ reply.text }}
+          {{ reply.comment }}
         </p>
       </div>
     </div>
@@ -32,9 +30,31 @@ export default {
   name: "Replies",
   mixins: [fromNowFilter],
   props: {
-    replies: {
+    initialReplies: {
       type: Array,
       required: true,
+    },
+  },
+  data() {
+    return {
+      replies: [],
+    };
+  },
+  watch: {
+    initialReplies(newValue) {
+      this.replies = [...newValue];
+      // 拆層
+      this.replies = this.replies.map((reply) => {
+        return {
+          id: reply.id,
+          avatar: reply.User.avatar,
+          name: reply.User.name,
+          account: reply.User.account,
+          createdAt: reply.createdAt,
+          comment: reply.comment,
+          targetAccount: reply.Tweet.User.account,
+        };
+      });
     },
   },
 };

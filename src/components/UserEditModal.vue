@@ -41,7 +41,7 @@
                 id="image-cover"
                 ref="cover"
                 type="file"
-                name="image"
+                name="cover"
                 accept="image/*"
                 class="d-none"
                 @change="handleCoverChange"
@@ -65,7 +65,7 @@
                 id="image-avatar"
                 ref="avatar"
                 type="file"
-                name="image"
+                name="avatar"
                 accept="image/*"
                 class="d-none"
                 @change="handleAvatarChange"
@@ -150,6 +150,7 @@
 <script>
 import $ from "jquery";
 import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 
 export default {
   name: "UserEditModal",
@@ -157,6 +158,7 @@ export default {
     initialTargetProfile: {
       type: Object,
       default: () => ({
+        id: -1,
         name: "",
         avatar:
           "https://github.com/ziwenying/simple-twitter-frontend/blob/main/src/assets/image/user-image.png?raw=true",
@@ -166,9 +168,13 @@ export default {
       }),
     },
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   data() {
     return {
       profile: {
+        id: -1,
         avatar: "",
         cover: "",
         name: "",
@@ -176,13 +182,14 @@ export default {
       },
     };
   },
+  watch: {
+    initialTargetProfile(newValue) {
+      this.profile = { ...newValue };
+      console.log("watch", this.profile);
+    },
+  },
   created() {
     // const { id: UserId } = this.$route.params;
-    this.profile = {
-      ...this.profile,
-      //如果沒有資料傳過來，就呈現預設資料
-      ...this.initialTargetProfile,
-    };
     this.getProfile();
   },
   methods: {
@@ -194,6 +201,7 @@ export default {
         introduction: this.initialTargetProfile.introduction,
       };
       this.profile = { avatar, cover, name, introduction };
+      console.log("create", this.profile);
     },
     handleCoverChange(e) {
       const { files } = e.target;
@@ -224,7 +232,7 @@ export default {
       // 恢復原本的 cover
       this.profile.cover = this.initialTargetProfile.cover;
     },
-    handleSubmit(e) {
+    async handleSubmit(e) {
       if (!this.profile.name.trim()) {
         Toast.fire({
           icon: "warning",
@@ -240,18 +248,13 @@ export default {
           title: "字數超出上限！",
         });
         return;
-      } else {
-        Toast.fire({
-          icon: "success",
-          title: "推文發送成功",
-        });
       }
       //關掉Modal
       $("#user-edit").modal("hide");
       // 表單資料轉為物件傳回父層 User.vue
       const form = e.target; // <form></form>
       const formData = new FormData(form);
-      this.$emit("after-submit", formData);
+      this.$emit("after-submit-profile", formData);
     },
   },
 };
@@ -481,4 +484,3 @@ export default {
   }
 }
 </style>
-

@@ -196,6 +196,7 @@ $light-blue2: #e6ecf0;
     .user-avatar {
       width: 50px;
       height: 50px;
+      border-radius: 50%;
     }
     .tweet-title-name-account {
       margin: 0 0 0 8px;

@@ -5,14 +5,39 @@
       :src="targetProfile.cover"
       alt="user-background"
     />
-    <div class="avatar">
-      <img class="user-avatar" :src="targetProfile.avatar" alt="user-avatar" />
+    <!--  -->
+    <div class="user-avatar">
+      <!-- 大頭貼 -->
+      <img :src="targetProfile.avatar" alt="user-avatar" class="avatar" />
     </div>
-    <button class="user-edit" data-toggle="modal" data-target="#user-edit">
+    <!--  -->
+    <button
+      v-if="Number($route.params.id) === currentUser.id"
+      class="user-edit"
+      data-toggle="modal"
+      data-target="#user-edit"
+    >
       編輯個人資料
     </button>
     <!-- v-if 如果此頁面非當前的使用者 -->
-
+    <div
+      v-else-if="Number($route.params.id) !== currentUser.id"
+      class="btn-icon"
+    >
+      <img
+        src="~@/assets/image/message.png"
+        alt="message-btn"
+        class="message-btn"
+      />
+      <!-- <img src="~@/assets/image/bell.png" alt="bell-btn" class="bell-btn" /> -->
+      <img src="~@/assets/image/notfi.png" alt="bell-btn" class="bell-btn" />
+      <button
+        class="handle-follow"
+        :class="{ 'btn-follow': false, 'btn-unfollow': true }"
+      >
+        跟隨
+      </button>
+    </div>
     <div class="user-title">
       <div class="name">{{ targetProfile.name }}</div>
       <div class="account">@{{ targetProfile.account }}</div>
@@ -34,6 +59,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "UserProfileCard",
   props: {
@@ -41,6 +68,9 @@ export default {
       type: Object,
       require: true,
     },
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
 };
 </script>
@@ -56,7 +86,7 @@ export default {
   .background-img {
     height: 200px;
   }
-  .avatar {
+  .user-avatar {
     position: absolute;
     top: 124px;
     left: 16px;
@@ -64,10 +94,11 @@ export default {
     height: 140px;
     border-radius: 50%;
     border: 4px $white solid;
-    .user-avatar {
+    .avatar {
       width: 132px;
       height: 132px;
       object-fit: cover;
+      border-radius: 50%;
     }
   }
 
@@ -77,6 +108,34 @@ export default {
     top: 216px;
     right: 16px;
     width: 128px;
+  }
+
+  .btn-icon {
+    display: flex;
+    position: absolute;
+    top: 216px;
+    right: 16px;
+    widows: 100%;
+    .message-btn,
+    .bell-btn {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+    .message-btn,
+    .bell-btn,
+    .handle-follow {
+      margin: 0 0 0 16px;
+    }
+
+    .btn-follow {
+      @extend %btn-style;
+      width: 96px;
+    }
+    .btn-unfollow {
+      @extend %btn-unfollowed-style;
+      width: 64px;
+    }
   }
 
   .user-title {

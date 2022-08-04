@@ -37,7 +37,7 @@
                 src="~@/assets/image/reply.png"
                 alt="reply"
               />
-              <p>{{ tweet.commentCount }}</p>
+              <p>{{ tweet.replyCount }}</p>
             </div>
             <div class="tweet-heart">
               <img
@@ -174,6 +174,7 @@ export default {
       margin: 16px 8px 0 0;
       width: 50px;
       height: 50px;
+      border-radius: 50%;
     }
     .tweet-content {
       display: flex;
@@ -211,7 +212,6 @@ export default {
       .tweet-reply-heart {
         display: flex;
         margin: 0 0 18px 0;
-        z-index: 1;
         .tweet-reply,
         .tweet-heart {
           display: flex;

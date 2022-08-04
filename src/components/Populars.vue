@@ -103,6 +103,7 @@ export default {
       .user-avatar {
         width: 50px;
         height: 50px;
+        border-radius: 50%;
       }
       .name-account {
         padding: 0 13px 0 8px;
