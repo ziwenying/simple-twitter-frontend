@@ -70,7 +70,7 @@ export default {
   },
   watch: {
     initialTweets(newValue) {
-      this.tweets = [...this.tweets, ...newValue];
+      this.tweets = [...newValue];
     },
   },
   created() {

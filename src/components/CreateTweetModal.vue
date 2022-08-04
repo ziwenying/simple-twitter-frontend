@@ -1,105 +1,120 @@
 <template>
   <form action="submit" @submit.prevent.stop="handleSubmit">
     <div
-    class="modal fade create-tweet-modal-container"
-    id="createTweetModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="createTweetModal"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button
-            type="button"
-            class="close-btn"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <img aria-hidden="true" src="~@/assets/image/modal-close-icon.png" alt="close-icon">
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="modal-user-avatar">
-            <img src="~@/assets/image/avatar.png" alt="avatar">
+      class="modal fade create-tweet-modal-container"
+      id="createTweetModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="createTweetModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close-btn"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <img
+                aria-hidden="true"
+                src="~@/assets/image/modal-close-icon.png"
+                alt="close-icon"
+              />
+            </button>
           </div>
-           <div class="modal-tweet-text">
-             <textarea
-                v-model="text"
+          <div class="modal-body">
+            <div class="modal-user-avatar">
+              <img :src="currentUser.avatar" alt="avatar" />
+            </div>
+            <div class="modal-tweet-text">
+              <textarea
+                v-model="description"
                 class="form-control"
                 id="tweet-text"
                 name="tweet-text"
                 type="text"
                 placeholder="有什麼新鮮事？"
               />
-           </div>
-           <span class="alert-msg" v-if="text.trim().length> 140">字數不可超過 140 字</span>
-           <button class="modal-tweet-btn" type="submit" :disabled="text.trim().length> 140">推文</button>
+            </div>
+            <span class="alert-msg" v-if="description.trim().length > 140"
+              >字數不可超過 140 字</span
+            >
+            <button
+              class="modal-tweet-btn"
+              type="submit"
+              :disabled="description.trim().length > 140"
+            >
+              推文
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </form>
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid"
-import { Toast } from "./../utils/helpers"
-import $ from 'jquery'   
-const dummyUser = {
-  currentUser: {
-    id: - 1,
-    name: 'root',
-    account: 'root',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    role: 'user'
-  },
-  isAuthenticated: true
-}
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
+import { mapState } from 'vuex'
+import $ from "jquery";
+
 export default {
   name: "CreateTweetModal",
   data() {
     return {
-      currentUser: dummyUser.currentUser,
-      text:'',
-    }
+      description: "",
+    };
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
-    handleSubmit() {
-      // TODO: 向 API 發送 POST 請求
-      // 表單驗證
-      if (!this.text.trim()) {
+    async handleSubmit() {
+      try {
+        // 表單驗證
+        if (!this.description.trim()) {
+          Toast.fire({
+            icon: "warning",
+            title: "內容不可空白",
+          });
+          return;
+        } else if (this.description.length > 140) {
+          Toast.fire({
+            icon: "warning",
+            title: "字數不可超過 140 字",
+          });
+          return;
+        } else {
+          Toast.fire({
+            icon: "success",
+            title: "推文發送成功",
+          });
+        }
+        const { data } = await tweetsAPI.tweets.create({ description: this.description })
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        // 伺服器新增 Comment 成功後...
+        this.$emit("after-submit-tweet", {
+          tweetId: data.tweetId, 
+          description: this.description,
+        });
+        // 送出後清空新增推文區塊的文字
+        this.description = "";
+        //關掉Modal
+        $("#createTweetModal").modal("hide");
+      } catch (error) {
+        console.error(error.message);
         Toast.fire({
-          icon: 'warning',
-          title: '內容不可空白'
-        })
-        return
-      } else if (this.text.length > 140) {
-        Toast.fire({
-          icon: 'warning',
-          title: '字數不可超過 140 字'
-        })
-        return 
-      } else {
-      Toast.fire({
-          icon: 'success',
-          title: '推文發送成功'
-        })
-      } 
-
-      // 伺服器新增 Comment 成功後...
-      this.$emit("after-submit-tweet", {
-        id: uuidv4(),  // 尚未串接 API 暫時使用隨機的 id, POST後伺服器會回傳id
-        tweetText: this.text,
-      })
-      // 送出後清空新增推文區塊的文字
-      this.text = '' 
-      //關掉Modal
-      $('#createTweetModal').modal('hide') 
-    }
-  }
+          icon: "error",
+          title: "無法新增推文，請稍後再試",
+        });
+      }
+    },
+  },
 };
 </script>
 
@@ -157,7 +172,7 @@ export default {
           border-radius: 3px;
         }
       }
-    } 
+    }
     .alert-msg {
       position: absolute;
       right: 100px;
@@ -174,6 +189,9 @@ export default {
       right: 16px;
       font-size: 16px;
       font-weight: 400;
+      &:disabled {
+        background-color: $gray3;
+      }
     }
   }
 }

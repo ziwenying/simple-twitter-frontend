@@ -13,6 +13,11 @@ export default {
         headers: { Authorization: `Bearer ${getToken()}` }
       })
     },
+    getUsersTweets({ userId }) {
+      return apiHelper.get(`/users/${userId}/tweets`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      })
+    },
     create({ userId, description }) {
       return apiHelper.post(`/tweets`, { userId, description }, {
         headers: { Authorization: `Bearer ${getToken()}` }
