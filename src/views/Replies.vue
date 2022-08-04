@@ -2,23 +2,21 @@
   <div class="reply-lists">
     <div class="reply-list" v-for="reply in replies" :key="reply.id">
       <a href="#">
-        <img class="user-avatar" :src="reply.user.avatar" alt="user-avatar" />
+        <img class="user-avatar" :src="reply.avatar" alt="user-avatar" />
       </a>
       <div class="reply-content">
         <div class="reply-title">
-          <p class="name">{{ reply.user.name }}</p>
+          <p class="name">{{ reply.name }}</p>
           <p class="account-time">
-            @{{ reply.user.account }}&nbsp;‧&nbsp;{{
-              reply.createdAt | fromNow
-            }}
+            @{{ reply.account }}&nbsp;‧&nbsp;{{ reply.createdAt | fromNow }}
           </p>
         </div>
         <div class="reply-who">
           <p class="reply">回覆</p>
-          <p class="account">@{{ reply.tweetMaster }}</p>
+          <p class="account">@{{ reply.targetAccount }}</p>
         </div>
         <p class="text">
-          {{ reply.text }}
+          {{ reply.comment }}
         </p>
       </div>
     </div>
@@ -27,14 +25,57 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "Replies",
   mixins: [fromNowFilter],
-  props: {
-    replies: {
-      type: Array,
-      required: true,
+  data() {
+    return {
+      replies: [],
+    };
+  },
+  beforeRouteUpdate(to, from, next) {
+    // 監聽路由
+    const { id } = to.params;
+    this.fetchReplies(id);
+    next();
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchReplies(id);
+  },
+  methods: {
+    async fetchReplies(id) {
+      try {
+        const response = await usersAPI.getTheUserReplies({
+          userId: id,
+        });
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得留言資料，請稍後再試");
+        }
+
+        this.replies = response.data;
+        // 資料拆層
+        this.replies = this.replies.map((reply) => {
+          return {
+            id: reply.id,
+            avatar: reply.User.avatar,
+            name: reply.User.name,
+            account: reply.User.account,
+            createdAt: reply.createdAt,
+            comment: reply.comment,
+            targetAccount: reply.Tweet.User.account,
+          };
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得留言資料，請稍後再試",
+        });
+      }
     },
   },
 };
@@ -58,6 +99,7 @@ export default {
     .user-avatar {
       width: 50px;
       height: 50px;
+      border-radius: 50%;
     }
     .reply-content {
       margin: 0 0 0 8px;

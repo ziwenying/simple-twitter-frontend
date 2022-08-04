@@ -185,6 +185,7 @@ export default {
           width: 50px;
           height: 50px;
           margin: 0 8px 0 0;
+          border-radius: 50%;
         }
         .textarea-tweet {
           padding: 12px;

@@ -2,20 +2,20 @@
   <div class="tweet-lists">
     <div class="tweet-list" v-for="tweet in tweets" :key="tweet.id">
       <a href="#">
-        <img class="user-avatar" :src="tweet.user.avatar" alt="user-avatar" />
+        <img class="user-avatar" :src="tweet.User.avatar" alt="user-avatar" />
       </a>
       <div class="tweet-content">
         <div class="tweet-title">
-          <p class="name">{{ tweet.user.name }}</p>
+          <p class="name">{{ tweet.User.name }}</p>
           <p class="account">
-            @{{ tweet.user.account }}&nbsp;‧&nbsp;{{
+            @{{ tweet.User.account }}&nbsp;‧&nbsp;{{
               tweet.createdAt | fromNow
             }}
           </p>
         </div>
         <div class="tweet-text">
           <p>
-            {{ tweet.text }}
+            {{ tweet.description }}
           </p>
         </div>
         <div class="tweet-reply-heart">
@@ -29,7 +29,7 @@
               src="~@/assets/image/reply.png"
               alt="reply"
             />
-            <p>{{ tweet.commentCount }}</p>
+            <p>{{ tweet.replyCount }}</p>
           </div>
           <div class="tweet-heart">
             <img
@@ -56,51 +56,46 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
+import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "MainTweets",
   mixins: [fromNowFilter],
-  props: {
-    initialTweets: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       tweets: [],
+      oneTweet: {},
     };
   },
+  beforeRouteUpdate(to, from, next) {
+    // 監聽路由
+    const { id } = to.params;
+    this.fetchTweets(id);
+    next();
+  },
   created() {
-    this.fetchTweets();
+    const { id } = this.$route.params;
+    this.fetchTweets(id);
   },
   methods: {
-    fetchTweets() {
-      this.tweets = this.initialTweets;
-    },
-    addLiked(tweetId) {
-      // /api/tweets/:id/like
-      this.tweets = this.tweets.map((tweet) => {
-        return tweetId === tweet.id
-          ? {
-              ...tweet,
-              isLiked: !tweet.isLiked,
-              likeCount: tweet.likeCount + 1,
-            }
-          : tweet;
-      });
-    },
-    deleteLiked(tweetId) {
-      // /api/tweets/:id/unlike
-      this.tweets = this.tweets.map((tweet) => {
-        return tweetId === tweet.id
-          ? {
-              ...tweet,
-              isLiked: !tweet.isLiked,
-              likeCount: tweet.likeCount - 1,
-            }
-          : tweet;
-      });
+    async fetchTweets(id) {
+      try {
+        const response = await usersAPI.getTheUserTweets({
+          userId: id,
+        });
+        if (response.statusText !== "OK") {
+          throw new Error("無法取得推文資料，請稍後再試");
+        }
+        this.tweets = response.data;
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
     },
     isClickedTweet(tweetId) {
       // 被點擊的那則留言的資料，傳到父層 User.vue
@@ -108,6 +103,52 @@ export default {
         return tweet.id === tweetId;
       });
       this.$emit("after-click-reply", this.oneTweet);
+    },
+    async addLiked(tweetId) {
+      try {
+        const { data } = await tweetsAPI.tweets.addLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.tweets = this.tweets.map((tweet) => {
+          return tweetId === tweet.id
+            ? {
+                ...tweet,
+                isLiked: !tweet.isLiked,
+                likeCount: tweet.likeCount + 1,
+              }
+            : tweet;
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文加入喜歡的內容，請稍後再試",
+        });
+      }
+    },
+    async deleteLiked(tweetId) {
+      try {
+        const { data } = await tweetsAPI.tweets.deleteLiked({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.tweets = this.tweets.map((tweet) => {
+          return tweetId === tweet.id
+            ? {
+                ...tweet,
+                isLiked: !tweet.isLiked,
+                likeCount: tweet.likeCount - 1,
+              }
+            : tweet;
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法將此推文從喜歡的內容移除，請稍後再試",
+        });
+      }
     },
   },
 };
@@ -129,6 +170,7 @@ export default {
       margin: 16px 8px 0 0;
       width: 50px;
       height: 50px;
+      border-radius: 50%;
     }
     .tweet-content {
       display: flex;

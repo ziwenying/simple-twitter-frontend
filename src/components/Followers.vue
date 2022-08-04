@@ -176,6 +176,7 @@ export default {
     .user-avatar {
       width: 50px;
       height: 50px;
+      border-radius: 50%;
     }
     .follow-content {
       margin: 0 0 0 8px;

@@ -5,14 +5,48 @@
       :src="targetProfile.cover"
       alt="user-background"
     />
-    <div class="avatar">
-      <img class="user-avatar" :src="targetProfile.avatar" alt="user-avatar" />
+    <!--  -->
+    <div class="user-avatar">
+      <!-- 大頭貼 -->
+      <img :src="targetProfile.avatar" alt="user-avatar" class="avatar" />
     </div>
-    <button class="user-edit" data-toggle="modal" data-target="#user-edit">
+    <!--  -->
+    <button
+      v-if="Number($route.params.id) === currentUser.id"
+      class="user-edit"
+      data-toggle="modal"
+      data-target="#user-edit"
+    >
       編輯個人資料
     </button>
     <!-- v-if 如果此頁面非當前的使用者 -->
-
+    <div
+      v-else-if="Number($route.params.id) !== currentUser.id"
+      class="btn-icon"
+    >
+      <img
+        src="~@/assets/image/message.png"
+        alt="message-btn"
+        class="message-btn"
+      />
+      <!-- 小鈴鐺 -->
+      <!-- <img src="~@/assets/image/bell.png" alt="bell-btn" class="bell-btn" /> -->
+      <img src="~@/assets/image/notfi.png" alt="bell-btn" class="bell-btn" />
+      <button
+        @click.stop.prevent="addFollowed(targetProfile.id)"
+        v-if="!this.followShip"
+        class="handle-follow btn-unfollow"
+      >
+        跟隨
+      </button>
+      <button
+        @click.stop.prevent="deleteFollowed(targetProfile.id)"
+        v-if="this.followShip"
+        class="handle-follow btn-follow"
+      >
+        正在跟隨
+      </button>
+    </div>
     <div class="user-title">
       <div class="name">{{ targetProfile.name }}</div>
       <div class="account">@{{ targetProfile.account }}</div>
@@ -34,12 +68,114 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+import usersAPI from "./../apis/users";
+
 export default {
   name: "UserProfileCard",
   props: {
     targetProfile: {
       type: Object,
       require: true,
+    },
+    initialChangeFollow: {
+      type: Boolean,
+      require: true,
+    },
+  },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
+  data() {
+    return {
+      followingList: [],
+      followShip: false,
+    };
+  },
+  watch: {
+    initialChangeFollow(newVal) {
+      this.followShip = newVal;
+    },
+  },
+  methods: {
+    async fetchFollowings() {
+      //追蹤功能需使用的資料
+      try {
+        const response = await usersAPI.getFollowings({
+          userId: this.$route.params.id,
+        });
+        const { data } = response;
+        console.log(response);
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
+        }
+        this.followingList = data;
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    async addFollowed(userId) {
+      try {
+        const { data } = await usersAPI.addfollowed({ id: userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.followingList = this.followingList.map((following) => {
+          return userId === following.followId
+            ? {
+                ...following,
+                isFollowing: !following.isFollowing,
+              }
+            : following;
+        });
+        this.followShip = true;
+        Toast.fire({
+          icon: "success",
+          title: "成功追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        if (error.message === "Can not follow yourself.") {
+          Toast.fire({
+            icon: "warning",
+            title: "不能追蹤自己唷！",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "無法追蹤該使用者，請稍後再試",
+          });
+        }
+      }
+    },
+    async deleteFollowed(userId) {
+      try {
+        const { data } = await usersAPI.deletefollowed({ userId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        console.log(this.followingList);
+        this.followingList = this.followingList.map((following) => {
+          return userId === following.followId
+            ? {
+                ...following,
+                isFollowing: !following.isFollowing,
+              }
+            : following;
+        });
+        this.followShip = false;
+        Toast.fire({
+          icon: "success",
+          title: "已取消追蹤該使用者",
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤該使用者，請稍後再試",
+        });
+      }
     },
   },
 };
@@ -56,7 +192,7 @@ export default {
   .background-img {
     height: 200px;
   }
-  .avatar {
+  .user-avatar {
     position: absolute;
     top: 124px;
     left: 16px;
@@ -64,10 +200,11 @@ export default {
     height: 140px;
     border-radius: 50%;
     border: 4px $white solid;
-    .user-avatar {
+    .avatar {
       width: 132px;
       height: 132px;
       object-fit: cover;
+      border-radius: 50%;
     }
   }
 
@@ -77,6 +214,34 @@ export default {
     top: 216px;
     right: 16px;
     width: 128px;
+  }
+
+  .btn-icon {
+    display: flex;
+    position: absolute;
+    top: 216px;
+    right: 16px;
+    widows: 100%;
+    .message-btn,
+    .bell-btn {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+    .message-btn,
+    .bell-btn,
+    .handle-follow {
+      margin: 0 0 0 16px;
+    }
+
+    .btn-follow {
+      @extend %btn-style;
+      width: 96px;
+    }
+    .btn-unfollow {
+      @extend %btn-unfollowed-style;
+      width: 64px;
+    }
   }
 
   .user-title {

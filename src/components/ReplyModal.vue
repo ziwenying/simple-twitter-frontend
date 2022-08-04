@@ -86,7 +86,6 @@
 </template>
 
 <script>
-// import { v4 as uuidv4 } from "uuid";
 import $ from "jquery";
 import { fromNowFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
@@ -207,6 +206,7 @@ export default {
             height: 50px;
             width: 50px;
             margin-right: 8px;
+            border-radius: 50%;
           }
           .tweet-info {
             display: flex;
@@ -254,8 +254,10 @@ export default {
         .modal-user-avatar {
           width: 50px;
           height: 50px;
-          border-radius: 50%;
           margin-right: 8px;
+          & > img {
+            border-radius: 50%;
+          }
         }
         .modal-tweet-text {
           flex: 1;
