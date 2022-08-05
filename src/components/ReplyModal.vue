@@ -68,7 +68,7 @@
                 />
               </div>
             </div>
-            <span v-if="description.trim().length === 0" class="alert-msg"
+            <span v-if="description && (description.trim().length === 0)" class="alert-msg"
               >內容不可空白</span
             >
             <button
@@ -275,6 +275,7 @@ export default {
             border-radius: 5px;
             resize: none;
             padding: 0;
+            padding-top: 10px;
             &::-webkit-scrollbar {
               width: 6px;
             }

@@ -53,6 +53,9 @@
               <div class="alert-msg" v-if="errorMsg === 'The email is registered.'">
                 <span class="msg">Email已重複註冊！</span>
               </div>
+              <div class="alert-msg" v-if="errorMsg === 'Invalid email address.'">
+                <span class="msg">Email格式錯誤</span>
+              </div>
             </div>
 
             <div class="form-field password-field">
@@ -231,6 +234,12 @@ export default {
             icon: 'error',
             title: '兩次密碼輸入不相符'
           })
+        } else if (error.message === 'Invalid email address.') {
+          this.errorMsg = error.message
+          Toast.fire({
+            icon: "error",
+            title: "Email格式錯誤，請填入有效的Email地址",
+          });
         } else {
           this.errorMsg = error.message
             Toast.fire({

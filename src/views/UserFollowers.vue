@@ -30,17 +30,19 @@ export default {
         if (response.statusText !== 'OK') {
           throw new Error (data.message)
         }
+        if (data.length === 0) {
+          Toast.fire({
+            icon: 'info',
+            title: '您的追隨者清單是空的'
+          })
+        }
         this.followerList = data
       } catch (error) {
         console.error(error.message)
-        // 沒有跟隨者的情況
-        if (error.message === 'No followers found.') {
-          this.followingList = []
-          return
-        } else {
+         {
           Toast.fire({
             icon: 'error',
-            title: '無法取得跟隨者資料'
+            title: '無法取得追隨者資料'
           })
         }
       }
