@@ -90,6 +90,9 @@ export default {
       padding: 16px 23px;
       position: relative;
       border-bottom: 1px solid $light-blue2;
+      &:hover {
+        background-color: $gray-white3;
+      }
       .avatar {
         height: 50px;
         width: 50px;

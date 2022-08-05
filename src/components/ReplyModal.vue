@@ -68,7 +68,7 @@
                 />
               </div>
             </div>
-            <span v-if="description && description.trim().length === 0" class="alert-msg"
+            <span v-if="description && (description.trim().length === 0)" class="alert-msg"
               >內容不可空白</span
             >
             <button
@@ -124,13 +124,14 @@ export default {
           tweetId: this.replyModalData.id,
           comment: this.description,
         });
-        console.log("res", this.replyModalData);
         if (data.status !== "success") {
           throw new Error(data.status);
         }
         // 如果在單一貼文頁面使用回覆功能，需要即時顯示新回覆內容，傳 ->> ReplyList.vue
         if (this.$route.name === "reply-list") {
           this.$emit("after-submit-reply", this.replyModalData.id);
+        } else if (this.$route.name === "main-page") {
+          this.$emit("main-after-submit-reply", this.replyModalData.id);
         }
         Toast.fire({
           icon: "success",
@@ -197,7 +198,7 @@ export default {
             position: absolute;
             left: 25px;
             top: 60px;
-            height: calc(100% - 45px);  // 裝飾線長度自動調整
+            height: calc(100% - 45px); // 裝飾線長度自動調整
             background-color: $gray3;
             border-right: 1px solid $gray3;
             border-left: 1px solid $gray3;
@@ -274,6 +275,7 @@ export default {
             border-radius: 5px;
             resize: none;
             padding: 0;
+            padding-top: 10px;
             &::-webkit-scrollbar {
               width: 6px;
             }
@@ -303,6 +305,10 @@ export default {
         right: 16px;
         font-size: 16px;
         font-weight: 400;
+        &:disabled {
+          background-color: $gray3;
+          color: $near-white;
+        }
       }
     }
   }

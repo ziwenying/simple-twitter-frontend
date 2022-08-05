@@ -1,19 +1,31 @@
 <template>
   <div class="reply-lists">
     <div class="reply-list" v-for="reply in replies" :key="reply.id">
-      <a href="#">
+      <router-link
+        :to="{ path: `/users/${$route.params.id}/tweets` }"
+        class="tweet-link"
+      >
         <img class="user-avatar" :src="reply.avatar" alt="user-avatar" />
-      </a>
+      </router-link>
       <div class="reply-content">
         <div class="reply-title">
-          <p class="name">{{ reply.name }}</p>
-          <p class="account-time">
-            @{{ reply.account }}&nbsp;‧&nbsp;{{ reply.createdAt | fromNow }}
-          </p>
+          <router-link :to="{ path: `/users/${$route.params.id}/tweets` }">
+            <p class="name">{{ reply.name }}</p>
+          </router-link>
+          <router-link :to="{ path: `/users/${$route.params.id}/tweets` }">
+            <p class="account">@{{ reply.account }}</p>
+          </router-link>
+          <p class="time">&nbsp;‧&nbsp;{{ reply.createdAt | fromNow }}</p>
         </div>
         <div class="reply-who">
           <p class="reply">回覆</p>
-          <p class="account">@{{ reply.targetAccount }}</p>
+          <p v-if="!reply.targetAccount" class="no-account">"此推文已被刪除"</p>
+          <router-link
+            v-else
+            :to="{ path: `/users/${$route.params.id}/tweets` }"
+          >
+            <p class="account">@{{ reply.targetAccount }}</p>
+          </router-link>
         </div>
         <p class="text">
           {{ reply.comment }}
@@ -108,12 +120,21 @@ export default {
         align-items: center;
         .name {
           margin: 0 8px 0 0;
-          font-weight: 700;
           color: $black;
+          font-size: 16px;
+          font-weight: 700;
+          &:hover {
+            text-decoration: underline;
+          }
         }
-        .account-time {
+        .account,
+        .time {
           color: $Secondary;
           font-size: 14px;
+        }
+        .account:hover {
+          text-decoration: underline;
+          color: $brand-color;
         }
       }
       .reply-who {
@@ -124,6 +145,12 @@ export default {
         .account {
           margin: 0 0 0 8px;
           color: $brand-color;
+        }
+        .no-account {
+          margin: 0 0 0 8px;
+        }
+        .account:hover {
+          text-decoration: underline;
         }
       }
       .text {

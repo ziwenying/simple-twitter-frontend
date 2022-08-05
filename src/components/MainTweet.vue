@@ -28,32 +28,33 @@
           </div>
           <div class="tweet-reply-heart">
             <!-- 要跳出 modal -->
-            <div class="tweet-reply">
-              <img
-                @click.prevent="isClickedTweet(tweet.id)"
-                data-toggle="modal"
-                data-target="#replyTweetModal"
-                class="icon"
-                src="~@/assets/image/reply.png"
-                alt="reply"
-              />
+            <div
+              @click.prevent="isClickedTweet(tweet.id)"
+              data-toggle="modal"
+              data-target="#replyTweetModal"
+              class="tweet-reply"
+            >
+              <img class="icon" src="~@/assets/image/reply.png" alt="reply" />
               <p>{{ tweet.replyCount }}</p>
             </div>
-            <div class="tweet-heart">
+            <div
+              v-if="tweet.isLiked"
+              @click.stop.prevent="deleteLiked(tweet.id)"
+              class="tweet-heart"
+            >
               <img
-                v-if="tweet.isLiked"
-                @click.stop.prevent="deleteLiked(tweet.id)"
                 class="icon"
                 src="~@/assets/image/red-heart.png"
                 alt="heart"
               />
-              <img
-                v-if="!tweet.isLiked"
-                @click.stop.prevent="addLiked(tweet.id)"
-                class="icon"
-                src="~@/assets/image/heart.png"
-                alt="heart"
-              />
+              <p class="text">{{ tweet.likeCount }}</p>
+            </div>
+            <div
+              v-if="!tweet.isLiked"
+              @click.stop.prevent="addLiked(tweet.id)"
+              class="tweet-heart"
+            >
+              <img class="icon" src="~@/assets/image/heart.png" alt="heart" />
               <p>{{ tweet.likeCount }}</p>
             </div>
           </div>
@@ -133,7 +134,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        console.log(data.status);
         //顯示空心 & 愛心數減一
         this.tweets = this.tweets.map((tweet) => {
           return tweetId === tweet.id
@@ -210,6 +210,7 @@ export default {
         line-height: 26px;
       }
       .tweet-reply-heart {
+        width: 100%;
         display: flex;
         margin: 0 0 18px 0;
         .tweet-reply,
@@ -218,11 +219,18 @@ export default {
           align-items: center;
           margin: 0 41px 0 0;
           font-size: 14px;
+          .text {
+            margin: 0 2px 0 0;
+          }
+          &:hover {
+            cursor: pointer;
+            background: $gray-white3;
+            border-radius: 5px;
+          }
           .icon {
             width: 14px;
             height: 14px;
-            margin: 0 8px 0 0;
-            cursor: pointer;
+            margin: 0 8px 0 1px;
           }
         }
       }

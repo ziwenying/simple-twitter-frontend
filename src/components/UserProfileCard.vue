@@ -106,7 +106,6 @@ export default {
           userId: this.$route.params.id,
         });
         const { data } = response;
-        console.log(response);
         if (response.statusText !== "OK") {
           throw new Error(data.message);
         }
@@ -155,7 +154,6 @@ export default {
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        console.log(this.followingList);
         this.followingList = this.followingList.map((following) => {
           return userId === following.followId
             ? {
