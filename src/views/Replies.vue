@@ -20,10 +20,7 @@
         <div class="reply-who">
           <p class="reply">回覆</p>
           <p v-if="!reply.targetAccount" class="no-account">"此推文已被刪除"</p>
-          <router-link
-            v-else
-            :to="{ path: `/users/${$route.params.id}/tweets` }"
-          >
+          <router-link v-else :to="{ path: `/users/${reply.targetId}/tweets` }">
             <p class="account">@{{ reply.targetAccount }}</p>
           </router-link>
         </div>
@@ -69,6 +66,7 @@ export default {
         }
 
         this.replies = response.data;
+        console.log(this.replies);
         // 資料拆層
         this.replies = this.replies.map((reply) => {
           return {
@@ -79,6 +77,7 @@ export default {
             createdAt: reply.createdAt,
             comment: reply.comment,
             targetAccount: reply.Tweet.User.account,
+            targetId: reply.Tweet.User.id,
           };
         });
       } catch (error) {

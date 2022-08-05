@@ -27,8 +27,7 @@
             type="submit"
             class="modal-save"
             :disabled="
-              profile.name.trim().length > 50 ||
-              profile.name.trim().length === 0 ||
+              profile.name.length > 50 ||
               profile.name.trim().length === 0 ||
               profile.introduction.length > 160
             "
@@ -106,6 +105,7 @@
                 :class="{
                   error:
                     profile.name.trim().length > 50 ||
+                    profile.name.length > 50 ||
                     profile.name.trim().length === 0,
                 }"
                 v-model="profile.name"
@@ -116,20 +116,17 @@
                 required
               />
               <div class="alert-msg">
+                <span class="msg" v-if="profile.name.length > 50">
+                  字數超出上限！
+                </span>
                 <span
                   class="msg"
-                  v-if="
-                    profile.name.trim().length > 50 ||
-                    profile.name.trim().length === 0
-                  "
+                  :class="{ blank: profile.name.length > 50 }"
+                  v-if="profile.name.trim().length === 0"
                 >
-                  {{
-                    profile.name.trim().length === 0
-                      ? "名稱不可空白！"
-                      : "字數超出上限！"
-                  }}</span
-                >
-                <span class="number">{{ profile.name.trim().length }}/50</span>
+                  名稱不可空白！
+                </span>
+                <span class="number">{{ profile.name.length }}/50</span>
               </div>
             </div>
             <div class="form-field introduction-field">
@@ -416,6 +413,9 @@ export default {
                 left: 0;
                 color: $brand-color;
                 font-size: 12px;
+              }
+              .blank {
+                margin: 0 0 0 90px;
               }
               .number {
                 position: absolute;
