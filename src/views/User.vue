@@ -129,7 +129,7 @@ export default {
           role: response.data.role,
           followerCount: response.data.followerCount,
           followingCount: response.data.followingCount,
-          tweetCount: response.data.tweetCount
+          tweetCount: response.data.tweetCount,
         };
         this.targetProfile = {
           id,
@@ -142,7 +142,7 @@ export default {
           role,
           followerCount,
           followingCount,
-          tweetCount
+          tweetCount,
         };
       } catch (error) {
         console.error(error.message);
@@ -156,7 +156,6 @@ export default {
       try {
         const response = await usersAPI.getTopUser();
         const { data } = response;
-        console.log("pop", response);
         if (response.statusText !== "OK") {
           throw new Error(data.message);
         }
@@ -188,7 +187,7 @@ export default {
           formData,
         });
         // 更新後的資料，渲染用
-        if (response.statusText === "OK") {
+        if (response.statusText !== "OK") {
           throw new Error("無法編輯個人資料，請稍後再試");
         }
         // 及時更新圖
@@ -271,11 +270,7 @@ export default {
   }
   .scrollbar {
     &::-webkit-scrollbar {
-      width: 8px;
-    }
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background-color: rgba(0, 0, 0, 0.1);
+      width: 1px;
     }
   }
 }

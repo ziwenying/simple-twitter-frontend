@@ -14,7 +14,10 @@
     <Populars :initialTopPopular="topPopular" class="col-3 popular" />
     <!-- Modal -->
     <CreateTweetModal @after-submit-tweet="afterSubmitTweet" />
-    <ReplyModal :replyModalData="replyModalData" />
+    <ReplyModal
+      :replyModalData="replyModalData"
+      @main-after-submit-reply="fetchTweets"
+    />
   </div>
 </template>
 
@@ -26,7 +29,7 @@ import ReplyModal from "../components/ReplyModal.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
-import userAPI from './../apis/users'
+import userAPI from "./../apis/users";
 
 export default {
   name: "MainPage",
@@ -69,18 +72,18 @@ export default {
     },
     async fetchPopular() {
       try {
-        const response = await userAPI.getTopUser()
-        const { data } = response
-        if (response.statusText !== 'OK') {
-          throw new Error(data.message)
+        const response = await userAPI.getTopUser();
+        const { data } = response;
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
         }
-        this.topPopular = data 
+        this.topPopular = data;
       } catch (error) {
-        console.error(error.message)
+        console.error(error.message);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得推薦追蹤名單'
-        })
+          icon: "error",
+          title: "無法取得推薦追蹤名單",
+        });
       }
     },
     afterSubmitTweet(payload) {
@@ -127,11 +130,7 @@ export default {
   }
   .scrollbar {
     &::-webkit-scrollbar {
-      width: 8px;
-    }
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background-color: rgba(0, 0, 0, 0.1);
+      width: 1px;
     }
   }
 }

@@ -23,7 +23,18 @@
           >
             <span aria-hidden="true">&times;</span>
           </button>
-          <button type="submit" class="modal-save">儲存</button>
+          <button
+            type="submit"
+            class="modal-save"
+            :disabled="
+              profile.name.trim().length > 50 ||
+              profile.name.trim().length === 0 ||
+              profile.name.trim().length === 0 ||
+              profile.introduction.length > 160
+            "
+          >
+            儲存
+          </button>
         </div>
         <div class="modal-body">
           <div class="modal-img">
@@ -185,7 +196,6 @@ export default {
   watch: {
     initialTargetProfile(newValue) {
       this.profile = { ...newValue };
-      console.log("watch", this.profile);
     },
   },
   created() {
@@ -201,7 +211,6 @@ export default {
         introduction: this.initialTargetProfile.introduction,
       };
       this.profile = { avatar, cover, name, introduction };
-      console.log("create", this.profile);
     },
     handleCoverChange(e) {
       const { files } = e.target;
@@ -296,6 +305,10 @@ export default {
           right: 16px;
           width: 64px;
           padding: 8px 0 8px 0;
+          &:disabled {
+            background-color: $gray3;
+            color: $near-white;
+          }
         }
       }
       .modal-body {

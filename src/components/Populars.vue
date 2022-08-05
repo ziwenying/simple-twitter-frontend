@@ -130,6 +130,7 @@ export default {
 
 .popular-wrapper {
   margin: 16px 0 20px 0;
+  padding: 0;
   background: $near-white;
   border-radius: 16px;
   .popular-title {
@@ -141,10 +142,14 @@ export default {
       display: flex;
       position: relative;
       padding: 16px 0 16px 0;
+      &:hover {
+        background: $gray-white3;
+      }
       .user-avatar {
         width: 50px;
         height: 50px;
         border-radius: 50%;
+        margin: 0 0 0 16px;
       }
       .name-account {
         padding: 0 13px 0 8px;

@@ -4,10 +4,23 @@
     <div class="nav-container">
       <template v-if="currentUser.role === 'user'">
         <div class="nav-top">
-          <img class="logo-img" src="~@/assets/image/logo.png" alt="logo-img" />
+          <router-link :to="{ name: 'main' }">
+            <img
+              class="logo-img"
+              src="~@/assets/image/logo.png"
+              alt="logo-img"
+            />
+          </router-link>
           <!-- 在該頁面時, icon和選項文字變成橘色 -->
-          <div class="home-btn nav-item btn-clicked" v-if="$route.name === 'main-page' || $route.name === 'reply-list'">
-            <img class="home-icon" src="~@/assets/image/home-orange.png" alt="home-icon">
+          <div
+            class="home-btn nav-item btn-clicked"
+            v-if="$route.name === 'main-page' || $route.name === 'reply-list'"
+          >
+            <img
+              class="home-icon"
+              src="~@/assets/image/home-orange.png"
+              alt="home-icon"
+            />
             <p class="nav-text">首頁</p>
           </div>
           <!-- 黑色 -->
@@ -19,10 +32,24 @@
             />
             <router-link to="/main" class="nav-text">首頁</router-link>
           </div>
-          <div class="user-profile-btn nav-item btn-clicked" 
-            v-if="$route.name === 'main-tweets' || $route.name === 'replies' || $route.name === 'liked-tweets'">
-            <img class="user-icon" src="~@/assets/image/user-orange.png" alt="user-icon">
-            <p class="nav-text">個人資料</p>
+          <div
+            class="user-profile-btn nav-item btn-clicked"
+            v-if="
+              $route.name === 'main-tweets' ||
+              $route.name === 'replies' ||
+              $route.name === 'liked-tweets'
+            "
+          >
+            <img
+              class="user-icon"
+              src="~@/assets/image/user-orange.png"
+              alt="user-icon"
+            />
+            <router-link
+              :to="{ name: 'user', params: { id: currentUser.id } }"
+              class="nav-text"
+              >個人資料</router-link
+            >
           </div>
           <div class="user-profile-btn nav-item" v-else>
             <img
@@ -30,10 +57,21 @@
               src="~@/assets/image/user.png"
               alt="user-icon"
             />
-            <router-link :to="{name: 'user', params: {id: currentUser.id } }" class="nav-text">個人資料</router-link>
+            <router-link
+              :to="{ name: 'user', params: { id: currentUser.id } }"
+              class="nav-text"
+              >個人資料</router-link
+            >
           </div>
-          <div class="setting-btn nav-item btn-clicked" v-if="$route.name === 'setting'">
-            <img  class="setting-icon" src="~@/assets/image/setting-orange.png" alt="setting-icon">
+          <div
+            class="setting-btn nav-item btn-clicked"
+            v-if="$route.name === 'setting'"
+          >
+            <img
+              class="setting-icon"
+              src="~@/assets/image/setting-orange.png"
+              alt="setting-icon"
+            />
             <p class="nav-text">設定</p>
           </div>
           <div class="setting-btn nav-item" v-else>
@@ -42,31 +80,66 @@
               src="~@/assets/image/setting.png"
               alt="setting-icon"
             />
-            <router-link :to="{name: 'setting', params: {id: currentUser.id} }"  class="nav-text">設定</router-link>
+            <router-link
+              :to="{ name: 'setting', params: { id: currentUser.id } }"
+              class="nav-text"
+              >設定</router-link
+            >
           </div>
-          <button class="tweet-btn" data-toggle="modal"
-        data-target="#createTweetModal">推文</button>
+          <button
+            class="tweet-btn"
+            data-toggle="modal"
+            data-target="#createTweetModal"
+          >
+            推文
+          </button>
         </div>
       </template>
       <!-- 後台Navbar  -->
       <template v-else>
         <div class="nav-top">
-          <img class="logo-img" src="~@/assets/image/logo.png" alt="logo-img">
-          <div class="home-btn nav-item btn-clicked" v-if="$route.name === 'admin-tweets'">
-            <img class="home-icon" src="~@/assets/image/home-orange.png" alt="home-icon">
+          <img class="logo-img" src="~@/assets/image/logo.png" alt="logo-img" />
+          <div
+            class="home-btn nav-item btn-clicked"
+            v-if="$route.name === 'admin-tweets'"
+          >
+            <img
+              class="home-icon"
+              src="~@/assets/image/home-orange.png"
+              alt="home-icon"
+            />
             <p class="nav-text">推文清單</p>
           </div>
           <div class="home-btn nav-item" v-else>
-            <img class="home-icon" src="~@/assets/image/home.png" alt="home-icon">
-            <router-link :to="{name: 'admin-tweets'}" class="nav-text">推文清單</router-link>
+            <img
+              class="home-icon"
+              src="~@/assets/image/home.png"
+              alt="home-icon"
+            />
+            <router-link :to="{ name: 'admin-tweets' }" class="nav-text"
+              >推文清單</router-link
+            >
           </div>
-          <div class="user-profile-btn nav-item btn-clicked" v-if="$route.name === 'admin-users'">
-            <img class="user-icon" src="~@/assets/image/user-orange.png" alt="user-icon">
+          <div
+            class="user-profile-btn nav-item btn-clicked"
+            v-if="$route.name === 'admin-users'"
+          >
+            <img
+              class="user-icon"
+              src="~@/assets/image/user-orange.png"
+              alt="user-icon"
+            />
             <p class="nav-text">使用者列表</p>
           </div>
           <div class="user-profile-btn nav-item" v-else>
-            <img class="user-icon" src="~@/assets/image/user.png" alt="user-icon">
-            <router-link :to="{name: 'admin-users'}" class="nav-text">使用者列表</router-link>
+            <img
+              class="user-icon"
+              src="~@/assets/image/user.png"
+              alt="user-icon"
+            />
+            <router-link :to="{ name: 'admin-users' }" class="nav-text"
+              >使用者列表</router-link
+            >
           </div>
         </div>
       </template>
@@ -83,32 +156,32 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   name: "Navbar",
   // 取得Vuex中的currentUser資料
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   data() {
     return {
-      role: ''
-    }
+      role: "",
+    };
   },
   methods: {
     logout() {
       // 因為呼叫revokeAuthentication幫忙改state資料時, currentUser就會被清空, 先把role存起來, 以便等一下判別轉址到哪裡
-      this.role = this.currentUser.role
-      this.$store.commit('revokeAuthentication')
-      if (this.role === 'user') {
+      this.role = this.currentUser.role;
+      this.$store.commit("revokeAuthentication");
+      if (this.role === "user") {
         // 使用者登出-> 前台登入頁
-        this.$router.push('/login')
+        this.$router.push("/login");
       } else {
         // 管理員登出-> 前台登入頁
-        this.$router.push('/admin/login')
+        this.$router.push("/admin/login");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

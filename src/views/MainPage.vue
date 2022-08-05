@@ -23,13 +23,13 @@
           </div>
           <!-- if more 140 show waring-msg-->
           <div class="input-footer">
-            <p v-if="description.trim().length > 140" class="waring-msg">
+            <p v-if="description.length > 140" class="waring-msg">
               字數不可超過 140 字
             </p>
             <button
               type="submit"
               class="btn-setting"
-              :disabled="description.trim().length > 140"
+              :disabled="description.length > 140"
             >
               推文
             </button>
@@ -214,6 +214,10 @@ export default {
           width: 64px;
           font-size: 18px;
           @extend %btn-style;
+          &:disabled {
+            background-color: $gray3;
+            color: $near-white;
+          }
         }
       }
     }

@@ -162,7 +162,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        console.log(data.status);
         //顯示空心 & 愛心數減一
         this.oneTweet = {
           ...this.oneTweet,
@@ -208,6 +207,7 @@ $light-blue2: #e6ecf0;
   .tweet-text {
     .text {
       font-size: 24px;
+      overflow-wrap: anywhere;
     }
     .time {
       margin: 8px 0;

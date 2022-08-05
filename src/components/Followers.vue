@@ -5,29 +5,32 @@
       :key="followList.followId"
       class="follow-list"
     >
-      <router-link :to="{ path: `/users/${followList.followId}/tweets` }">
+      <router-link
+        class="follow-link"
+        :to="{ path: `/users/${followList.followId}/tweets` }"
+      >
         <img class="user-avatar" :src="followList.avatar" alt="user-avatar" />
+        <div class="follow-content">
+          <p class="follow-name">{{ followList.name }}</p>
+          <p class="follow-intro">
+            {{ followList.introduction }}
+          </p>
+        </div>
+        <button
+          @click.stop.prevent="deleteFollowed(followList.followId)"
+          v-if="followList.isFollowing"
+          class="btn-follow"
+        >
+          正在跟隨
+        </button>
+        <button
+          @click.stop.prevent="addFollowed(followList.followId)"
+          v-if="!followList.isFollowing"
+          class="btn-unfollow"
+        >
+          跟隨
+        </button>
       </router-link>
-      <div class="follow-content">
-        <p class="follow-name">{{ followList.name }}</p>
-        <p class="follow-intro">
-          {{ followList.introduction }}
-        </p>
-      </div>
-      <button
-        @click.stop.prevent="deleteFollowed(followList.followId)"
-        v-if="followList.isFollowing"
-        class="btn-follow"
-      >
-        正在跟隨
-      </button>
-      <button
-        @click.stop.prevent="addFollowed(followList.followId)"
-        v-if="!followList.isFollowing"
-        class="btn-unfollow"
-      >
-        跟隨
-      </button>
     </div>
   </div>
 </template>
@@ -136,7 +139,6 @@ export default {
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        console.log(this.showFollowLists)
         this.showFollowLists = this.showFollowLists.map((showFollowList) => {
           return userId === showFollowList.followId
             ? {
@@ -167,48 +169,57 @@ export default {
 .follow-lists {
   border-right: $light-blue2 1px solid;
   .follow-list {
-    display: flex;
-    position: relative;
-    max-height: 158px;
-    padding: 16px 23px 16px 23px;
-    border-bottom: $light-blue2 1px solid;
-    border-left: $light-blue2 1px solid;
-    .user-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+    &:hover {
+      background: $gray-white3;
     }
-    .follow-content {
-      margin: 0 0 0 8px;
-      width: 88%;
-      .follow-name {
-        margin: 7px 8px 0 0;
-        font-weight: 700;
-        color: $black;
+    .follow-link {
+      display: flex;
+      position: relative;
+      max-height: 158px;
+      padding: 16px 23px 16px 23px;
+      border-bottom: $light-blue2 1px solid;
+      border-left: $light-blue2 1px solid;
+      .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
       }
-      .account-time {
-        color: $Secondary;
-        font-size: 14px;
+      .follow-content {
+        margin: 0 0 0 8px;
+        width: 88%;
+        .follow-name {
+          margin: 7px 8px 0 0;
+          font-weight: 700;
+          color: $black;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        .account-time {
+          color: $Secondary;
+          font-size: 14px;
+        }
+        .follow-intro {
+          margin: 15px 0 0 0;
+          color: $black;
+          line-height: 26px;
+          overflow-wrap: break-word;
+        }
       }
-      .follow-intro {
-        margin: 15px 0 0 0;
-        line-height: 26px;
-        overflow-wrap: break-word;
+      .btn-follow {
+        position: absolute;
+        top: 16px;
+        right: 30px;
+        @extend %btn-style;
+        width: 96px;
       }
-    }
-    .btn-follow {
-      position: absolute;
-      top: 16px;
-      right: 30px;
-      @extend %btn-style;
-      width: 96px;
-    }
-    .btn-unfollow {
-      position: absolute;
-      top: 16px;
-      right: 30px;
-      @extend %btn-unfollowed-style;
-      width: 64px;
+      .btn-unfollow {
+        position: absolute;
+        top: 16px;
+        right: 30px;
+        @extend %btn-unfollowed-style;
+        width: 64px;
+      }
     }
   }
 }
