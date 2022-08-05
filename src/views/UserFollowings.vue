@@ -31,6 +31,7 @@ export default {
   watch: {
     initialChangeFollow() {
       const { id: userId } = this.$route.params;
+      // initialChangeFollow 改變代表資料有從 Popular.vue 更新，重新向 api 取資料
       this.fetchFollowings(userId);
     },
   },
@@ -62,6 +63,7 @@ export default {
       }
     },
     afterFollowListChangeFollow() {
+      //Followers.vue 的 popular 有變動，告知 UserFollowList.vue 要更新追蹤頁面資料
       this.$emit("after-followList-change-follow");
     },
   },

@@ -90,10 +90,11 @@ export default {
         if (response.statusText !== "OK") {
           throw new Error(data.message);
         }
-
+        // 帶有 "change" 的資料來時，代表是從 Populars.vue 來
         if (change === "change") {
           this.changeFollow = !this.changeFollow;
         } else {
+          // 平時載入
           this.topPopular = data;
         }
       } catch (error) {

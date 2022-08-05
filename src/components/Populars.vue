@@ -80,12 +80,15 @@ export default {
           icon: "success",
           title: "成功追蹤該使用者",
         });
+        //告知 User.vue 有變動
         if (
+          //判斷變動是從在哪個追蹤頁發生的
           this.$route.name === "user-followings" ||
           this.$route.name === "user-followers"
         ) {
           this.$emit("after-change-follow", "change");
         } else if (this.$route.name === "main-tweets") {
+          // 如果變動在個人頁面發生，帶 id 和 追蹤狀態 true 回 User.vue
           this.$emit("change-profile-follow", { userId: userId, change: true });
         }
       } catch (error) {
@@ -121,12 +124,15 @@ export default {
           icon: "success",
           title: "已取消追蹤該使用者",
         });
+        //告知 User.vue 有變動
         if (
+          //判斷變動是從在哪個追蹤頁發生的
           this.$route.name === "user-followings" ||
           this.$route.name === "user-followers"
         ) {
           this.$emit("after-change-follow", "change");
         } else if (this.$route.name === "main-tweets") {
+          // 如果變動在個人頁面發生，帶 id 和 追蹤狀態 false 回 User.vue
           this.$emit("change-profile-follow", {
             userId: userId,
             change: false,

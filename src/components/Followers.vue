@@ -111,6 +111,7 @@ export default {
               }
             : showFollowList;
         });
+        //告知 UserFollowings.vue & UserFollowers.vue 有變動
         this.$emit("after-followList-change-follow");
         Toast.fire({
           icon: "success",
@@ -149,6 +150,7 @@ export default {
           icon: "success",
           title: "已取消追蹤該使用者",
         });
+        //告知 UserFollowings.vue & UserFollowers.vue 有變動
         this.$emit("after-followList-change-follow");
       } catch (error) {
         console.error(error.message);

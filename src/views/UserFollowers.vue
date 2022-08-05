@@ -18,6 +18,7 @@ export default {
   },
   // 串聯 Populars
   props: {
+    // initialChangeFollow 改變代表資料有從 Popular.vue 更新，重新向 api 取資料
     initialChangeFollow: {
       type: Boolean,
       require: true,

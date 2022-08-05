@@ -129,7 +129,7 @@ export default {
             : following;
         });
         this.followShip = true;
-        // 為了讓 top popular改變
+        // 追蹤按鈕改變，告知 User.vue
         this.$emit("after-change-profile-follow");
         Toast.fire({
           icon: "success",
@@ -165,6 +165,7 @@ export default {
             : following;
         });
         this.followShip = false;
+        // 追蹤按鈕改變，告知 User.vue
         this.$emit("after-change-profile-follow");
         Toast.fire({
           icon: "success",

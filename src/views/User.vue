@@ -243,8 +243,7 @@ export default {
     },
     async changeProfilePopular(change) {
       // 這邊為了個人頁面的追蹤按鈕
-
-      // popular 傳回來
+      // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
       const userId = change.userId;
       try {
         const response = await usersAPI.getFollowings({ userId });
