@@ -10,7 +10,7 @@
           </router-link>
           <div class="name-tweet">
             <p class="name">{{ targetProfile.name }}</p>
-            <p class="tweet-count">{{ targetProfile.tweetsCount }} 推文</p>
+            <p class="tweet-count">{{ targetProfile.tweetCount }} 推文</p>
           </div>
         </div>
         <!-- component UserProfileCard.vue -->
@@ -115,6 +115,7 @@ export default {
           role,
           followerCount,
           followingCount,
+          tweetCount,
         } = {
           id: response.data.id,
           account: response.data.account,
@@ -128,6 +129,7 @@ export default {
           role: response.data.role,
           followerCount: response.data.followerCount,
           followingCount: response.data.followingCount,
+          tweetCount: response.data.tweetCount
         };
         this.targetProfile = {
           id,
@@ -140,6 +142,7 @@ export default {
           role,
           followerCount,
           followingCount,
+          tweetCount
         };
       } catch (error) {
         console.error(error.message);

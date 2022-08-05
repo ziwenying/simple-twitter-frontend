@@ -9,8 +9,8 @@
           </div>
           <img class="avatar" :src="user.avatar" alt="avatar" />
           <div class="card-content">
-            <div class="name">{{user.name}}</div>
-            <div class="account">@{{user.account}}</div>
+            <div class="name"><p :title="user.name">{{user.name}}</p></div>
+            <div class="account"><p :title="`@${user.account}`">@{{user.account}}</p></div>
             <div class="tweets-likes">
               <div class="tweets-count">
                 <img
@@ -129,19 +129,37 @@ export default {
         flex-direction: column;
         align-items: center;
         padding: 18px;
+        padding-top: 10px;
         .name {
-          font-size: 16px;
-          font-weight: 700;
-          color: $black;
+          width: 100%;
+          text-align: center;
+          p {
+            height: 26px;
+            font-size: 16px;
+            font-weight: 700;
+            color: $black;
+            overflow: hidden;  // 超過隱藏
+            text-overflow: ellipsis;  //超過的內容用...顯示
+            display: -webkit-box;
+            -webkit-line-clamp: 1;  // 超過一行省略
+            -webkit-box-orient: vertical;
+          }
         }
         .account {
-          font-size: 14px;
-          font-weight: 400;
-          color: $gray4;
+          width: 100%;
+          text-align: center;
+          p {
+            font-size: 14px;
+            font-weight: 400;
+            color: $gray4;
+            &:hover {
+              width: auto;
+            }
+          }          
         }
         .tweets-likes {
           display: flex;
-          margin-top: 20px;
+          margin-top: 10px;
           width: 139px;
           justify-content: space-between;
           .icon {
@@ -159,8 +177,10 @@ export default {
           }
         }
         .followings-followers {
+          width: 100%;
           margin-top: 8px;
           display: flex;
+          justify-content: space-evenly;
           .followings {
             margin-right: 8px;
           }

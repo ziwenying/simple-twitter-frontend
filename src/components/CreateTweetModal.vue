@@ -38,13 +38,13 @@
                 placeholder="有什麼新鮮事？"
               />
             </div>
-            <span class="alert-msg" v-if="description.trim().length > 140"
+            <span class="alert-msg" v-if="description.length > 140"
               >字數不可超過 140 字</span
             >
             <button
               class="modal-tweet-btn"
               type="submit"
-              :disabled="description.trim().length > 140"
+              :disabled="description.length > 140"
             >
               推文
             </button>
@@ -153,6 +153,9 @@ export default {
       width: 50px;
       height: 50px;
       border-radius: 50%;
+      img {
+        border-radius: 50%;
+      }
     }
     .modal-tweet-text {
       flex: 1;

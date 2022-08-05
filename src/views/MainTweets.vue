@@ -173,10 +173,12 @@ export default {
       border-radius: 50%;
     }
     .tweet-content {
+      width: 85%;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
       .tweet-title {
+        width: 100%;
         display: flex;
         align-items: center;
         .name {
@@ -191,10 +193,13 @@ export default {
         }
       }
       .tweet-text {
+        width: 100%;
         font-size: 16px;
         line-height: 26px;
+        overflow-wrap: break-word;
       }
       .tweet-reply-heart {
+        width: 100%;
         display: flex;
         .tweet-reply,
         .tweet-heart {
