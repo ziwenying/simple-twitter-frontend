@@ -162,7 +162,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        console.log(data.status);
         //顯示空心 & 愛心數減一
         this.oneTweet = {
           ...this.oneTweet,

@@ -185,7 +185,6 @@ export default {
   watch: {
     initialTargetProfile(newValue) {
       this.profile = { ...newValue };
-      console.log("watch", this.profile);
     },
   },
   created() {
@@ -201,7 +200,6 @@ export default {
         introduction: this.initialTargetProfile.introduction,
       };
       this.profile = { avatar, cover, name, introduction };
-      console.log("create", this.profile);
     },
     handleCoverChange(e) {
       const { files } = e.target;

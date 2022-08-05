@@ -106,7 +106,6 @@ export default {
           userId: this.$route.params.id,
         });
         const { data } = response;
-        console.log(response);
         if (response.statusText !== "OK") {
           throw new Error(data.message);
         }
@@ -130,6 +129,8 @@ export default {
             : following;
         });
         this.followShip = true;
+        // 為了讓 top popular改變
+        this.$emit("after-change-profile-follow");
         Toast.fire({
           icon: "success",
           title: "成功追蹤該使用者",
@@ -155,7 +156,6 @@ export default {
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        console.log(this.followingList);
         this.followingList = this.followingList.map((following) => {
           return userId === following.followId
             ? {
@@ -165,6 +165,7 @@ export default {
             : following;
         });
         this.followShip = false;
+        this.$emit("after-change-profile-follow");
         Toast.fire({
           icon: "success",
           title: "已取消追蹤該使用者",

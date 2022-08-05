@@ -111,6 +111,7 @@ export default {
               }
             : showFollowList;
         });
+        this.$emit("after-followList-change-follow");
         Toast.fire({
           icon: "success",
           title: "成功追蹤該使用者",
@@ -136,7 +137,6 @@ export default {
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        console.log(this.showFollowLists)
         this.showFollowLists = this.showFollowLists.map((showFollowList) => {
           return userId === showFollowList.followId
             ? {
@@ -149,6 +149,7 @@ export default {
           icon: "success",
           title: "已取消追蹤該使用者",
         });
+        this.$emit("after-followList-change-follow");
       } catch (error) {
         console.error(error.message);
         Toast.fire({

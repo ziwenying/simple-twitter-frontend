@@ -15,6 +15,7 @@
         </div>
         <!-- component UserProfileCard.vue -->
         <UserProfileCard
+          @after-change-profile-follow="fetchPopular"
           :targetProfile="targetProfile"
           :initialChangeFollow="followShip"
         />
@@ -28,7 +29,12 @@
       </div>
     </div>
     <!--component Populars -->
-    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
+    <Populars
+      @after-change-follow="fetchFollowings"
+      @change-profile-follow="changeProfilePopular"
+      :initialTopPopular="topPopular"
+      class="col-3 popular"
+    />
     <!-- component UserEditModal -->
     <UserEditModal
       @after-submit-profile="afterSubmitProfile"
@@ -129,7 +135,7 @@ export default {
           role: response.data.role,
           followerCount: response.data.followerCount,
           followingCount: response.data.followingCount,
-          tweetCount: response.data.tweetCount
+          tweetCount: response.data.tweetCount,
         };
         this.targetProfile = {
           id,
@@ -142,7 +148,7 @@ export default {
           role,
           followerCount,
           followingCount,
-          tweetCount
+          tweetCount,
         };
       } catch (error) {
         console.error(error.message);
@@ -156,7 +162,6 @@ export default {
       try {
         const response = await usersAPI.getTopUser();
         const { data } = response;
-        console.log("pop", response);
         if (response.statusText !== "OK") {
           throw new Error(data.message);
         }
@@ -220,6 +225,7 @@ export default {
     },
     async fetchFollowings(userId) {
       // 這邊為了個人頁面的追蹤按鈕
+      // popular 傳回來
       try {
         const response = await usersAPI.getFollowings({ userId });
         const { data } = response;
@@ -231,6 +237,23 @@ export default {
           (following) => following.followingId === Number(this.$route.params.id)
         );
         this.followShip = !!followingShip; //可以判斷 true 正在追蹤，傳到 UserProfileCard 使用
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    async changeProfilePopular(change) {
+      // 這邊為了個人頁面的追蹤按鈕
+
+      // popular 傳回來
+      const userId = change.userId;
+      try {
+        const response = await usersAPI.getFollowings({ userId });
+        const { data } = response;
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
+        }
+        this.followingList = data;
+        this.followShip = change.change; //可以判斷 true 正在追蹤，傳到 UserProfileCard 使用
       } catch (error) {
         console.error(error.message);
       }

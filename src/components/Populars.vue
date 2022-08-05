@@ -80,6 +80,14 @@ export default {
           icon: "success",
           title: "成功追蹤該使用者",
         });
+        if (
+          this.$route.name === "user-followings" ||
+          this.$route.name === "user-followers"
+        ) {
+          this.$emit("after-change-follow", "change");
+        } else if (this.$route.name === "main-tweets") {
+          this.$emit("change-profile-follow", { userId: userId, change: true });
+        }
       } catch (error) {
         console.error(error.message);
         if (error.message === "Can not follow yourself.") {
@@ -113,6 +121,17 @@ export default {
           icon: "success",
           title: "已取消追蹤該使用者",
         });
+        if (
+          this.$route.name === "user-followings" ||
+          this.$route.name === "user-followers"
+        ) {
+          this.$emit("after-change-follow", "change");
+        } else if (this.$route.name === "main-tweets") {
+          this.$emit("change-profile-follow", {
+            userId: userId,
+            change: false,
+          });
+        }
       } catch (error) {
         console.error(error.message);
         Toast.fire({

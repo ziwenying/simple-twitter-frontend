@@ -133,7 +133,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        console.log(data.status);
         //顯示空心 & 愛心數減一
         this.tweets = this.tweets.map((tweet) => {
           return tweetId === tweet.id

@@ -68,7 +68,9 @@
                 />
               </div>
             </div>
-            <span v-if="description && description.trim().length === 0" class="alert-msg"
+            <span
+              v-if="description && description.trim().length === 0"
+              class="alert-msg"
               >內容不可空白</span
             >
             <button
@@ -124,7 +126,6 @@ export default {
           tweetId: this.replyModalData.id,
           comment: this.description,
         });
-        console.log("res", this.replyModalData);
         if (data.status !== "success") {
           throw new Error(data.status);
         }
@@ -197,7 +198,7 @@ export default {
             position: absolute;
             left: 25px;
             top: 60px;
-            height: calc(100% - 45px);  // 裝飾線長度自動調整
+            height: calc(100% - 45px); // 裝飾線長度自動調整
             background-color: $gray3;
             border-right: 1px solid $gray3;
             border-left: 1px solid $gray3;

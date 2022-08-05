@@ -19,13 +19,19 @@
         <FollowerNavPills />
         <!-- UserFollowers.vue, UserFollowings.vue -->
         <router-view
+          @after-followList-change-follow="fetchPopular"
+          :initialChangeFollow="changeFollow"
           class="bottom-lists scrollbar"
         />
       </div>
     </div>
 
     <!--component Populars -->
-    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
+    <Populars
+      @after-change-follow="fetchPopular"
+      :initialTopPopular="topPopular"
+      class="col-3 popular"
+    />
   </div>
 </template>
 
@@ -33,9 +39,9 @@
 import Navbar from "../components/Navbar.vue";
 import FollowerNavPills from "../components/FollowerNavPills.vue";
 import Populars from "../components/Populars.vue";
-import { Toast } from './../utils/helpers'
-import userAPI from './../apis/users'
-import tweetsAPI from './../apis/tweets'
+import { Toast } from "./../utils/helpers";
+import userAPI from "./../apis/users";
+import tweetsAPI from "./../apis/tweets";
 
 export default {
   name: "UserFollowList",
@@ -48,48 +54,54 @@ export default {
     return {
       topPopular: [],
       tweets: [],
-      userName: ''  // 渲染頁面上方標題
+      userName: "", // 渲染頁面上方標題
+      changeFollow: false,
     };
   },
   created() {
     const { id: userId } = this.$route.params;
     this.fetchPopular();
-    this.fetchTweets(userId)
+    this.fetchTweets(userId);
   },
   methods: {
     // 利用使用者 id 取得所有推文，計算推文數量使用
     async fetchTweets(userId) {
       try {
-        const response = await tweetsAPI.tweets.getUsersTweets( {userId} )
-        const { data } = response
+        const response = await tweetsAPI.tweets.getUsersTweets({ userId });
+        const { data } = response;
 
-        if (response.statusText !== 'OK') {
-          throw new Error (data.message)
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
         }
         this.tweets = data;
-        this.userName = data[0].User.name
+        this.userName = data[0].User.name;
       } catch (error) {
-        console.error(error.message)
+        console.error(error.message);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得推文數量資料'
-        })
+          icon: "error",
+          title: "無法取得推文數量資料",
+        });
       }
     },
-    async fetchPopular() {
+    async fetchPopular(change) {
       try {
-        const response = await userAPI.getTopUser()
-        const { data } = response
-        if (response.statusText !== 'OK') {
-          throw new Error(data.message)
+        const response = await userAPI.getTopUser();
+        const { data } = response;
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
         }
-        this.topPopular = data 
+
+        if (change === "change") {
+          this.changeFollow = !this.changeFollow;
+        } else {
+          this.topPopular = data;
+        }
       } catch (error) {
-        console.error(error.message)
+        console.error(error.message);
         Toast.fire({
-          icon: 'error',
-          title: '無法取得推薦追蹤名單'
-        })
+          icon: "error",
+          title: "無法取得推薦追蹤名單",
+        });
       }
     },
   },
