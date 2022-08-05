@@ -184,7 +184,8 @@ export default {
 
 .user-profile-outer {
   position: relative;
-  height: 409px;
+  height: calc(409px + 10%);
+  overflow-wrap: anywhere;
   border-left: $light-blue2 1px solid;
   border-right: $light-blue2 1px solid;
   .background-img {
@@ -254,7 +255,7 @@ export default {
     }
   }
   .user-text {
-    margin: 6px 0 0 16px;
+    margin: 6px 17px 0 16px;
     font-size: 14px;
   }
   .follow {
