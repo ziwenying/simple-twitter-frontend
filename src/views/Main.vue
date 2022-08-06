@@ -3,7 +3,9 @@
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
     <!-- MainPage.vue & ReplyList -->
+    <Spinner v-if="isLoading" class="col-7"/>
     <router-view
+      v-else
       :initialTweets="tweets"
       :newReply="newReply"
       :popular="topPopular"
@@ -11,7 +13,7 @@
       class="col-7 main-page scrollbar"
     />
     <!--component Populars -->
-    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
+    <Populars  class="col-3 popular" />
     <!-- Modal -->
     <CreateTweetModal @after-submit-tweet="afterSubmitTweet" />
     <ReplyModal
@@ -26,63 +28,50 @@ import Populars from "../components/Populars.vue";
 import Navbar from "../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
+import Spinner from "../components/Spinner.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
-import userAPI from "./../apis/users";
 
 export default {
   name: "MainPage",
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "topPopular"]),
   },
   components: {
     Populars,
     Navbar,
     ReplyModal,
     CreateTweetModal,
+    Spinner
   },
   data() {
     return {
       tweets: [],
-      topPopular: [],
       replyModalData: {},
       newReply: {},
+      isLoading: true
     };
   },
   created() {
     this.fetchTweets();
-    this.fetchPopular();
   },
   methods: {
     async fetchTweets() {
       try {
+        this.isLoading = true
         const response = await tweetsAPI.tweets.getTweets();
         if (response.statusText !== "OK") {
           throw new Error("無法取得推文資料，請稍後再試");
         }
         this.tweets = response.data;
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error.message);
         Toast.fire({
           icon: "error",
           title: "無法取得推文資料，請稍後再試",
-        });
-      }
-    },
-    async fetchPopular() {
-      try {
-        const response = await userAPI.getTopUser();
-        const { data } = response;
-        if (response.statusText !== "OK") {
-          throw new Error(data.message);
-        }
-        this.topPopular = data;
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得推薦追蹤名單",
         });
       }
     },

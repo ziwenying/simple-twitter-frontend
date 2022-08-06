@@ -66,7 +66,6 @@ export default {
         }
 
         this.replies = response.data;
-        console.log(this.replies);
         // 資料拆層
         this.replies = this.replies.map((reply) => {
           return {

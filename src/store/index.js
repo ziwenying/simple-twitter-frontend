@@ -1,7 +1,7 @@
-
 import Vue from 'vue'
 import Vuex from 'vuex'
 import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
 Vue.use(Vuex)
 
@@ -16,6 +16,7 @@ export default new Vuex.Store({
       role: ''
     },
     isAuthenticated: false,
+    topPopular: []
   },
   getters: {
   },
@@ -34,6 +35,9 @@ export default new Vuex.Store({
       state.currentUser = {}
       state.isAuthenticated = false
       localStorage.removeItem('token')
+    },
+    setTopPopular(state, topPopular) {
+      state.topPopular = [...topPopular]
     }
   },
   actions: {
@@ -53,7 +57,23 @@ export default new Vuex.Store({
         commit('revokeAuthentication') // 登入無效直接把使用者登出
         return { isAuthenticated: false, role: '' }  //登入無效
       }
-    }
+    },
+    async fetchPopular({commit}) {
+      try {
+        const response = await usersAPI.getTopUser();
+        const { data } = response;
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
+        }
+        commit('setTopPopular', data)
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推薦追蹤名單",
+        });
+      }
+    },
   },
   modules: {
   }

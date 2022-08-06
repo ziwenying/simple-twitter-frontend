@@ -128,6 +128,15 @@ const router = new VueRouter({
   routes
 })
 
+// 去需要topPopular的頁面就拉取一次topPopular資料
+router.beforeEach((to, from, next) => {
+  const pageWithPopular = ['main-page', 'reply-list', 'user-followers', 'user-followings', 'main-tweets', 'replies', 'liked-tweets']
+  if (pageWithPopular.includes(to.name)) {
+     store.dispatch('fetchPopular')
+  }
+   next()
+}) 
+
 // 每次切換路由都拉取一次currentUser資料
 router.beforeEach(async (to, from, next) => {
   // 拿出token

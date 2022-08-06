@@ -10,12 +10,24 @@ import userAPI from './../apis/users'
 
 export default {
   name: "UserFollowers",
+    props: {
+    changeFollow : {
+      type: Boolean,
+      required: true
+    }
+  },
   components: {
     Followers,
   },
   data() {
     return {
       followerList: [],
+    }
+  },
+  watch: {
+    changeFollow() {
+      const { id: userId } = this.$route.params;
+      this.fetchFollowers(userId);
     }
   },
   created() {

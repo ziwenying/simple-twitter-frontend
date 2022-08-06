@@ -72,7 +72,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "topPopular"]),
   },
   data() {
     return {
@@ -114,6 +114,7 @@ export default {
               }
             : showFollowList;
         });
+        this.$store.dispatch('fetchPopular')
         Toast.fire({
           icon: "success",
           title: "成功追蹤該使用者",
@@ -147,6 +148,7 @@ export default {
               }
             : showFollowList;
         });
+        this.$store.dispatch('fetchPopular')
         Toast.fire({
           icon: "success",
           title: "已取消追蹤該使用者",

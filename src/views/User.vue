@@ -2,7 +2,8 @@
   <div class="row outer-user-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 user-nav" />
-    <div class="col-7 user-page">
+    <Spinner v-if="isLoading" class="col-7"/>
+    <div class="col-7 user-page" v-else>
       <div class="user-outer">
         <div class="reply-lists-title">
           <router-link :to="{ name: 'main-page' }">
@@ -17,6 +18,7 @@
         <UserProfileCard
           :targetProfile="targetProfile"
           :initialChangeFollow="followShip"
+          @change-follow-ship= "changeFollowShip"
         />
         <!-- component UserNavPills.vue -->
         <UserNavPills />
@@ -28,7 +30,7 @@
       </div>
     </div>
     <!--component Populars -->
-    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
+    <Populars  class="col-3 popular" @change-profile-follow="changeProfilePopular"/>
     <!-- component UserEditModal -->
     <UserEditModal
       @after-submit-profile="afterSubmitProfile"
@@ -47,6 +49,7 @@ import Populars from "../components/Populars.vue";
 import UserEditModal from "../components/UserEditModal.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
+import Spinner from "./../components/Spinner.vue"
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
@@ -61,9 +64,10 @@ export default {
     UserEditModal,
     ReplyModal,
     CreateTweetModal,
+    Spinner
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "topPopular"]),
   },
   data() {
     return {
@@ -77,10 +81,10 @@ export default {
         introduction: "",
         role: "",
       },
-      topPopular: [],
       replyModalData: {},
       followingList: [],
       followShip: false,
+      isLoading: true
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -94,12 +98,13 @@ export default {
     //透過 id 取得指定使用者的資料
     const { id } = this.$route.params;
     this.fetchProfile(id);
-    this.fetchPopular();
+    this.$store.dispatch('fetchPopular')
     this.fetchFollowings(this.currentUser.id);
   },
   methods: {
     async fetchProfile(userId) {
       try {
+        this.isLoading = true
         const response = await usersAPI.getTheUser({ userId });
         if (response.statusText !== "OK") {
           throw new Error("無法取得使用者資料，請稍後再試");
@@ -144,27 +149,13 @@ export default {
           followingCount,
           tweetCount,
         };
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error.message);
         Toast.fire({
           icon: "error",
           title: "無法取得使用者資料，請稍後再試",
-        });
-      }
-    },
-    async fetchPopular() {
-      try {
-        const response = await usersAPI.getTopUser();
-        const { data } = response;
-        if (response.statusText !== "OK") {
-          throw new Error(data.message);
-        }
-        this.topPopular = data;
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得推薦追蹤名單",
         });
       }
     },
@@ -232,6 +223,56 @@ export default {
         this.followShip = !!followingShip; //可以判斷 true 正在追蹤，傳到 UserProfileCard 使用
       } catch (error) {
         console.error(error.message);
+      }
+    },
+    changeProfilePopular(change) {
+      // 個人頁面的追蹤按鈕
+      // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
+      const userId = change.userId;
+      const { id } = this.$route.params 
+      // 如果目前是在別人的個人頁面: 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
+      if (userId === Number(id)) {
+        this.followShip = change.change; 
+        // 改變user profile頁面的跟隨中與跟隨者人數
+        if (this.followShip === true) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount + 1,
+        };
+      } else if (this.followShip === false) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount - 1,
+        };
+      }
+      // 如果是在自己的個人頁面: 追蹤中人數相應改變
+     } else if (userId === Number(id) && Number(id) === this.currentUser.id) {
+        if (this.followShip === true) {
+            this.targetProfile = {
+            ...this.targetProfile,
+            followingCount: this.targetProfile.followingCount + 1,
+          };
+        } else if (this.followShip === false) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followingCount: this.targetProfile.followingCount - 1,
+        };
+      }
+     }
+    },
+    changeFollowShip(payload) {
+      this.followShip = payload
+      // 在"別人"的個人頁面按下追蹤或退追按鈕, 下方的追隨者人數會相應變化 
+      if (this.followShip === true) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount + 1,
+        };
+      } else if (this.followShip === false) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount - 1,
+        };
       }
     },
   },

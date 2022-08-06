@@ -128,7 +128,8 @@ export default {
               }
             : following;
         });
-        this.followShip = true;
+        this.$emit('change-follow-ship', true)
+        this.$store.dispatch('fetchPopular')
         Toast.fire({
           icon: "success",
           title: "成功追蹤該使用者",
@@ -162,7 +163,8 @@ export default {
               }
             : following;
         });
-        this.followShip = false;
+        this.$emit('change-follow-ship', false)
+        this.$store.dispatch('fetchPopular')
         Toast.fire({
           icon: "success",
           title: "已取消追蹤該使用者",

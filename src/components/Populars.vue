@@ -36,50 +36,30 @@
 <script>
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
+import { mapState } from 'vuex'
 
 export default {
   name: "Populars",
-  props: {
-    initialTopPopular: {
-      type: Array,
-      required: true,
-    },
-  },
-  watch: {
-    initialTopPopular(newVal) {
-      this.topPopular = [...newVal];
-    },
-  },
-  data() {
-    return {
-      topPopular: [],
-    };
-  },
-  created() {
-    this.fetchTopPupular();
+  computed: {
+    ...mapState(['topPopular'])
   },
   methods: {
-    fetchTopPupular() {
-      this.topPopular = this.initialTopPopular;
-    },
     async addFollowed(userId) {
       try {
         const { data } = await usersAPI.addfollowed({ id: userId });
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        this.topPopular = this.topPopular.map((popular) => {
-          return userId === popular.id
-            ? {
-                ...popular,
-                isFollowed: !popular.isFollowed,
-              }
-            : popular;
-        });
+        this.$store.dispatch('fetchPopular')
+        this.$emit('after-follow-change-in-popular')
         Toast.fire({
           icon: "success",
           title: "成功追蹤該使用者",
         });
+        if (this.$route.name === "main-tweets" || this.$route.name === "replies" || this.$route.name === "liked-tweets") {
+          // 如果變動在個人頁面發生，帶 id 和 追蹤狀態 true 回 User.vue
+          this.$emit("change-profile-follow", { userId: userId, change: true });
+        }
       } catch (error) {
         console.error(error.message);
         if (error.message === "Can not follow yourself.") {
@@ -101,18 +81,16 @@ export default {
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        this.topPopular = this.topPopular.map((popular) => {
-          return userId === popular.id
-            ? {
-                ...popular,
-                isFollowed: !popular.isFollowed,
-              }
-            : popular;
-        });
+        this.$store.dispatch('fetchPopular')
+        this.$emit('after-follow-change-in-popular')
         Toast.fire({
           icon: "success",
           title: "已取消追蹤該使用者",
         });
+        if (this.$route.name === "main-tweets" || this.$route.name === "replies" || this.$route.name === "liked-tweets") {
+          // 如果變動在個人頁面發生，帶 id 和 追蹤狀態 true 回 User.vue
+          this.$emit("change-profile-follow", { userId: userId, change: false });
+        }
       } catch (error) {
         console.error(error.message);
         Toast.fire({
