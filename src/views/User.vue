@@ -78,7 +78,6 @@ export default {
         introduction: "",
         role: "",
       },
-      // topPopular: [],
       replyModalData: {},
       followingList: [],
       followShip: false,
@@ -99,9 +98,6 @@ export default {
     this.fetchFollowings(this.currentUser.id);
   },
   methods: {
-    changeFollowShip(payload) {
-      this.followShip = payload
-    },
     async fetchProfile(userId) {
       try {
         const response = await usersAPI.getTheUser({ userId });
@@ -227,23 +223,51 @@ export default {
       // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
       const userId = change.userId;
       const { id } = this.$route.params 
-        // 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
-        if (userId === Number(id)) {
-          this.followShip = change.change; 
-           // 改變user profile頁面的跟隨中與跟隨者人數
-           if (this.followShip === true) {
-          this.targetProfile = {
+      this.fetchProfile(id)
+      // 如果目前是在別人的個人頁面: 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
+      if (userId === Number(id)) {
+        this.followShip = change.change; 
+        // 改變user profile頁面的跟隨中與跟隨者人數
+        if (this.followShip === true) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount + 1,
+        };
+      } else if (this.followShip === false) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount - 1,
+        };
+      }
+      // 如果是在自己的個人頁面: 追蹤中人數相應改變
+     } else if (userId === Number(id) && Number(id) === this.currentUser.id) {
+        if (this.followShip === true) {
+            this.targetProfile = {
             ...this.targetProfile,
-            followerCount: this.targetProfile.followerCount + 1,
+            followingCount: this.targetProfile.followingCount + 1,
           };
         } else if (this.followShip === false) {
-          this.targetProfile = {
-            ...this.targetProfile,
-            followerCount: this.targetProfile.followerCount - 1,
-          };
-        }
+        this.targetProfile = {
+          ...this.targetProfile,
+          followingCount: this.targetProfile.followingCount - 1,
+        };
+      }
      }
-
+    },
+    changeFollowShip(payload) {
+      this.followShip = payload
+      // 在"別人"的個人頁面按下追蹤或退追按鈕, 下方的追隨者人數會相應變化 
+      if (this.followShip === true) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount + 1,
+        };
+      } else if (this.followShip === false) {
+        this.targetProfile = {
+          ...this.targetProfile,
+          followerCount: this.targetProfile.followerCount - 1,
+        };
+      }
     },
   },
 };
