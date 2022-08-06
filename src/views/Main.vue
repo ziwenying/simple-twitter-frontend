@@ -3,7 +3,9 @@
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
     <!-- MainPage.vue & ReplyList -->
+    <Spinner v-if="isLoading" class="col-7"/>
     <router-view
+      v-else
       :initialTweets="tweets"
       :newReply="newReply"
       :popular="topPopular"
@@ -26,6 +28,7 @@ import Populars from "../components/Populars.vue";
 import Navbar from "../components/Navbar.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
+import Spinner from "../components/Spinner.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
@@ -40,12 +43,14 @@ export default {
     Navbar,
     ReplyModal,
     CreateTweetModal,
+    Spinner
   },
   data() {
     return {
       tweets: [],
       replyModalData: {},
       newReply: {},
+      isLoading: true
     };
   },
   created() {
@@ -54,12 +59,15 @@ export default {
   methods: {
     async fetchTweets() {
       try {
+        this.isLoading = true
         const response = await tweetsAPI.tweets.getTweets();
         if (response.statusText !== "OK") {
           throw new Error("無法取得推文資料，請稍後再試");
         }
         this.tweets = response.data;
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error.message);
         Toast.fire({
           icon: "error",

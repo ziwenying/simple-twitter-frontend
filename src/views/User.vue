@@ -2,7 +2,8 @@
   <div class="row outer-user-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 user-nav" />
-    <div class="col-7 user-page">
+    <Spinner v-if="isLoading" class="col-7"/>
+    <div class="col-7 user-page" v-else>
       <div class="user-outer">
         <div class="reply-lists-title">
           <router-link :to="{ name: 'main-page' }">
@@ -48,6 +49,7 @@ import Populars from "../components/Populars.vue";
 import UserEditModal from "../components/UserEditModal.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
+import Spinner from "./../components/Spinner.vue"
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
@@ -62,6 +64,7 @@ export default {
     UserEditModal,
     ReplyModal,
     CreateTweetModal,
+    Spinner
   },
   computed: {
     ...mapState(["currentUser", "topPopular"]),
@@ -81,6 +84,7 @@ export default {
       replyModalData: {},
       followingList: [],
       followShip: false,
+      isLoading: true
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -100,6 +104,7 @@ export default {
   methods: {
     async fetchProfile(userId) {
       try {
+        this.isLoading = true
         const response = await usersAPI.getTheUser({ userId });
         if (response.statusText !== "OK") {
           throw new Error("無法取得使用者資料，請稍後再試");
@@ -144,7 +149,9 @@ export default {
           followingCount,
           tweetCount,
         };
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error.message);
         Toast.fire({
           icon: "error",
