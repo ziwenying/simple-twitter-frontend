@@ -223,7 +223,6 @@ export default {
       // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
       const userId = change.userId;
       const { id } = this.$route.params 
-      this.fetchProfile(id)
       // 如果目前是在別人的個人頁面: 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
       if (userId === Number(id)) {
         this.followShip = change.change; 
