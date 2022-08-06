@@ -130,9 +130,12 @@ const router = new VueRouter({
 
 // 去需要topPopular的頁面就拉取一次topPopular資料
 router.beforeEach((to, from, next) => {
-  const pageWithPopular = ['main-page', 'reply-list', 'user-followers', 'user-followings', 'main-tweets', 'replies', 'liked-tweets']
-  if (pageWithPopular.includes(to.name)) {
-     store.dispatch('fetchPopular')
+  const token = localStorage.getItem('token')
+  if (token) {
+    const pageWithPopular = ['main-page', 'reply-list', 'user-followers', 'user-followings', 'main-tweets', 'replies', 'liked-tweets']
+    if (pageWithPopular.includes(to.name)) {
+      store.dispatch('fetchPopular')
+    }
   }
    next()
 }) 
