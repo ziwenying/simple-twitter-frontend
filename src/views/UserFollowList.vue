@@ -33,9 +33,10 @@ import Navbar from "../components/Navbar.vue";
 import FollowerNavPills from "../components/FollowerNavPills.vue";
 import Populars from "../components/Populars.vue";
 import { Toast } from "./../utils/helpers";
-import userAPI from "./../apis/users";
+// import userAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
+import { mapState } from 'vuex' 
 
 export default {
   name: "UserFollowList",
@@ -47,14 +48,16 @@ export default {
   },
   data() {
     return {
-      topPopular: [],
       tweets: [],
       userName: "", // 渲染頁面上方標題
     };
   },
+  computed: {
+     ...mapState(['topPopular'])
+  },
   created() {
     const { id: userId } = this.$route.params;
-    this.fetchPopular();
+    // this.fetchPopular();
     this.fetchTweets(userId);
   },
   methods: {
@@ -77,22 +80,22 @@ export default {
         });
       }
     },
-    async fetchPopular() {
-      try {
-        const response = await userAPI.getTopUser();
-        const { data } = response;
-        if (response.statusText !== "OK") {
-          throw new Error(data.message);
-        }
-        this.topPopular = data;
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得推薦追蹤名單",
-        });
-      }
-    },
+    // async fetchPopular() {
+    //   try {
+    //     const response = await userAPI.getTopUser();
+    //     const { data } = response;
+    //     if (response.statusText !== "OK") {
+    //       throw new Error(data.message);
+    //     }
+    //     this.topPopular = data;
+    //   } catch (error) {
+    //     console.error(error.message);
+    //     Toast.fire({
+    //       icon: "error",
+    //       title: "無法取得推薦追蹤名單",
+    //     });
+    //   }
+    // },
   },
 };
 </script>

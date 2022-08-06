@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-const baseURL = 'https://twitter-api-2022.herokuapp.com/api'
+const baseURL = 'https://fierce-waters-58925.herokuapp.com/api'
 
 export const apiHelper = axios.create({
   baseURL,

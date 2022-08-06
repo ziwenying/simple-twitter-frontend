@@ -128,6 +128,11 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  store.dispatch('fetchPopular')
+  next()
+}) 
+
 // 每次切換路由都拉取一次currentUser資料
 router.beforeEach(async (to, from, next) => {
   // 拿出token

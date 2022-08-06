@@ -36,46 +36,52 @@
 <script>
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
+import { mapState } from 'vuex'
 
 export default {
   name: "Populars",
-  props: {
-    initialTopPopular: {
-      type: Array,
-      required: true,
-    },
+  computed: {
+    ...mapState(['topPopular'])
   },
-  watch: {
-    initialTopPopular(newVal) {
-      this.topPopular = [...newVal];
-    },
-  },
-  data() {
-    return {
-      topPopular: [],
-    };
-  },
-  created() {
-    this.fetchTopPupular();
-  },
+
+  // props: {
+  //   initialTopPopular: {
+  //     type: Object,
+  //     required: true,
+  //   },
+  // },
+  // watch: {
+  //   initialTopPopular(newVal) {
+  //     this.topPopular = { ...this.this.topPopular, ...newVal};
+  //   },
+  // },
+  // data() {
+  //   return {
+  //     topPopular: [],
+  //   };
+  // },
+  // created() {
+  //   this.fetchTopPupular();
+  // }
   methods: {
-    fetchTopPupular() {
-      this.topPopular = this.initialTopPopular;
-    },
+    // fetchTopPupular() {
+    //   this.topPopular = this.initialTopPopular;
+    // },
     async addFollowed(userId) {
       try {
         const { data } = await usersAPI.addfollowed({ id: userId });
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        this.topPopular = this.topPopular.map((popular) => {
-          return userId === popular.id
-            ? {
-                ...popular,
-                isFollowed: !popular.isFollowed,
-              }
-            : popular;
-        });
+        this.$store.dispatch('fetchPopular')
+        // this.topPopular = this.topPopular.map((popular) => {
+        //   return userId === popular.id
+        //     ? {
+        //         ...popular,
+        //         isFollowed: !popular.isFollowed,
+        //       }
+        //     : popular;
+        // });
         Toast.fire({
           icon: "success",
           title: "成功追蹤該使用者",
@@ -101,14 +107,15 @@ export default {
         if (data.status === "error") {
           throw new Error(data.message);
         }
-        this.topPopular = this.topPopular.map((popular) => {
-          return userId === popular.id
-            ? {
-                ...popular,
-                isFollowed: !popular.isFollowed,
-              }
-            : popular;
-        });
+        this.$store.dispatch('fetchPopular')
+        // this.topPopular = this.topPopular.map((popular) => {
+        //   return userId === popular.id
+        //     ? {
+        //         ...popular,
+        //         isFollowed: !popular.isFollowed,
+        //       }
+        //     : popular;
+        // });
         Toast.fire({
           icon: "success",
           title: "已取消追蹤該使用者",

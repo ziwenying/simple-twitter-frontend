@@ -63,7 +63,7 @@ export default {
     CreateTweetModal,
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "topPopular"]),
   },
   data() {
     return {
@@ -77,7 +77,7 @@ export default {
         introduction: "",
         role: "",
       },
-      topPopular: [],
+      // topPopular: [],
       replyModalData: {},
       followingList: [],
       followShip: false,
@@ -94,7 +94,8 @@ export default {
     //透過 id 取得指定使用者的資料
     const { id } = this.$route.params;
     this.fetchProfile(id);
-    this.fetchPopular();
+    // this.fetchPopular();
+    this.$store.dispatch('fetchPopular')
     this.fetchFollowings(this.currentUser.id);
   },
   methods: {
@@ -152,22 +153,22 @@ export default {
         });
       }
     },
-    async fetchPopular() {
-      try {
-        const response = await usersAPI.getTopUser();
-        const { data } = response;
-        if (response.statusText !== "OK") {
-          throw new Error(data.message);
-        }
-        this.topPopular = data;
-      } catch (error) {
-        console.error(error.message);
-        Toast.fire({
-          icon: "error",
-          title: "無法取得推薦追蹤名單",
-        });
-      }
-    },
+    // async fetchPopular() {
+    //   try {
+    //     const response = await usersAPI.getTopUser();
+    //     const { data } = response;
+    //     if (response.statusText !== "OK") {
+    //       throw new Error(data.message);
+    //     }
+    //     this.topPopular = data;
+    //   } catch (error) {
+    //     console.error(error.message);
+    //     Toast.fire({
+    //       icon: "error",
+    //       title: "無法取得推薦追蹤名單",
+    //     });
+    //   }
+    // },
     afterClickReply(payload) {
       // 點擊回覆，顯示 modal 使用的資料
       const { id, description, User, createdAt } = payload;
@@ -186,6 +187,7 @@ export default {
           userId: this.currentUser.id,
           formData,
         });
+        console.log(response)
         // 更新後的資料，渲染用
         if (response.statusText !== "OK") {
           throw new Error("無法編輯個人資料，請稍後再試");
