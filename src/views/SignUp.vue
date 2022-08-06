@@ -262,10 +262,6 @@ export default {
           border-bottom: 2px solid #657786;
           padding-bottom: 10px;
           padding-left: 9px;
-          &:disabled {
-            border-color: transparent;
-            background-color: transparent;
-          }
           &:hover,
           &:focus {
             border-bottom: 2px solid $light-blue1;
