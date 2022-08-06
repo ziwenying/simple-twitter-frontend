@@ -229,9 +229,12 @@ export default {
           throw new Error(data.message);
         }
         this.followingList = data;
-        this.followShip = change.change; 
         const { id } = this.$route.params 
-        this.fetchProfile(id);   // 重新渲染user profile頁面的跟隨中與跟隨者人數
+        // 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
+        if (userId === Number(id)) {
+          this.followShip = change.change; 
+          this.fetchProfile(id);   // 重新渲染user profile頁面的跟隨中與跟隨者人數
+        }
       } catch (error) {
         console.error(error.message);
       }
