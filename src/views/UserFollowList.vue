@@ -35,7 +35,6 @@ import Populars from "../components/Populars.vue";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
-import { mapState } from 'vuex' 
 
 export default {
   name: "UserFollowList",
@@ -51,9 +50,6 @@ export default {
       userName: "", // 渲染頁面上方標題
       changeFollow: false
     };
-  },
-  computed: {
-     ...mapState(['topPopular'])
   },
   created() {
     const { id: userId } = this.$route.params;

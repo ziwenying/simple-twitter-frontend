@@ -128,7 +128,7 @@ export default {
               }
             : following;
         });
-        this.followShip = true;
+        this.$emit('change-follow-ship', true)
         this.$store.dispatch('fetchPopular')
         Toast.fire({
           icon: "success",
@@ -163,7 +163,7 @@ export default {
               }
             : following;
         });
-        this.followShip = false;
+        this.$emit('change-follow-ship', false)
         this.$store.dispatch('fetchPopular')
         Toast.fire({
           icon: "success",

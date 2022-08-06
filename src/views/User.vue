@@ -17,6 +17,7 @@
         <UserProfileCard
           :targetProfile="targetProfile"
           :initialChangeFollow="followShip"
+          @change-follow-ship= "changeFollowShip"
         />
         <!-- component UserNavPills.vue -->
         <UserNavPills />
@@ -98,6 +99,9 @@ export default {
     this.fetchFollowings(this.currentUser.id);
   },
   methods: {
+    changeFollowShip(payload) {
+      this.followShip = payload
+    },
     async fetchProfile(userId) {
       try {
         const response = await usersAPI.getTheUser({ userId });
@@ -218,26 +222,28 @@ export default {
         console.error(error.message);
       }
     },
-    async changeProfilePopular(change) {
+    changeProfilePopular(change) {
       // 個人頁面的追蹤按鈕
       // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
       const userId = change.userId;
-      try {
-        const response = await usersAPI.getFollowings({ userId });
-        const { data } = response;
-        if (response.statusText !== "OK") {
-          throw new Error(data.message);
-        }
-        this.followingList = data;
-        const { id } = this.$route.params 
+      const { id } = this.$route.params 
         // 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
         if (userId === Number(id)) {
           this.followShip = change.change; 
-          this.fetchProfile(id);   // 重新渲染user profile頁面的跟隨中與跟隨者人數
+           // 改變user profile頁面的跟隨中與跟隨者人數
+           if (this.followShip === true) {
+          this.targetProfile = {
+            ...this.targetProfile,
+            followerCount: this.targetProfile.followerCount + 1,
+          };
+        } else if (this.followShip === false) {
+          this.targetProfile = {
+            ...this.targetProfile,
+            followerCount: this.targetProfile.followerCount - 1,
+          };
         }
-      } catch (error) {
-        console.error(error.message);
-      }
+     }
+
     },
   },
 };
