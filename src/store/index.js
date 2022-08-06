@@ -65,7 +65,6 @@ export default new Vuex.Store({
         if (response.statusText !== "OK") {
           throw new Error(data.message);
         }
-        console.log(data)
         commit('setTopPopular', data)
       } catch (error) {
         console.error(error.message);

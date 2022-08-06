@@ -128,6 +128,7 @@ const router = new VueRouter({
   routes
 })
 
+// 每次切換路由都拉取一次topPopular資料
 router.beforeEach((to, from, next) => {
   store.dispatch('fetchPopular')
   next()

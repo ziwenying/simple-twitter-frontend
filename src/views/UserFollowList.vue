@@ -18,12 +18,12 @@
         <!-- component FollowerNavPills.vue -->
         <FollowerNavPills />
         <!-- UserFollowers.vue, UserFollowings.vue -->
-        <router-view class="bottom-lists scrollbar" />
+        <router-view class="bottom-lists scrollbar" :change-follow="changeFollow"/>
       </div>
     </div>
 
     <!--component Populars -->
-    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
+    <Populars class="col-3 popular" @after-follow-change-in-popular="afterFollowChange"/>
     <CreateTweetModal />
   </div>
 </template>
@@ -33,7 +33,6 @@ import Navbar from "../components/Navbar.vue";
 import FollowerNavPills from "../components/FollowerNavPills.vue";
 import Populars from "../components/Populars.vue";
 import { Toast } from "./../utils/helpers";
-// import userAPI from "./../apis/users";
 import tweetsAPI from "./../apis/tweets";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import { mapState } from 'vuex' 
@@ -50,6 +49,7 @@ export default {
     return {
       tweets: [],
       userName: "", // 渲染頁面上方標題
+      changeFollow: false
     };
   },
   computed: {
@@ -61,6 +61,9 @@ export default {
     this.fetchTweets(userId);
   },
   methods: {
+    afterFollowChange() {
+      this.changeFollow = !this.changeFollow
+    },
     // 利用使用者 id 取得所有推文，計算推文數量使用
     async fetchTweets(userId) {
       try {
@@ -80,22 +83,6 @@ export default {
         });
       }
     },
-    // async fetchPopular() {
-    //   try {
-    //     const response = await userAPI.getTopUser();
-    //     const { data } = response;
-    //     if (response.statusText !== "OK") {
-    //       throw new Error(data.message);
-    //     }
-    //     this.topPopular = data;
-    //   } catch (error) {
-    //     console.error(error.message);
-    //     Toast.fire({
-    //       icon: "error",
-    //       title: "無法取得推薦追蹤名單",
-    //     });
-    //   }
-    // },
   },
 };
 </script>

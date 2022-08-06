@@ -28,7 +28,7 @@
       </div>
     </div>
     <!--component Populars -->
-    <Populars :initialTopPopular="topPopular" class="col-3 popular" />
+    <Populars  class="col-3 popular" @change-profile-follow="changeProfilePopular"/>
     <!-- component UserEditModal -->
     <UserEditModal
       @after-submit-profile="afterSubmitProfile"
@@ -94,7 +94,6 @@ export default {
     //透過 id 取得指定使用者的資料
     const { id } = this.$route.params;
     this.fetchProfile(id);
-    // this.fetchPopular();
     this.$store.dispatch('fetchPopular')
     this.fetchFollowings(this.currentUser.id);
   },
@@ -153,22 +152,6 @@ export default {
         });
       }
     },
-    // async fetchPopular() {
-    //   try {
-    //     const response = await usersAPI.getTopUser();
-    //     const { data } = response;
-    //     if (response.statusText !== "OK") {
-    //       throw new Error(data.message);
-    //     }
-    //     this.topPopular = data;
-    //   } catch (error) {
-    //     console.error(error.message);
-    //     Toast.fire({
-    //       icon: "error",
-    //       title: "無法取得推薦追蹤名單",
-    //     });
-    //   }
-    // },
     afterClickReply(payload) {
       // 點擊回覆，顯示 modal 使用的資料
       const { id, description, User, createdAt } = payload;
@@ -187,7 +170,6 @@ export default {
           userId: this.currentUser.id,
           formData,
         });
-        console.log(response)
         // 更新後的資料，渲染用
         if (response.statusText !== "OK") {
           throw new Error("無法編輯個人資料，請稍後再試");
@@ -232,6 +214,24 @@ export default {
           (following) => following.followingId === Number(this.$route.params.id)
         );
         this.followShip = !!followingShip; //可以判斷 true 正在追蹤，傳到 UserProfileCard 使用
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    async changeProfilePopular(change) {
+      // 個人頁面的追蹤按鈕
+      // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
+      const userId = change.userId;
+      try {
+        const response = await usersAPI.getFollowings({ userId });
+        const { data } = response;
+        if (response.statusText !== "OK") {
+          throw new Error(data.message);
+        }
+        this.followingList = data;
+        this.followShip = change.change; 
+        const { id } = this.$route.params 
+        this.fetchProfile(id);   // 重新渲染user profile頁面的跟隨中與跟隨者人數
       } catch (error) {
         console.error(error.message);
       }
