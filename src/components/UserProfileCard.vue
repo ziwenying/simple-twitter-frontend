@@ -34,14 +34,14 @@
       <img src="~@/assets/image/notfi.png" alt="bell-btn" class="bell-btn" />
       <button
         @click.stop.prevent="addFollowed(targetProfile.id)"
-        v-if="!this.followShip"
+        v-if="!this.initialChangeFollow"
         class="handle-follow btn-unfollow"
       >
         跟隨
       </button>
       <button
         @click.stop.prevent="deleteFollowed(targetProfile.id)"
-        v-if="this.followShip"
+        v-if="this.initialChangeFollow"
         class="handle-follow btn-follow"
       >
         正在跟隨
