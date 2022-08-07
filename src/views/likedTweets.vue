@@ -1,42 +1,44 @@
 <template>
   <div class="tweet-lists">
-    <div class="tweet-list" v-for="tweet in likeTweets" :key="tweet.id">
+    <div class="tweet-list" v-for="likeTweet in likeTweets" :key="likeTweet.id">
       <router-link
-        :to="{ path: `/main/replylist/${tweet.id}/` }"
+        :to="{ path: `/main/replylist/${likeTweet.tweetId}/` }"
         class="tweet-link"
       >
-        <router-link :to="{ path: `/users/${tweet.User.id}/tweets` }">
-          <img class="user-avatar" :src="tweet.User.avatar" alt="user-avatar" />
+        <router-link :to="{ path: `/users/${likeTweet.userId}/tweets` }">
+          <img class="user-avatar" :src="likeTweet.avatar" alt="user-avatar" />
         </router-link>
         <div class="tweet-content">
           <div class="tweet-title">
-            <router-link :to="{ path: `/users/${tweet.User.id}/tweets` }">
-              <p class="name">{{ tweet.User.name }}</p>
+            <router-link :to="{ path: `/users/${likeTweet.userId}/tweets` }">
+              <p class="name">{{ likeTweet.name }}</p>
             </router-link>
-            <router-link :to="{ path: `/users/${tweet.User.id}/tweets` }">
-              <p class="account">@{{ tweet.User.account }}</p>
+            <router-link :to="{ path: `/users/${likeTweet.userId}/tweets` }">
+              <p class="account">@{{ likeTweet.account }}</p>
             </router-link>
-            <p class="time">&nbsp;‧&nbsp;{{ tweet.createdAt | fromNow }}</p>
+            <p class="time">
+              &nbsp;‧&nbsp;{{ likeTweet.tweetCreatedAt | fromNow }}
+            </p>
           </div>
           <div class="tweet-text">
             <p>
-              {{ tweet.description }}
+              {{ likeTweet.description }}
             </p>
           </div>
           <div class="tweet-reply-heart">
             <!-- 要跳出 modal -->
             <div
-              @click.prevent="isClickedTweet(tweet.id)"
+              @click.prevent="isClickedTweet(likeTweet.tweetId)"
               data-toggle="modal"
               data-target="#replyTweetModal"
               class="tweet-reply"
             >
               <img class="icon" src="~@/assets/image/reply.png" alt="reply" />
-              <p>{{ tweet.replyCount }}</p>
+              <p>{{ likeTweet.replyCount }}</p>
             </div>
             <div
-              v-if="tweet.isLiked"
-              @click.stop.prevent="deleteLiked(tweet.id)"
+              v-if="likeTweet.isLiked"
+              @click.stop.prevent="deleteLiked(likeTweet.tweetId)"
               class="tweet-heart"
             >
               <img
@@ -44,15 +46,15 @@
                 src="~@/assets/image/red-heart.png"
                 alt="heart"
               />
-              <p class="text">{{ tweet.likeCount }}</p>
+              <p class="text">{{ likeTweet.likeCount }}</p>
             </div>
             <div
-              v-if="!tweet.isLiked"
-              @click.stop.prevent="addLiked(tweet.id)"
+              v-if="!likeTweet.isLiked"
+              @click.stop.prevent="addLiked(likeTweet.tweetId)"
               class="tweet-heart"
             >
               <img class="icon" src="~@/assets/image/heart.png" alt="heart" />
-              <p>{{ tweet.likeCount }}</p>
+              <p>{{ likeTweet.likeCount }}</p>
             </div>
           </div>
         </div>
@@ -65,6 +67,7 @@
 import { fromNowFilter } from "./../utils/mixins";
 import { Toast } from "./../utils/helpers";
 import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
 
 export default {
   name: "likedTweets",
@@ -77,24 +80,40 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     // 監聽路由
-    this.fetchTweets();
+    const { id } = to.params;
+    this.fetchTweets(id);
     next();
   },
   created() {
-    this.fetchLikeTweets();
+    const { id } = this.$route.params;
+    this.fetchLikeTweets(id);
   },
   methods: {
-    async fetchLikeTweets() {
+    async fetchLikeTweets(id) {
       try {
-        // 先有全部的 tweets
-        const response = await tweetsAPI.tweets.getTweets();
+        const response = await usersAPI.getTheLikeTweets({
+          userId: id,
+        });
         if (response.statusText !== "OK") {
           throw new Error("無法取得推文資料，請稍後再試");
         }
-        this.tweets = response.data;
-        // 再撈出喜歡的 tweets
-        this.likeTweets = this.tweets.filter((tweet) => {
-          return tweet.isLiked === true;
+        this.likeTweets = response.data;
+        console.log(this.likeTweets);
+        this.likeTweets = this.likeTweets.map((likeTweet) => {
+          return {
+            id: likeTweet.id,
+            tweetId: likeTweet.TweetId,
+            avatar: likeTweet.Tweet.User.avatar,
+            name: likeTweet.Tweet.User.name,
+            account: likeTweet.Tweet.User.account,
+            description: likeTweet.Tweet.description,
+            tweetCreatedAt: likeTweet.Tweet.createdAt,
+            createdAt: likeTweet.createdAt,
+            likeCount: likeTweet.Tweet.likeCount,
+            replyCount: likeTweet.Tweet.replyCount,
+            isLiked: likeTweet.isLiked,
+            userId: likeTweet.Tweet.User.id,
+          };
         });
       } catch (error) {
         console.error(error.message);
@@ -107,8 +126,18 @@ export default {
     isClickedTweet(tweetId) {
       // 被點擊的那則留言的資料，傳到父層 User.vue
       this.oneTweet = this.likeTweets.find((tweet) => {
-        return tweet.id === tweetId;
+        return tweet.tweetId === tweetId;
       });
+      this.oneTweet = {
+        id: this.oneTweet.id,
+        description: this.oneTweet.description,
+        createdAt: this.oneTweet.tweetCreatedAt,
+        User: {
+          name: this.oneTweet.name,
+          account: this.oneTweet.account,
+          avatar: this.oneTweet.avatar,
+        },
+      };
       this.$emit("after-click-reply", this.oneTweet);
     },
     async addLiked(tweetId) {
@@ -118,7 +147,7 @@ export default {
           throw new Error(data.message);
         }
         this.likeTweets = this.likeTweets.map((tweet) => {
-          return tweetId === tweet.id
+          return tweetId === tweet.tweetId
             ? {
                 ...tweet,
                 isLiked: !tweet.isLiked,
@@ -141,7 +170,7 @@ export default {
           throw new Error(data.message);
         }
         this.likeTweets = this.likeTweets.map((tweet) => {
-          return tweetId === tweet.id
+          return tweetId === tweet.tweetId
             ? {
                 ...tweet,
                 isLiked: !tweet.isLiked,
