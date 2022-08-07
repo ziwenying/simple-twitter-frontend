@@ -258,13 +258,13 @@ export default {
           };
         }
         // 如果是在自己的個人頁面: 追蹤中人數相應改變
-      } else if (userId === Number(id) && Number(id) === this.currentUser.id) {
-        if (this.followShip === true) {
+      } else if (userId !== Number(id) && Number(id) === this.currentUser.id) {
+        if (change.change === true) {
           this.targetProfile = {
             ...this.targetProfile,
             followingCount: this.targetProfile.followingCount + 1,
           };
-        } else if (this.followShip === false) {
+        } else if (change.change === false) {
           this.targetProfile = {
             ...this.targetProfile,
             followingCount: this.targetProfile.followingCount - 1,
