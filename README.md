@@ -24,24 +24,24 @@ npm run build
 
 【採用】
 
-vue2 
-vuex 
-vue-router
-axios
-scss
-sweetalert2
-bootstrap
+1. vue2 
+2. vuex 
+3. vue-router
+4. axios
+5. scss
+6. sweetalert2
+7. bootstrap
 
 【前台測試帳號】
 
-account: user1
-email: user1@example.com
+account: user1/
+email: user1@example.com/
 password: 12345678
 
 【後台測試帳號】
 
-account: root
-email: root@example.com
+account: root/
+email: root@example.com/
 password: 12345678
 
 【專案網頁點此進入】
