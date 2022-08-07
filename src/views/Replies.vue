@@ -102,7 +102,7 @@ export default {
 
   .reply-list {
     display: flex;
-    max-height: 158px;
+    width: 100%;
     padding: 16px 23px 16px 23px;
     border-bottom: $light-blue2 1px solid;
 
@@ -112,8 +112,11 @@ export default {
       border-radius: 50%;
     }
     .reply-content {
+      width: 90%;
+      overflow-wrap: anywhere;
       margin: 0 0 0 8px;
       .reply-title {
+        width: 100%;
         display: flex;
         align-items: center;
         .name {
@@ -136,6 +139,7 @@ export default {
         }
       }
       .reply-who {
+        width: 100%;
         display: flex;
         .reply {
           color: $Secondary;
@@ -152,6 +156,7 @@ export default {
         }
       }
       .text {
+        width: 100%;
         line-height: 26px;
       }
       .reply-who,
