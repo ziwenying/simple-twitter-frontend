@@ -70,11 +70,24 @@ import usersAPI from "./../apis/users";
 export default {
   name: "MainTweets",
   mixins: [fromNowFilter],
+  props: {
+    theTweetId: {
+      type: Number,
+      default: () => ({
+        theTweetId: -1,
+      }),
+    },
+  },
   data() {
     return {
       tweets: [],
       oneTweet: {},
     };
+  },
+  watch: {
+    theTweetId(newVal) {
+      this.addReplyCount(newVal);
+    },
   },
   beforeRouteUpdate(to, from, next) {
     // 監聽路由
@@ -103,6 +116,13 @@ export default {
           title: "無法取得推文資料，請稍後再試",
         });
       }
+    },
+    addReplyCount(id) {
+      this.tweets = this.tweets.map((tweet) => {
+        return tweet.id === id
+          ? { ...tweet, replyCount: tweet.replyCount + 1 }
+          : tweet;
+      });
     },
     isClickedTweet(tweetId) {
       // 被點擊的那則留言的資料，傳到父層 User.vue
