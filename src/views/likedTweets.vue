@@ -72,16 +72,28 @@ import usersAPI from "./../apis/users";
 export default {
   name: "likedTweets",
   mixins: [fromNowFilter],
+  props: {
+    addReply: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       likeTweets: [],
       oneTweet: {},
     };
   },
+  watch: {
+    addReply() {
+      const { id } = this.$route.params;
+      this.fetchLikeTweets(id);
+    },
+  },
   beforeRouteUpdate(to, from, next) {
     // 監聽路由
     const { id } = to.params;
-    this.fetchTweets(id);
+    this.fetchLikeTweets(id);
     next();
   },
   created() {
@@ -98,7 +110,6 @@ export default {
           throw new Error("無法取得推文資料，請稍後再試");
         }
         this.likeTweets = response.data;
-        console.log(this.likeTweets);
         this.likeTweets = this.likeTweets.map((likeTweet) => {
           return {
             id: likeTweet.id,
@@ -129,7 +140,7 @@ export default {
         return tweet.tweetId === tweetId;
       });
       this.oneTweet = {
-        id: this.oneTweet.id,
+        id: this.oneTweet.tweetId,
         description: this.oneTweet.description,
         createdAt: this.oneTweet.tweetCreatedAt,
         User: {

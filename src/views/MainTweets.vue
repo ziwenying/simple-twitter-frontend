@@ -70,11 +70,23 @@ import usersAPI from "./../apis/users";
 export default {
   name: "MainTweets",
   mixins: [fromNowFilter],
+  props: {
+    addReply: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       tweets: [],
       oneTweet: {},
     };
+  },
+  watch: {
+    addReply() {
+      const { id } = this.$route.params;
+      this.fetchTweets(id);
+    },
   },
   beforeRouteUpdate(to, from, next) {
     // 監聽路由

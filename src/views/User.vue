@@ -2,7 +2,7 @@
   <div class="row outer-user-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 user-nav" />
-    <Spinner v-if="isLoading" class="col-7"/>
+    <Spinner v-if="isLoading" class="col-7" />
     <div class="col-7 user-page" v-else>
       <div class="user-outer">
         <div class="reply-lists-title">
@@ -18,26 +18,33 @@
         <UserProfileCard
           :targetProfile="targetProfile"
           :initialChangeFollow="followShip"
-          @change-follow-ship= "changeFollowShip"
+          @change-follow-ship="changeFollowShip"
         />
         <!-- component UserNavPills.vue -->
         <UserNavPills />
         <!-- view MainTweets.vue or Replies.vue or likedTweets.vue -->
         <router-view
+          :addReply="addReply"
           @after-click-reply="afterClickReply"
           class="scrollbar bottom-lists"
         />
       </div>
     </div>
     <!--component Populars -->
-    <Populars  class="col-3 popular" @change-profile-follow="changeProfilePopular"/>
+    <Populars
+      class="col-3 popular"
+      @change-profile-follow="changeProfilePopular"
+    />
     <!-- component UserEditModal -->
     <UserEditModal
       @after-submit-profile="afterSubmitProfile"
       :initialTargetProfile="targetProfile"
     />
     <CreateTweetModal />
-    <ReplyModal :replyModalData="replyModalData" />
+    <ReplyModal
+      @user-after-submit-reply="userAfterSubmitReply"
+      :replyModalData="replyModalData"
+    />
   </div>
 </template>
 
@@ -49,7 +56,7 @@ import Populars from "../components/Populars.vue";
 import UserEditModal from "../components/UserEditModal.vue";
 import CreateTweetModal from "../components/CreateTweetModal.vue";
 import ReplyModal from "../components/ReplyModal.vue";
-import Spinner from "./../components/Spinner.vue"
+import Spinner from "./../components/Spinner.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 import usersAPI from "./../apis/users";
@@ -64,7 +71,7 @@ export default {
     UserEditModal,
     ReplyModal,
     CreateTweetModal,
-    Spinner
+    Spinner,
   },
   computed: {
     ...mapState(["currentUser", "topPopular"]),
@@ -84,7 +91,8 @@ export default {
       replyModalData: {},
       followingList: [],
       followShip: false,
-      isLoading: true
+      isLoading: true,
+      addReply: false, //及時增加留言數使用
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -98,13 +106,13 @@ export default {
     //透過 id 取得指定使用者的資料
     const { id } = this.$route.params;
     this.fetchProfile(id);
-    this.$store.dispatch('fetchPopular')
+    this.$store.dispatch("fetchPopular");
     this.fetchFollowings(this.currentUser.id);
   },
   methods: {
     async fetchProfile(userId) {
       try {
-        this.isLoading = true
+        this.isLoading = true;
         const response = await usersAPI.getTheUser({ userId });
         if (response.statusText !== "OK") {
           throw new Error("無法取得使用者資料，請稍後再試");
@@ -149,9 +157,9 @@ export default {
           followingCount,
           tweetCount,
         };
-        this.isLoading = false
+        this.isLoading = false;
       } catch (error) {
-        this.isLoading = false
+        this.isLoading = false;
         console.error(error.message);
         Toast.fire({
           icon: "error",
@@ -170,6 +178,10 @@ export default {
         userAvatar: User.avatar,
         createdAt: createdAt,
       };
+    },
+    userAfterSubmitReply() {
+      //即時顯示留言數字 + 1
+      this.addReply = !this.addReply;
     },
     async afterSubmitProfile(formData) {
       try {
@@ -229,40 +241,40 @@ export default {
       // 個人頁面的追蹤按鈕
       // popular 傳回來的 change 物件包含 id 和 改變狀態 true or false
       const userId = change.userId;
-      const { id } = this.$route.params 
+      const { id } = this.$route.params;
       // 如果目前是在別人的個人頁面: 如果popular改動的追蹤按鈕使用者id跟當前個人頁面id相符合, 才改變按鈕狀態
       if (userId === Number(id)) {
-        this.followShip = change.change; 
+        this.followShip = change.change;
         // 改變user profile頁面的跟隨中與跟隨者人數
         if (this.followShip === true) {
-        this.targetProfile = {
-          ...this.targetProfile,
-          followerCount: this.targetProfile.followerCount + 1,
-        };
-      } else if (this.followShip === false) {
-        this.targetProfile = {
-          ...this.targetProfile,
-          followerCount: this.targetProfile.followerCount - 1,
-        };
-      }
-      // 如果是在自己的個人頁面: 追蹤中人數相應改變
-     } else if (userId === Number(id) && Number(id) === this.currentUser.id) {
+          this.targetProfile = {
+            ...this.targetProfile,
+            followerCount: this.targetProfile.followerCount + 1,
+          };
+        } else if (this.followShip === false) {
+          this.targetProfile = {
+            ...this.targetProfile,
+            followerCount: this.targetProfile.followerCount - 1,
+          };
+        }
+        // 如果是在自己的個人頁面: 追蹤中人數相應改變
+      } else if (userId === Number(id) && Number(id) === this.currentUser.id) {
         if (this.followShip === true) {
-            this.targetProfile = {
+          this.targetProfile = {
             ...this.targetProfile,
             followingCount: this.targetProfile.followingCount + 1,
           };
         } else if (this.followShip === false) {
-        this.targetProfile = {
-          ...this.targetProfile,
-          followingCount: this.targetProfile.followingCount - 1,
-        };
+          this.targetProfile = {
+            ...this.targetProfile,
+            followingCount: this.targetProfile.followingCount - 1,
+          };
+        }
       }
-     }
     },
     changeFollowShip(payload) {
-      this.followShip = payload
-      // 在"別人"的個人頁面按下追蹤或退追按鈕, 下方的追隨者人數會相應變化 
+      this.followShip = payload;
+      // 在"別人"的個人頁面按下追蹤或退追按鈕, 下方的追隨者人數會相應變化
       if (this.followShip === true) {
         this.targetProfile = {
           ...this.targetProfile,
