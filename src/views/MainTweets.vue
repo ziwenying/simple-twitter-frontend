@@ -193,7 +193,6 @@ export default {
     .tweet-link {
       display: flex;
       padding: 0 0 17px 23px;
-      max-height: 168px;
       color: $black;
       border-top: $light-blue2 1px solid;
       border-bottom: $light-blue2 1px solid;
@@ -206,6 +205,7 @@ export default {
       border-radius: 50%;
     }
     .tweet-content {
+      width: 90%;
       display: flex;
       flex-direction: column;
       padding: 0 29px 0 0;
