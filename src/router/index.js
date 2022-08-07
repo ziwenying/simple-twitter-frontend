@@ -129,11 +129,15 @@ const router = new VueRouter({
 })
 
 // 去需要topPopular的頁面就拉取一次topPopular資料
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token')
+  // 有token的話
   if (token) {
+    // 拉currentUserAPI確認角色身分
+    let { role } = await store.dispatch('fetchCurrentUser')
     const pageWithPopular = ['main-page', 'reply-list', 'user-followers', 'user-followings', 'main-tweets', 'replies', 'liked-tweets']
-    if (pageWithPopular.includes(to.name)) {
+    // 如果身分是user並且要去的地方是有Popular的頁面, 才拉取Popular的資料
+    if (pageWithPopular.includes(to.name) && role === 'user') {
       store.dispatch('fetchPopular')
     }
   }
@@ -162,6 +166,10 @@ router.beforeEach(async (to, from, next) => {
     let { isAuthenticated, role } = await store.dispatch('fetchCurrentUser')
     // 驗證無效, 要去的地方是需驗證的頁面, 直接導向登入頁
     if (!isAuthenticated && !pathWithoutToken.includes(to.name)) {
+      Toast.fire({
+        icon: 'warning',
+        title: '您無權訪問該頁面，請先進行登入'
+      })
       next('/login')
       return
     }
@@ -178,6 +186,10 @@ router.beforeEach(async (to, from, next) => {
         return
         // 如果要去管理員無權瀏覽的頁面, 轉址登入頁
       } else if (!pathAdminCanEnter.includes(to.name)) {
+        Toast.fire({
+          icon: 'warning',
+          title: '您無權訪問該頁面，請先進行登入'
+        })
         next('/login')
         return
       }
