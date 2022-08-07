@@ -67,7 +67,6 @@ export default {
 .reply-lists {
   .reply-list {
     display: flex;
-    max-height: 158px;
     padding: 16px 23px 16px 23px;
     border-top: $light-blue2 1px solid;
     border-bottom: $light-blue2 1px solid;
@@ -77,8 +76,11 @@ export default {
       border-radius: 50%;
     }
     .reply-content {
+      width: 90%;
       margin: 0 0 0 8px;
+      overflow-wrap: anywhere;
       .reply-title {
+        width: 100%;
         display: flex;
         align-items: center;
         .name {
@@ -98,6 +100,7 @@ export default {
         }
       }
       .reply-link {
+        width: 100%;
         cursor: auto;
         .reply-who {
           display: flex;
@@ -116,7 +119,9 @@ export default {
         }
       }
       .text {
+        width: 100%;
         margin: 8px 0 0 0;
+        
       }
     }
     .reply-list div:nth-child(1) {

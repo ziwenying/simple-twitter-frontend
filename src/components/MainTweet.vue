@@ -166,7 +166,6 @@ export default {
     .tweet-link {
       display: flex;
       padding: 0 0 0 23px;
-      max-height: 168px;
       border: $light-blue2 1px solid;
       color: $black;
     }
