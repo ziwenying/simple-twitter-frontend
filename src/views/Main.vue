@@ -2,10 +2,11 @@
   <div class="row outer-main-wrapper">
     <!--component Navbar -->
     <Navbar class="col-2 main-nav" />
+    <Spinner v-if="isLoading" class="col-7" />
     <!-- MainPage.vue & ReplyList -->
-    <Spinner v-if="isLoading" class="col-7"/>
     <router-view
       v-else
+      :theTweetId="theTweetId"
       :initialTweets="tweets"
       :newReply="newReply"
       :popular="topPopular"
@@ -13,12 +14,12 @@
       class="col-7 main-page scrollbar"
     />
     <!--component Populars -->
-    <Populars  class="col-3 popular" />
+    <Populars class="col-3 popular" />
     <!-- Modal -->
     <CreateTweetModal @after-submit-tweet="afterSubmitTweet" />
     <ReplyModal
       :replyModalData="replyModalData"
-      @main-after-submit-reply="fetchTweets"
+      @main-after-submit-reply="mainAfterSubmitReply"
     />
   </div>
 </template>
@@ -43,14 +44,15 @@ export default {
     Navbar,
     ReplyModal,
     CreateTweetModal,
-    Spinner
+    Spinner,
   },
   data() {
     return {
       tweets: [],
       replyModalData: {},
       newReply: {},
-      isLoading: true
+      theTweetId: -1, //及時增加留言數使用
+      isLoading: true,
     };
   },
   created() {
@@ -59,21 +61,25 @@ export default {
   methods: {
     async fetchTweets() {
       try {
-        this.isLoading = true
+        this.isLoading = true;
         const response = await tweetsAPI.tweets.getTweets();
         if (response.statusText !== "OK") {
           throw new Error("無法取得推文資料，請稍後再試");
         }
         this.tweets = response.data;
-        this.isLoading = false
+        this.isLoading = false;
       } catch (error) {
-        this.isLoading = false
+        this.isLoading = false;
         console.error(error.message);
         Toast.fire({
           icon: "error",
           title: "無法取得推文資料，請稍後再試",
         });
       }
+    },
+    mainAfterSubmitReply(id) {
+      //即時顯示留言數字 + 1
+      this.theTweetId = id;
     },
     afterSubmitTweet(payload) {
       const { tweetId, description } = payload;

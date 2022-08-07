@@ -139,7 +139,7 @@ export default {
           this.$route.name === "main-tweets" ||
           this.$route.name === "liked-tweets"
         ) {
-          this.$emit("user-after-submit-reply");
+          this.$emit("user-after-submit-reply", this.replyModalData.id);
         }
         Toast.fire({
           icon: "success",

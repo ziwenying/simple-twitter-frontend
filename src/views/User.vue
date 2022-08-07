@@ -24,7 +24,7 @@
         <UserNavPills />
         <!-- view MainTweets.vue or Replies.vue or likedTweets.vue -->
         <router-view
-          :addReply="addReply"
+          :theTweetId="theTweetId"
           @after-click-reply="afterClickReply"
           class="scrollbar bottom-lists"
         />
@@ -92,7 +92,7 @@ export default {
       followingList: [],
       followShip: false,
       isLoading: true,
-      addReply: false, //及時增加留言數使用
+      theTweetId: -1, //及時增加留言數使用
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -179,9 +179,9 @@ export default {
         createdAt: createdAt,
       };
     },
-    userAfterSubmitReply() {
+    userAfterSubmitReply(id) {
       //即時顯示留言數字 + 1
-      this.addReply = !this.addReply;
+      this.theTweetId = id;
     },
     async afterSubmitProfile(formData) {
       try {

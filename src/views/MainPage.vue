@@ -61,6 +61,12 @@ export default {
       type: Array,
       required: true,
     },
+    theTweetId: {
+      type: Number,
+      default: () => ({
+        theTweetId: -1,
+      }),
+    },
   },
   data() {
     return {
@@ -71,6 +77,9 @@ export default {
   watch: {
     initialTweets(newValue) {
       this.tweets = [...newValue];
+    },
+    theTweetId(newVal) {
+      this.addReplyCount(newVal);
     },
   },
   created() {
@@ -132,6 +141,13 @@ export default {
           title: "推文發送失敗，請稍後再試",
         });
       }
+    },
+    addReplyCount(id) {
+      this.tweets = this.tweets.map((tweet) => {
+        return tweet.id === id
+          ? { ...tweet, replyCount: tweet.replyCount + 1 }
+          : tweet;
+      });
     },
     afterClickReply(payload) {
       // 被點擊的那則留言的資料，繼續傳到父層 Main.vue

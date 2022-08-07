@@ -71,9 +71,11 @@ export default {
   name: "MainTweets",
   mixins: [fromNowFilter],
   props: {
-    addReply: {
-      type: Boolean,
-      required: true,
+    theTweetId: {
+      type: Number,
+      default: () => ({
+        theTweetId: -1,
+      }),
     },
   },
   data() {
@@ -83,9 +85,8 @@ export default {
     };
   },
   watch: {
-    addReply() {
-      const { id } = this.$route.params;
-      this.fetchTweets(id);
+    theTweetId(newVal) {
+      this.addReplyCount(newVal);
     },
   },
   beforeRouteUpdate(to, from, next) {
@@ -115,6 +116,13 @@ export default {
           title: "無法取得推文資料，請稍後再試",
         });
       }
+    },
+    addReplyCount(id) {
+      this.tweets = this.tweets.map((tweet) => {
+        return tweet.id === id
+          ? { ...tweet, replyCount: tweet.replyCount + 1 }
+          : tweet;
+      });
     },
     isClickedTweet(tweetId) {
       // 被點擊的那則留言的資料，傳到父層 User.vue
