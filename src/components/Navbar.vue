@@ -21,7 +21,7 @@
               src="~@/assets/image/home-orange.png"
               alt="home-icon"
             />
-            <p class="nav-text">首頁</p>
+            <router-link to="/main" class="nav-text">首頁</router-link>
           </div>
           <!-- 黑色 -->
           <div class="home-btn nav-item" v-else>
